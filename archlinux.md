@@ -27,3 +27,7 @@ grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB_ARCH
 ```
 grub-mkconfig -o /boot/grub/grub.cfg
 ```
+
+# package manager
+### Pacman apt equivalent
+https://wiki.archlinux.org/index.php/Pacman/Rosetta
