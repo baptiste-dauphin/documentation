@@ -62,3 +62,6 @@ copy the first line, and replace with LV path
 Delete partition in a DISK
 cfdisk /dev/sdb
 ###############
+
+### reduce lv size
+https://www.rootusers.com/lvm-resize-how-to-decrease-an-lvm-partition/
