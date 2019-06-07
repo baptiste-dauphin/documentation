@@ -131,3 +131,34 @@ nc -znv 10.10.10.10 3306
 ```
 echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 1514
 ```
+
+# Git
+### git log
+##### Find commit by author or since a specific date
+```
+git log --author="g.allard" \
+		--since="2 week ago"
+```
+
+##### Find n last commit
+```
+git log --author="g.allard" \
+		-3
+```
+#### only print specific info from commits
+##### author
+```
+git log --since="2 week ago" \
+		--pretty=format:"%an"
+```
+##### hash, author name, date, message
+```
+git log --author="g.allard"  \
+		--since="2 week ago" \
+		--pretty=format:"%h - %an, %ar : %s"
+```
+
+##### Show modification of specific commits
+```
+git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af05daad8b40
+```
