@@ -44,3 +44,14 @@ https://wiki.archlinux.org/index.php/Pacman/Rosetta
 ```
 sudo pacman -S pulseaudio tree xf86-video-intel mesa-dri opencl-nvidia sudo polkit lxsession kernel headers git gdm terminator keepass firefox
 ```
+
+# Wi-Fi
+#### With gdm (gnome desktop manager)
+You have just have to use the service NetworkManager, which it way much more simple than other wireless connection manager (like wicd, netctl).
+NetworkManager will allow you to graphically setup once your wifi settings and autodiscover SSID.
+```
+systemctl start NetworkManager
+# and enable it at boot, by default no wifi connection manager is enable on archlinux
+systemctl enable NetworkManager
+```
+Then, fill in your infos in your graphical wifi settings
