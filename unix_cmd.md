@@ -162,3 +162,15 @@ git log --author="g.allard"  \
 ```
 git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af05daad8b40
 ```
+
+
+
+# OpenSSL, TLS, private key, rsa, ecdsa
+### Generate __Certificate Signing Request__ (csr) + the associate private key
+Will generates both private key and csr token
+```
+openssl req -nodes -newkey rsa:4096 -sha256 -keyout sub.mydomain.tld.key -out sub.mydomain.tld.csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=sub.mydomain.tld"
+```
+You can verify the content of your csr token here :
+[DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
+
