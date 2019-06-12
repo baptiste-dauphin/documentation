@@ -1,0 +1,26 @@
+Port 22
+ListenAddress $IP
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ecdsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+UsePrivilegeSeparation yes
+
+SyslogFacility AUTH
+LogLevel INFO
+PermitRootLogin no
+StrictModes yes
+PermitEmptyPasswords no
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+PrintMotd no
+AcceptEnv LANG LANGUAGE LC_*
+AcceptEnv XMODIFIERS
+
+UsePAM yes
+UseDNS no
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+
+AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+AuthorizedKeysCommandUser nobody
