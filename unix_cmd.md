@@ -250,6 +250,10 @@ journalctl -k
 | json-pretty  | Displays logs in JSON format across multiple lines for better readability. |
 | cat  | Displays only the message from each log without any other metadata. |
 
+```
+journalctl -o json-pretty
+```
+
 ### Persist Your LogsPermalink
 systemd-journald can be configured to persist your systemd logs on disk, and it also provides controls to manage the total size of your archived logs. These settings are defined in /etc/systemd/journald.conf
 To start persisting your logs, uncomment the Storage line in /etc/systemd/journald.conf and set its value to persistent. Your archived logs will be held in /var/log/journal. If this directory does not already exist in your file system, systemd-journald will create it.
