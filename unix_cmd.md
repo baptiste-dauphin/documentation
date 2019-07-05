@@ -243,6 +243,7 @@ journalctl -k
 
 ##### Change the Log Output FormatPermalink
 | Format Name  | Description |
+|----------|-------------|
 | short |  The default option, displays logs in the traditional syslog format. |
 | verbose  | Displays all information in the log record structure. |
 | json | Displays logs in JSON format, with one log per line. |
