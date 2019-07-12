@@ -23,7 +23,6 @@ export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
 
-# Definition
 
 
 # OpenVpn
@@ -166,6 +165,29 @@ git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af
 
 
 # OpenSSL, TLS, private key, rsa, ecdsa
+
+#### Get info of a certificate from internet
+```
+openssl s_client -connect www.qwant.com:443 -servername www.qwant.com   < /dev/null | openssl x509 -text
+openssl s_client -connect qwant.com:443 -servername qwant.com           < /dev/null | openssl x509 -noout -fingerprint
+openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/null | openssl x509 -text -noout -dates
+```
+
+#### Get info about a certificate from the file (.pem)
+```
+openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
+```
+
+#### get system CA
+```
+ls -l /usr/local/share/ca-certificates
+ls -l /etc/ssl/certs/
+```
+#### refresh system CA after changing files in the folder
+```
+sudo update-ca-certificates
+```
+
 ### Generate __Certificate Signing Request__ (csr) + the associate private key
 Will generates both private key and csr token
 ```
@@ -194,6 +216,7 @@ journalctl -r
 ```
 
 #### Paging through Your Logs
+
 ##### journalctl pipes its output to the __less__ command
 | Key command       |      Action |
 |-------------------|-------------|
@@ -293,4 +316,23 @@ journalctl --vacuum-size=2G
 Run journalctl with the --vacuum-time option to remove archived journal files with dates older than the specified relative time. For example, the following command will remove journals older than one year:
 ```
 journalctl --vacuum-time=1years
+```
+
+
+
+# Definition
+
+# Monitor, screen
+### Xrandr
+```
+xrandr --help
+xrandr --current
+xrandr --auto
+
+xrandr --output DP-2 --mode 1680x1050 --primary
+xrandr --output DP-1 --mode 1280x1024 --right-of DP-2
+
+xrandr --output DP-1 --auto --right-of eDP-1
+xrandr --output HDMI-1 --auto --right-of DP-1
+sudo dpkg-reconfigure libxrandr2
 ```
