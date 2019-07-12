@@ -327,12 +327,52 @@ journalctl --vacuum-time=1years
 ```
 xrandr --help
 xrandr --current
-xrandr --auto
 
 xrandr --output DP-2 --mode 1680x1050 --primary
 xrandr --output DP-1 --mode 1280x1024 --right-of DP-2
 
 xrandr --output DP-1 --auto --right-of eDP-1
 xrandr --output HDMI-1 --auto --right-of DP-1
+
+```
+#### Troubleshooting
+__Monitor plugged in but not displaying anything__
+```
+xrandr --auto
 sudo dpkg-reconfigure libxrandr2
+logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
+```
+
+
+# Git
+## Branch
+```
+git checkout dev
+git checkout master
+git checkout branch
+```
+
+## Commit
+```
+git checkout ac92da0124997377a3ee30f3159cdee838bd5b0b
+```
+
+## Stash
+```
+git reset --soft HEAD^
+git stash
+git pull
+git stash pop # Will cause a conflict
+git commit    # Re-commit 7826b2
+```
+
+## Tag
+### checkout to a specific tag
+```
+git checkout v_0.9
+```
+
+### Get the current tag version
+```
+git describe --tags --exact-match HEAD
 ```
