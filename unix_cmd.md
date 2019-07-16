@@ -466,11 +466,8 @@ __Ctrl + B__ : (to press __each time before another command__)
 | + | : break pane into window (e.g. to select text by mouse to copy) |
 | - | : restore pane from window |
 | ⍽ | : space - toggle between layouts |
-
-"prefix" usually is "alt gr"
-
-| <prefix> q | (Show pane numbers, when the numbers show up type the key to goto that pane) |
-| <prefix> { | (Move the current pane left) |
-| <prefix> } | (Move the current pane right) |
-| <prefix> z | toggle pane zoom |
+| q | (Show pane numbers, when the numbers show up type the key to goto that pane) |
+| { | (Move the current pane left) |
+| } | (Move the current pane right) |
+| z | toggle pane zoom |
 | ":set synchronise-panes on" :|  synchronise_all_panes in the current session (to execute parallel tasks like multiple iperfs client)" |
