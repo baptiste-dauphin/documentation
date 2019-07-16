@@ -468,6 +468,7 @@ __Ctrl + B__ : (to press __each time before another command__)
 | ⍽ | : space - toggle between layouts |
 
 "prefix" usually is "alt gr"
+
 | <prefix> q | (Show pane numbers, when the numbers show up type the key to goto that pane) |
 | <prefix> { | (Move the current pane left) |
 | <prefix> } | (Move the current pane right) |
