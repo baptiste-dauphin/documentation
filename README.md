@@ -1,9 +1,10 @@
 # Link
-## Archlinux tips
-https://github.com/FataPlex/documentation/blob/master/archlinux.md
+## ArchLinux
+[:book: doc](human/archlinux.md)
 
-## LVM tips
-https://github.com/FataPlex/documentation/blob/master/lvm.md
+## Logical Volume Manager
+[:book: doc](human/lvm.md)
 
-## Various unix commands
-https://github.com/FataPlex/documentation/blob/master/unix_cmd.md
+## Various Unix Commands
+[:book: doc](human/unix_cmd.md)
+
