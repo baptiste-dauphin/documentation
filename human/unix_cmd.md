@@ -22,8 +22,52 @@ export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 ```
 unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
+# Bash test
 
+|Operator   |   Description|
+|-------------------|-------------|
+|! EXPRESSION  |  The EXPRESSION is false.|
+|-n STRING   |  The length of STRING is greater than zero.|
+|-z STRING   |  The lengh of STRING is zero (ie it is empty).|
+|STRING1 = STRING2 |STRING1 is equal to STRING2|
+|STRING1 != STRING2 | STRING1 is not equal to STRING2|
+|INTEGER1 -eq INTEGER2  | INTEGER1 is numerically equal to INTEGER2|
+|INTEGER1 -gt INTEGER2  | INTEGER1 is numerically greater than INTEGER2|
+|INTEGER1 -lt INTEGER2  | INTEGER1 is numerically less than INTEGER2|
+|-d FILE  | FILE exists and is a directory.|
+|-e FILE |  FILE exists.|
+|-f FILE |  True if file exists AND is a regular file.|
+|-r FILE |  FILE exists and the read permission is granted.|
+|-s FILE |  FILE exists and its size is greater than zero (ie. it is not empty).|
+|-w FILE |  FILE exists and the write permission is granted.|
+|-x FILE |  FILE exists and the execute permission is granted.|
+|-eq 0    |        COMMAND result equal to 0|
 
+```bash
+if [ -f /tmp/test.txt ]; then echo "true"; else echo "false"; fi
+```
+## Boolean
+```bash
+$ true && echo howdy!
+howdy!
+
+$ false || echo howdy!
+howdy!
+```
+
+### For
+```bash
+for i in `seq 1 6`
+do
+mysql -h 127.0.0.1 -u user -p password -e "show variables like 'server_id'; select user()"
+done
+```
+
+# symbolic link
+## update sym link
+```bash
+ln -sfTv /opt/DSS/DnsAdminWUI_$TAG /opt/DSS/DnsAdminWUI_current
+```
 
 # OpenVpn
 #### Run OpenVpn client in background, immune to hangups, with output to a non-tty
@@ -130,39 +174,6 @@ nc -znv 10.10.10.10 3306
 ```
 echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 1514
 ```
-
-# Git
-### git log
-##### Find commit by author or since a specific date
-```
-git log --author="g.allard" \
-		--since="2 week ago"
-```
-
-##### Find n last commit
-```
-git log --author="g.allard" \
-		-3
-```
-#### only print specific info from commits
-##### author
-```
-git log --since="2 week ago" \
-		--pretty=format:"%an"
-```
-##### hash, author name, date, message
-```
-git log --author="g.allard"  \
-		--since="2 week ago" \
-		--pretty=format:"%h - %an, %ar : %s"
-```
-
-##### Show modification of specific commits
-```
-git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af05daad8b40
-```
-
-
 
 # OpenSSL, TLS, private key, rsa, ecdsa
 
@@ -319,9 +330,6 @@ journalctl --vacuum-time=1years
 ```
 
 
-
-# Definition
-
 # Monitor, screen
 ### Xrandr
 ```
@@ -358,12 +366,22 @@ git checkout ac92da0124997377a3ee30f3159cdee838bd5b0b
 ```
 
 ## Stash
-```
+```bash
+# (go at the previous commit)
+# will uncommit your last changes
 git reset --soft HEAD^
 git stash
+# verify
+git stash show
+# enventually FF merge without any conflict
 git pull
-git stash pop # Will cause a conflict
-git commit    # Re-commit 7826b2
+
+
+# put back your work
+git stash pop
+# commit again
+history | grep "git commit" | tail
+git commit "copy-paste history commit message :)"
 ```
 
 ## Tag
@@ -376,3 +394,80 @@ git checkout v_0.9
 ```
 git describe --tags --exact-match HEAD
 ```
+
+### git log
+##### Find commit by author or since a specific date
+```
+git log --author="g.allard" \
+    --since="2 week ago"
+```
+
+##### Find n last commit
+```
+git log --author="g.allard" \
+    -3
+```
+#### only print specific info from commits
+##### author
+```
+git log --since="2 week ago" \
+    --pretty=format:"%an"
+```
+##### hash, author name, date, message
+```
+git log --author="g.allard"  \
+    --since="2 week ago" \
+    --pretty=format:"%h - %an, %ar : %s"
+```
+
+##### Show modification of specific commits
+```
+git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af05daad8b40
+```
+
+# Tmux
+
+Depuis le shell, avant de rentrer dans une session tmux
+```bash
+$ tmux ls
+$ tmux new
+$ tmux new -s session
+$ tmux attach
+$ tmux attach -t session_name
+$ tmux kill-server : kill all sessions
+:setw synchronize-panes on
+:setw synchronize-panes off
+:set-window-option xterm-keys on
+```
+
+## [.tmux.conf]
+```bash
+set-window-option -g xterm-keys on
+```
+
+
+## Inside tmux
+
+__Ctrl + B__ : (to press __each time before another command__)
+
+| Command |  meaning |
+|---------|----------|
+| Flèches | = se déplacer dans le splitage des fenêtres |
+| N | "Next window" |
+| P | "Previous window" |
+| z | : zoom in/out in the current span |
+| d | : detach from the current and let it running on the background (to be reattached to later) |
+| x | : kill |
+| % |  vertical split |
+| " |  horizontal split |
+| o | : swap panes |
+| q | : show pane numbers |
+| x | : kill pane |
+| + | : break pane into window (e.g. to select text by mouse to copy) |
+| - | : restore pane from window |
+| ⍽ | : space - toggle between layouts |
+| q | (Show pane numbers, when the numbers show up type the key to goto that pane) |
+| { | (Move the current pane left) |
+| } | (Move the current pane right) |
+| z | toggle pane zoom |
+| ":set synchronise-panes on" :|  synchronise_all_panes in the current session (to execute parallel tasks like multiple iperfs client)" |
