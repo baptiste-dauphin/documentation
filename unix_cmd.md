@@ -22,8 +22,45 @@ export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 ```
 unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
+## Bash test
 
+|Operator   |   Description|
+|-------------------|-------------|
+|! EXPRESSION  |  The EXPRESSION is false.|
+|-n STRING   |  The length of STRING is greater than zero.|
+|-z STRING   |  The lengh of STRING is zero (ie it is empty).|
+|STRING1 = STRING2 |STRING1 is equal to STRING2|
+|STRING1 != STRING2 | STRING1 is not equal to STRING2|
+|INTEGER1 -eq INTEGER2  | INTEGER1 is numerically equal to INTEGER2|
+|INTEGER1 -gt INTEGER2  | INTEGER1 is numerically greater than INTEGER2|
+|INTEGER1 -lt INTEGER2  | INTEGER1 is numerically less than INTEGER2|
+|-d FILE  | FILE exists and is a directory.|
+|-e FILE |  FILE exists.|
+|-f FILE |  True if file exists AND is a regular file.|
+|-r FILE |  FILE exists and the read permission is granted.|
+|-s FILE |  FILE exists and its size is greater than zero (ie. it is not empty).|
+|-w FILE |  FILE exists and the write permission is granted.|
+|-x FILE |  FILE exists and the execute permission is granted.|
+|-eq 0    |        COMMAND result equal to 0|
 
+```bash
+if [ -f /tmp/test.txt ]; then echo "true"; else echo "false"; fi
+```
+### Boolean
+```bash
+$ true && echo howdy!
+howdy!
+
+$ false || echo howdy!
+howdy!
+```
+
+#########
+for i in `seq 1 6`
+do
+mysql -h 127.0.0.1 -u user -p password -e "show variables like 'server_id'; select user()"
+done
+#########
 
 # OpenVpn
 #### Run OpenVpn client in background, immune to hangups, with output to a non-tty
