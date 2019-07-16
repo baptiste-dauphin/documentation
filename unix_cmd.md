@@ -449,6 +449,7 @@ set-window-option -g xterm-keys on
 ## Inside tmux
 
 __Ctrl + B__ : (to press __each time before another command__)
+
 | Command |  meaning |
 |---------|----------|
 | Flèches | = se déplacer dans le splitage des fenêtres |
