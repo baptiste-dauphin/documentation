@@ -1,5 +1,7 @@
 #!/bin/bash
-./keyboard-fr.sh
-./pulseaudio-start.sh
-./monitors-placement.sh
-./ssh_agent.sh
+DIR="$(dirname "$0")"
+
+$DIR/keyboard-fr.sh
+$DIR/pulseaudio-start.sh
+$DIR/monitors-placement.sh
+$DIR/ssh_agent.sh
