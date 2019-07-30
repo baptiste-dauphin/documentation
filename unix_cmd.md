@@ -1,29 +1,35 @@
 # shell
-## Environment variable
-#### set variables to current __shell__
+### User
+```bash
+useradd -m -s /bin/bash b.dauphin
+-m create home dir
+-s shell path
 ```
-export http_proxy=http://10.10.10.10:9999
-```
-#### set variables only for the next line __execution__
-```
-http_proxy=http://10.10.10.10:9999 wget -O - https://repo.saltstack.com/apt/debian/9/amd64/latest/SALTSTACK-GPG-KEY.pub
-```
-#### Export multiple env var
-```
-export {http,https,ftp}_proxy="http://10.10.10.10:9999"
 
-export http_proxy=http://10.10.10.10:9999/
-export https_proxy=$http_proxy
-export ftp_proxy=$http_proxy
-export rsync_proxy=$http_proxy
-export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+### Group
+Add user baptiste to sudoer
+```bash
+usermod -aG sudo baptiste
+usermod -aG wireshark b.dauphin
 ```
-#### Unset env var
+
+### Change user
+switch to root
+```bash
+su -
+switch to b.dauphin
+su - b.dauphin
 ```
-unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
+
+### sudo
+Switch to root
+You have to be __sudoer__ (i.e. being member of 'sudo' group)
+```bash
+sudo su
 ```
+
+
 # Bash test
-
 |Operator   |   Description|
 |-------------------|-------------|
 |! EXPRESSION  |  The EXPRESSION is false.|
@@ -101,6 +107,30 @@ x=`grep "\`dirname \"$path\"\`" file`
 ## update sym link
 ```bash
 ln -sfTv /opt/DSS/DnsAdminWUI_$TAG /opt/DSS/DnsAdminWUI_current
+```
+
+## Environment variable
+#### set variables to current __shell__
+```
+export http_proxy=http://10.10.10.10:9999
+```
+#### set variables only for the next line __execution__
+```
+http_proxy=http://10.10.10.10:9999 wget -O - https://repo.saltstack.com/apt/debian/9/amd64/latest/SALTSTACK-GPG-KEY.pub
+```
+#### Export multiple env var
+```
+export {http,https,ftp}_proxy="http://10.10.10.10:9999"
+
+export http_proxy=http://10.10.10.10:9999/
+export https_proxy=$http_proxy
+export ftp_proxy=$http_proxy
+export rsync_proxy=$http_proxy
+export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+```
+#### Unset env var
+```
+unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
 
 # OpenVpn
@@ -221,6 +251,9 @@ openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/n
 #### Get info about a certificate from the file (.pem)
 ```
 openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
+
+# debian 7, openssl style
+openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
 ```
 
 #### get system CA
@@ -243,6 +276,19 @@ You can verify the content of your csr token here :
 
 
 # Systemd
+## Systemctl (system control)
+
+#### show all installed unit files
+systemctl list-unit-files --type=service
+
+#### active / running / loaded
+systemctl list-units --type=service --state=loaded
+systemctl list-units --type=service --state=active
+systemctl list-units --type=service --state=running
+systemctl show --property=Environment docker
+
+
+
 ## Journal
 ### Definition
 journalctl is a command for viewing logs collected by systemd. The systemd-journald service is responsible for systemd’s log collection, and it retrieves messages from the kernel, systemd services, and other sources.
@@ -252,13 +298,32 @@ These logs are gathered in a central location, which makes them easy to review. 
 ##### Run the journalctl command without any arguments to view all the logs in your journal:
 ```
 journalctl
+journalctl -r
 ```
 Each line starts with the date (in the server’s local time), followed by the server’s hostname, the process name, and the message for the log
 
-##### To reverse this order and display the newest messages at the top
+##### [journalctl]
+```bash
+journalctl --priority=0..3 --since "12 hours ago"
 ```
-journalctl -r
-```
+-u --unit=UNIT
+--user-unit=UNIT
+--no-pager
+--list-boots
+-b --boot[=ID]
+-e --pager-end
+-f --follow
+-p --priority=RANGE
+
+    0: emerg
+    1: alert
+    2: crit
+    3: err
+    4: warning
+    5: notice
+    6: info
+    7: debug
+
 
 #### Paging through Your Logs
 
@@ -387,6 +452,32 @@ logout of your current Windows Manager (like I3 or cinnamon, or gnome), then sel
 
 
 # Git
+## Global info
+```bash
+git remote -v
+git branch -v
+```
+
+## Edit remote URL
+```bash
+git remote set-url origin git@git.baptiste-dauphin.com:GROUP/SUB_GROUP/project_name
+```
+
+## Tag
+```bash
+# create tag at your current commit
+git tag temp_tag_2
+
+# By default tags are not __pushed__, nor __pulled__ 
+git push origin tag_1 tag_2
+
+# list tag
+git tag -l
+
+# delete tag
+git tag -d temp_tag_2
+```
+
 ## Branch
 ```bash
 git checkout dev
@@ -423,6 +514,7 @@ git commit "copy-paste history commit message :)"
 ```
 
 ## Tag
+```
 ### checkout to a specific tag
 ```bash
 git checkout v_0.9
@@ -436,13 +528,13 @@ git describe --tags --exact-match HEAD
 ### git log
 ##### Find commit by author or since a specific date
 ```bash
-git log --author="g.allard" \
+git log --author="b.dauphin" \
     --since="2 week ago"
 ```
 
 ##### Find n last commit
 ```bash
-git log --author="g.allard" \
+git log --author="b.dauphin" \
     -3
 ```
 #### only print specific info from commits
@@ -453,7 +545,7 @@ git log --since="2 week ago" \
 ```
 ##### hash, author name, date, message
 ```bash
-git log --author="g.allard"  \
+git log --author="b.dauphin"  \
     --since="2 week ago" \
     --pretty=format:"%h - %an, %ar : %s"
 ```
@@ -512,6 +604,7 @@ __Ctrl + B__ : (to press __each time before another command__)
 
 
 # MySQL
+
 ## User, Password
 ```sql
 CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
@@ -553,7 +646,7 @@ SHOW GRANTS FOR user@git.baptiste-dauphin.com;
 
 ## DUMP data (mysqldump)
 ```bash
-mysqldump -u root -p \ 
+mysqldump -u root -p \
 --all-databases \       # Dump all tables in all databases, WITHOUT 'INFORMATION_SCHEMA' and 'performace_schema'
 --add-drop-database \   # Add DROP DATABASE statement before each CREATE DATABASE statement
 --ignore-table=DB.table_name \
@@ -569,8 +662,8 @@ mysqldump -h 10.10.10.10 \
 --skip-lock-tables \
 --single-transaction \
 | gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
-
 ```
+
 #### Table size
 ```sql
 SELECT table_name AS `Table`, round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` FROM information_schema.TABLES WHERE table_schema = "github_db1" AND table_name = "table1";
@@ -582,4 +675,304 @@ SELECT table_schema "DB_1", ROUND(SUM(data_length + index_length) / 1024 / 1024,
 ### Feed database
 ```bash
 gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]
+```
+### All in one usage <3
+```bash
+mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
+```
+
+# Wireshark
+## DNS Analysis with Tshark
+It just plugs into 
+```bash
+tshark -f "udp port 53" -Y "dns.qry.type == A and dns.flags.response == 0"
+# count total dns query
+tshark -f "udp port 53" -n -T fields -e dns.qry.name | wc -l
+```
+## HTTP
+### HTTP Analysis with Tshark
+```bash
+tshark -i wlan0 -Y http.request -T fields -e http.host -e http.user_agent
+```
+
+### Parse User Agents and Frequency with Standard Shell Commands
+```bash
+tshark -r example.pcap -Y http.request -T fields -e http.host -e http.user_agent | sort | uniq -c | sort -n
+```
+
+### Using additional HTTP filters in Analysis
+```bash
+tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.request.full_uri
+```
+
+### Using additional HTTP filters in Analysis
+```bash
+tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.request.full_uri
+```
+
+# Files
+## Tar
+```bash
+tar --help
+```
+-c : create   (name your file .tar)
+-(c)z : archive type gzip    (name your file .tar.gz)
+-(c)j : archive type bzip2
+-x : extract
+-f : file
+-v : verbose
+-C : Set dir name to extract files
+--directory : same
+
+
+#### compress
+```bash
+tar zfcv myfiles.tar.gz /dir1 /dir2 /dir3
+```
+
+#### extract
+```bash
+tar zxvf somefilename.tar.gz or .tgz
+tar jxvf somefilename.tar.bz2
+tar xf file.tar -C /path/to/directory
+```
+
+# Default software
+### Change default terminal (under debian)
+will prompt you an interactive console to chose among recognized software
+```bash
+sudo update-alternatives --config x-terminal-emulator
+```
+
+# Process
+## get processes info
+##### debian
+```bash
+ps -ef
+```
+##### RedHat
+```bash
+ps aux
+```
+
+## list every running process
+```bash
+ps -ef | grep ssh-agent | awk '{print $2}'
+ps -ef | grep ssh-agent | awk '$0=$2'
+```
+
+#### Print only the process IDs of syslogd:
+```bash
+ps -C syslogd -o pid=
+```
+#### Print only the name of PID 42:
+```bash
+ps -q 42 -o comm=
+```
+
+#### To see every process running as root (real & effective ID) in user format:
+```bash
+ps -U root -u root u
+```
+
+#### Use process substitution:
+```bash
+diff <(cat /etc/passwd) <(cut -f2 /etc/passwd)
+```
+<(...) is called process substitution.
+It converts the output of a command into a file-like object that diff can read from.
+While process substitution is not POSIX, it is supported by bash, ksh, and zsh.
+
+### Get PID (process Identifier) of a running process
+```bash
+pidof iceweasel
+pgrep ssh-agent
+```
+
+### Kill a running process
+```bash
+sudo kill -9
+```
+
+
+# Unix File types
+- Regular file (-)
+- Directory (d)
+- Special files (5 sub types in it)
+- block file(b)
+- Character device file(c)
+- Named pipe file or just a pipe file(p)
+- Symbolic link file(l)
+- Socket file(s)
+
+# LDAP // Activate Directory
+
+#### Search into LDAP
+```bash
+ldapsearch --help
+-H URI     LDAP Uniform Resource Identifier(s)
+-x         Simple authentication
+-W         prompt for bind password
+-D binddn  bind DN
+-b basedn  base dn for search
+SamAccountName SINGLE-VALUE attribute that is the logon name used to support clients and servers from a previous version of Windows.
+
+ldapsearch -H ldap://10.10.10.10 \
+-x \
+-W \
+-D "user@fqdn" \
+-b "ou=ou,dc=sub,dc=under,dc=com" "(sAMAccountName=b.dauphin)"
+```
+
+#### modify an acount (remotly)
+```bash
+apt install ldap-utils
+#
+ldapmodify \
+-H ldaps://ldap.company.tld \
+-D "cn=b.dauphin,ou=people,c=fr,dc=company,dc=fr" \
+-W \
+-f b.gates.ldif
+# .ldif must contains modification data
+```
+#### Locally
+```bash
+slapcat -f b.gates.ldif
+```
+#### Generate hash of the password, to update later the password account
+```bash
+slappasswd -h {SSHA}
+# will prompt you the string you wanna hash, and generate it in stout
+```
+
+#### Content of .ldif
+```bash
+dn: cn=b.dauphin@github.com,ou=people,c=fr,dc=company,dc=fr
+changetype: modify
+replace: userPassword
+userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
+```
+
+# Security
+## Fail2Ban
+### Jail status
+fail2ban-client status
+fail2ban-client status ssh
+
+# SaltStack
+### salt-key
+```bash
+salt-call --local key.finger  : Print the minion key fingerprint (when directly SSH connected)
+salt-key -F master          : Print the master key fingerprint
+-p PRINT, --print=PRINT       : Print the specified public key.                         
+-P, --print-all  : Print all public keys.
+-d DELETE, --delete=DELETE      : Delete the specified key. Globs are supported.
+-D, --delete-all          : Delete all keys.
+-f FINGER, --finger=FINGER      : Print the specified key's fingerprint.'
+-F, --finger-all        : Print all keys's fingerprints.'
+```
+
+### Targeting
+salt -S 192.168.40.20 test.version
+
+# Iptables
+[Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
+[ArchLinux iptables good explanations](https://wiki.archlinux.org/index.php/iptables)
+
+#### Show saved rules
+```bash
+iptables-save
+```
+
+#### Save rules
+```bash
+iptables-save > /etc/iptables/rules.v4 
+```
+#### Print rules
+```bash
+iptables -L
+iptables -nvL
+iptables -nvL INPUT
+iptables -nvL OUTPUT
+iptables -nvL PREROUTING
+```
+
+#### once a rule is apply, it''s immediatly applied !!!
+The Default linux iptables chain policy is ACCEPT for all INPUT, FORWARD and OUTPUT policies. You can easily change this default policy to DROP with below listed commands.
+```bash
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+iptables --policy INPUT DROP
+iptables -P chain target [options]     --policy  -P chain target
+--append  -A chain   Append to chain
+--check   -C chain   Check for the existence of a rule
+--delete  -D chain   Delete matching rule from chain
+iptables --list     Print rules in human    readable format
+iptables --list-rules          Print rules in iptables readable format
+iptables -v -L -n
+```
+
+
+#### range multiport
+```bash
+iptables -A OUTPUT -d 10.10.10.10/32 -p tcp -m state --state NEW -m tcp --match multiport --dports 4506:10000 -j ACCEPT
+```
+
+#### NOTRACK
+```bash
+iptables -t raw -I PREROUTING -j NOTRACK
+iptables -t raw -I OUTPUT -j NOTRACK
+```
+
+### LOG
+#### on log les paquets drop
+```bash
+iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
+iptables -A INPUT -j DROP
+iptables -P INPUT DROP
+
+iptables -A OUTPUT -j LOG --log-prefix "OUTPUT:DROP:" --log-level 6
+iptables -A OUTPUT -j DROP
+iptables -P OUTPUT DROP
+```
+
+### add new rules when NOTRACK is set
+#### INPUT new rule
+you have to temporarily REMOVE log and drop last lines, otherwise, your new line
+#### will never be taken !
+```bash
+iptables -D INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
+iptables -D INPUT -j DROP
+```
+
+#### add your new rule
+```bash
+iptables -A INPUT -p udp -m udp --sport 123 -j ACCEPT
+```
+
+#### put back logging and dropping
+```bash
+iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
+iptables -A INPUT -j DROP
+```
+
+# Conntrack
+#### debian old
+```bash
+cat /proc/sys/net/netfilter/nf_conntrack_count
+```
+
+#### debian 9
+```bash
+conntrack -L [table] [options] [-z] 
+conntrack -G [table] parameters 
+conntrack -D [table] parameters 
+conntrack -I [table] parameters 
+conntrack -U [table] parameters 
+conntrack -E [table] [options] 
+conntrack -F [table] 
+conntrack -C [table] 
+conntrack -S
 ```
