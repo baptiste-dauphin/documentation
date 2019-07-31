@@ -37,8 +37,8 @@ lvextend -l +100%FREE /dev/vg_data/lv_data
 ```bash
 resize2fs /dev/VG_Name/LV_Name
 ```
-# notice that lvm create a directory with vg name and subfile with lv name
-# example :
+##### notice that lvm create a directory with vg name and subfile with lv name
+example :
 ```bash
 resize2fs /dev/HOSTNAME-vg/root
 ```
