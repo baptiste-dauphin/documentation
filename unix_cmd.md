@@ -48,7 +48,12 @@ sudo su
 |-w FILE |  FILE exists and the write permission is granted.|
 |-x FILE |  FILE exists and the execute permission is granted.|
 |-eq 0    |        COMMAND result equal to 0|
-| 
+|$?| last exit code|
+|$# | Number of parameters |
+|$@ |expands to all the parameters|
+|||
+|||
+
 
 ```bash
 if [ -f /tmp/test.txt ]; then echo "true"; else echo "false"; fi
@@ -975,4 +980,83 @@ conntrack -E [table] [options]
 conntrack -F [table] 
 conntrack -C [table] 
 conntrack -S
+```
+
+# NTP (Network Time Protocol)
+###
+```bash
+apt-get install ntp
+ntpq -p
+vim /etc/ntp.conf
+sudo service ntp restart
+ntpq -p
+```
+
+
+# NGINX (Engine X)
+### Various variables
+[HTTP variables](http://nginx.org/en/docs/http/ngx_http_core_module.html)
+
+
+
+# Zabbix Server
+## API usage
+Verify your url
+```
+https://zabbix.company/zabbix.php?action=dashboard.view
+https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
+```
+
+#### zabbix server info request (to perform a first test)
+```bash
+curl \
+-d '{ 
+  "jsonrpc":"2.0", 
+  "method":"apiinfo.version", 
+  "id":1, 
+  "auth":null, 
+  "params":{} 
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+
+##### Authentication request. In order to get TOKEN for the next request
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "user.login",
+    "params": {
+        "user": "b.dauphin",
+        "password": "toto"
+    },
+    "id": 1,
+    "auth": null
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+
+
+##### Get all trigger of a specific host
+replace $host and $token
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+        "filter": {
+            "host": [
+                "$host"
+            ]
+        },
+        "with_triggers": "82567"
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
 ```
