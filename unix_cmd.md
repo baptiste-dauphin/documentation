@@ -287,10 +287,12 @@ You can verify the content of your csr token here :
 systemctl list-unit-files --type=service
 
 #### active / running / loaded
+```bash
 systemctl list-units --type=service --state=loaded
 systemctl list-units --type=service --state=active
 systemctl list-units --type=service --state=running
 systemctl show --property=Environment docker
+```
 
 
 
@@ -311,23 +313,26 @@ Each line starts with the date (in the server’s local time), followed by the s
 ```bash
 journalctl --priority=0..3 --since "12 hours ago"
 ```
--u --unit=UNIT
---user-unit=UNIT
---no-pager
---list-boots
--b --boot[=ID]
--e --pager-end
--f --follow
--p --priority=RANGE
 
-    0: emerg
-    1: alert
-    2: crit
-    3: err
-    4: warning
-    5: notice
-    6: info
-    7: debug
+
+> -u --unit=UNIT
+> - --user-unit=UNIT
+> --no-pager
+> --list-boots
+> -b --boot[=ID]
+> -e --pager-end
+> -f --follow
+> -p --priority=RANGE
+```
+0: emerg
+1: alert
+2: crit
+3: err
+4: warning
+5: notice
+6: info
+7: debug
+```
 
 
 #### Paging through Your Logs
@@ -801,14 +806,16 @@ sudo kill -9
 
 
 # Unix File types
-- Regular file (-)
-- Directory (d)
-- Special files (5 sub types in it)
-- block file(b)
-- Character device file(c)
-- Named pipe file or just a pipe file(p)
-- Symbolic link file(l)
-- Socket file(s)
+|Description   |   symbol |
+|-------------------|-------------|
+| Regular file  | - |
+| Directory  | d |
+| Special files  | (5 sub types in it) |
+| block file | b |
+| Character device file | c |
+| Named pipe file or just a pipe file | p |
+| Symbolic link file | l |
+| Socket file | s |
 
 # LDAP // Activate Directory
 
@@ -858,12 +865,6 @@ replace: userPassword
 userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
 ```
 
-# Security
-## Fail2Ban
-### Jail status
-fail2ban-client status
-fail2ban-client status ssh
-
 # SaltStack
 ### salt-key
 ```bash
@@ -903,7 +904,7 @@ iptables -nvL PREROUTING
 ```
 
 #### once a rule is apply, it''s immediatly applied !!!
-The Default linux iptables chain policy is ACCEPT for all INPUT, FORWARD and OUTPUT policies. You can easily change this default policy to DROP with below listed commands.
+##### The Default linux iptables chain policy is ACCEPT for all INPUT, FORWARD and OUTPUT policies. You can easily change this default policy to DROP with below listed commands.
 ```bash
 iptables -P INPUT DROP
 iptables -P FORWARD DROP
@@ -918,7 +919,6 @@ iptables --list     Print rules in human    readable format
 iptables --list-rules          Print rules in iptables readable format
 iptables -v -L -n
 ```
-
 
 #### range multiport
 ```bash
@@ -1059,4 +1059,182 @@ curl \
   }' \
 -H "Content-Type: application/json-rpc" \
 -X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+
+
+# Elastic Search
+#### es nodes et la load+... jdk vers
+```
+https://company.tld/_cat/nodes?v&h=name,ip,load_1m,heapPercent,disk.used_percent,segments.count,jdk
+```
+#### info plus précises sur les index
+```
+https://company.tld/_cat/indices/*$INDEX*/?v&h=index,health,pri,rep,docs.count,store.size,search.query_current,segments,memory.total  
+```
+#### (compter le nombre de doc)
+```
+https://company.tld/_cat/count/*$INDEX*/?v&h=dc 
+```
+#### (savoir l'état du cluster à un instant T)
+```
+https://company.tld/_cat/health 
+```
+#### (full stats index en mode json à parser)
+```
+https://company.tld/*$INDEX*/_stats?pretty=true 
+```
+
+
+# Apt
+### Show available package(s)
+apt update
+apt-cache search sendmail
+
+#### Show dependencies for a given package(s)
+apt depends sendmail
+
+
+# Security
+## Fail2Ban
+### Jail status
+```bash
+fail2ban-client status
+fail2ban-client status ssh
+```
+### Mail sending
+
+__fail2ban will send mail using the MTA (mail transfer agent)__
+
+```bash
+grep "mta =" /etc/fail2ban/jail.conf
+mta = sendmail
+```
+
+
+# Email
+It exists two types of MTA (Mail Transfert Agent)
+
+- __Mail server__ : like postfix, or sendmail-server 
+- __SMTP client__, which only forward to a __SMTP relay__ : like ssmtp (deprecated since 2013), use __mstmp__ instead, 
+
+#### Check what is your email sender, by looking at the sym link of `sendmail`
+```bash
+which sendmail
+/usr/sbin/sendmail
+
+ls -l /usr/sbin/sendmail
+lrwxrwxrwx 1 root root 5 Jul 15  2014 /usr/sbin/sendmail -> ssmtp
+```
+
+In this case, ssmtp in my mail sender
+
+## MSTMP
+msmtp est un client SMTP très simple et facile à configurer pour l'envoi de courriels.
+Son mode de fonctionnement par défaut consiste à transférer les courriels au serveur SMTP que vous aurez indiqué dans sa configuration. Ce dernier se chargera de distribuer les courriels à leurs destinataires.
+Il est entièrement compatible avec sendmail, prend en charge le transport sécurisé TLS, les comptes multiples, diverses méthodes d’authentification et les notifications de distribution.
+
+### Installation
+
+apt install msmtp msmtp-mta
+
+vim /etc/msmtprc
+
+```
+# Valeurs par défaut pour tous les comptes.
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+# Exemple pour un compte Gmail
+account        gmail
+host           smtp.gmail.com
+port           587
+from           username@gmail.com
+user           username
+password       plain-text-password
+
+# Définir le compte par défaut
+account default : gmail
+```
+
+#### Test email sending
+```
+echo -n "Subject: hello\n\nDo see my mail" | sendmail baptistedauphin76@gmail.com
+
+```
+You run the command... and, oops: sendmail: Cannot open mailhub:25. The reason for this is that we didn't provide mailhub settings at all. In order to forward messages, you need an SMTP server configured. That's where SSMTP performs really well: you just need to edit its configuration file once, and you are good to go.
+
+
+
+
+# sed (Stream editor)
+```bash
+sed '/^#/ d' redis.conf : supprime le dieze en début de ligne (décommente)
+sed -n : silent mode. By default print nothing. Use with /p to print interesting cmd
+sed -e : Script directement dans la ligne de commande
+sed -f script_file  : script dans un fichier
+sed -i : agit non pas sur l input stream mais sur le fichier specifier
+
+sed -i 's/patern 1/patern 2/g' /etc/ssh/sshd_config
+sed -n 's/ *Not After : *//p'`  remplace Not after par rien 
+```
+
+##### remove 342th line of file
+```bash
+sed '342d' -i ~/.ssh/known_hosts
+```
+
+##### remove 342th to 342th line, equivalent to precedent cmd
+```bash
+sed '342,342d' -i ~/.ssh/known_hosts
+```
+
+##### remove first 42 lines of test.sql file and print result
+```bash
+sed -i '1,42d' -i test.sql
+```
+
+# Find
+### Execute specific command on result
+```bash
+find . -type f -mmin -5 -exec command1 arg1 arg2 {} +
+# example
+find . -type f -mmin -5 -exec ls -ltr {} +
+```
+##### date de modif des DATA du fichier (day)
+```bash
+find -mtime n
+```
+##### last acces time (day)
+```bash
+find -atime n
+```
+##### date de modif du STATUT du fichier
+```bash
+find -ctime n
+```
+
+##### list symbolic links
+```bash
+find . -maxdepth 1 -type l -ls
+```
+
+### list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
+```bash
+find . -type f -mtime +10 -exec ls -ltr {} +
+```
+### list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
+```bash
+find . -type f -mtime -10 -exec ls -ltr {} +
+```
+
+##### list files with last modified date of LESS than 5 minutes
+```bash
+find . -type f -mmin -5 -exec ls -ltr {} +
+```
+##### Various example, with xargs
+```bash
+find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
 ```
