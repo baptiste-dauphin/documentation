@@ -54,6 +54,22 @@ sudo su
 |||
 |||
 
+# Bash worth known commands
+file
+tail -n 15 -f
+head -n 15
+w
+who
+wall
+sudo updatedb
+locate $file_name
+echo app.$(date +%Y_%m_%d)
+touch app.$(date +%Y_%m_%d)
+mkdir app.$(date +%Y_%m_%d)
+
+#### remove some characters __(__ and __)__ if found
+.. | tr -d '()'
+
 
 ```bash
 if [ -f /tmp/test.txt ]; then echo "true"; else echo "false"; fi
@@ -292,6 +308,7 @@ systemctl list-units --type=service --state=loaded
 systemctl list-units --type=service --state=active
 systemctl list-units --type=service --state=running
 systemctl show --property=Environment docker
+systemctl show docker --no-pager | grep proxy
 ```
 
 
@@ -521,6 +538,37 @@ git stash pop
 # commit again
 history | grep "git commit" | tail
 git commit "copy-paste history commit message :)"
+```
+
+## Git Merge conflict
+In case of conflict when pulling, by default git will conserve both version of file(s)
+```bash
+git pull origin master
+
+git status
+
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+...
+...
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+
+  both modified:   path/to/file
+```
+
+You can tell him that you want your modifications take precedance 
+So, in that case of __merge conflict__
+```bash
+# cancel your conflict by cancel the current merge,
+git merge --abort
+
+# Then, pull again telling git to keep YOUR local changes
+git pull -X ours origin master
+
+# Or if you want to keep only the REMOTE work
+git pull -X theirs origin master
 ```
 
 ## Tag
@@ -1197,44 +1245,127 @@ sed -i '1,42d' -i test.sql
 ```
 
 # Find
-### Execute specific command on result
+##### Various example, with xargs
 ```bash
-find . -type f -mmin -5 -exec command1 arg1 arg2 {} +
-# example
+find . -maxdepth 1 -type l -ls
+find /opt -type f -mmin -5 -exec ls -ltr {} +
+find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
+
+#list files with last modified date of LESS than 5 minutes
 find . -type f -mmin -5 -exec ls -ltr {} +
+
+# xargs
+find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
 ```
-##### date de modif des DATA du fichier (day)
+
+date de modif des DATA du fichier (day)
 ```bash
 find -mtime n
 ```
-##### last acces time (day)
+last acces time (day)
 ```bash
 find -atime n
 ```
-##### date de modif du STATUT du fichier
+date de modif du STATUT du fichier
 ```bash
 find -ctime n
 ```
 
-##### list symbolic links
-```bash
-find . -maxdepth 1 -type l -ls
-```
 
-### list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
+list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
 ```bash
 find . -type f -mtime +10 -exec ls -ltr {} +
 ```
-### list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
+list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
 ```bash
 find . -type f -mtime -10 -exec ls -ltr {} +
 ```
 
-##### list files with last modified date of LESS than 5 minutes
+
+# Mount
+### When lost remote access to machine.
+press `e` to edit grub
+After editing grub, add this at the end of __linux__ line
+` init=/bin/bash`
+F10 to boot with the current config
+Make writable the root filesystem
 ```bash
-find . -type f -mmin -5 -exec ls -ltr {} +
+mount -n -o remount,rw /
 ```
-##### Various example, with xargs
+
+Make your modifications
 ```bash
-find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
+passwd user_you_want_to_modify
+# or
+vim /etc/iptables/rules.v4
+```
+
+to exit the prompt and reboot the computer.
+```bash
+exec /sbin/init
+```
+
+# redis
+### Get info about __master/slave__ replication
+redis-cli -h 10.10.10.10 -p 6379 -a $PASSWORD info replication
+
+### FLUSH all keys of all databases
+redis-cli FLUSHALL
+
+### Delete all keys of the specified Redis database
+redis-cli -n <database_number> FLUSHDB
+
+### Check all databases
+```bash
+CONFIG GET databases
+1) "databases"
+2) "16"
+```
+
+```bash
+INFO keyspace
+# Keyspace
+db0:keys=10,expires=0
+db1:keys=1,expires=0
+db3:keys=1,expires=0
+```
+
+### Delete multiples keys
+```bash
+redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
+```
+
+
+# Php-FPM
+### check config
+php-fpm7.2 -t
+
+# Docker
+# Docker Swarm
+
+
+# System performance
+htop
+nload
+
+## Get memory physical size
+
+##### Kilobyte
+grep MemTotal /proc/meminfo | awk '{print $2}'
+
+##### MegaByte
+grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^1" | bc
+
+##### GigaByte
+grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^2" | bc
+
+## Get number processing units (CPU / cores)
+```bash
+# available to the current process (may be less than all online)
+nproc
+# all online
+nproc --all
+
+# old fashion version
+grep -c ^processor /proc/cpuinfo
 ```
