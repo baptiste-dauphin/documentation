@@ -479,6 +479,8 @@ logout of your current Windows Manager (like I3 or cinnamon, or gnome), then sel
 
 
 # Git
+![GitHub Logo](../src/git_cheat.png)
+
 ## Global info
 ```bash
 git remote -v
@@ -672,6 +674,7 @@ CREATE USER 'api_153'@'10.10.%.%' IDENTIFIED BY 'password';
 ```sql
 GRANT SELECT, INSERT, UPDATE, DELETE ON `qwant`.* TO 'api_153'@'10.10.%.%';
 GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
+
 -- Apply GRANT
 FLUSH PRIVILEGES;
 ```
@@ -679,6 +682,11 @@ FLUSH PRIVILEGES;
 ```bash
 mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
 ```
+## Show users and remote client IP or subnet etc
+```sql
+SELECT user, host FROM mysql.user;
+```
+
 
 ## System
 
@@ -726,9 +734,21 @@ mysqldump -h 10.10.10.10 \
 ```sql
 SELECT table_name AS `Table`, round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` FROM information_schema.TABLES WHERE table_schema = "github_db1" AND table_name = "table1";
 ```
-#### Database size
+
+#### All tables of all databases with size
 ```sql
-SELECT table_schema "DB_1", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
+SELECT 
+     table_schema as `Database`, 
+     table_name AS `Table`, 
+     round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB`,
+     round(((data_length + index_length) / 1024 / 1024 / 1024), 2) `Size in GB` 
+FROM information_schema.TABLES 
+ORDER BY table_schema, data_length + index_length DESC;
+```
+
+#### All Databases size
+```sql
+SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
 ```
 ### Feed database
 ```bash
@@ -773,14 +793,17 @@ tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.
 ```bash
 tar --help
 ```
--c : create   (name your file .tar)
--(c)z : archive type gzip    (name your file .tar.gz)
--(c)j : archive type bzip2
--x : extract
--f : file
--v : verbose
--C : Set dir name to extract files
---directory : same
+
+| Command |  meaning |
+|---------|----------|
+| -c | create   (name your file .tar) |
+| -(c)z | archive type gzip    (name your file .tar.gz) |
+| -(c)j | archive type bzip2 |
+| -x | extract |
+| -f | file |
+| -v | verbose |
+| -C | Set dir name to extract files |
+| --directory | same |
 
 
 #### compress
@@ -795,23 +818,82 @@ tar jxvf somefilename.tar.bz2
 tar xf file.tar -C /path/to/directory
 ```
 
-# Default software
-### Change default terminal (under debian)
+# update-alternatives - Default system software (Debian)
+ update-alternatives - maintain symbolic links determining default commands 
+
+### List existing selections
+```bash
+update-alternatives --get-selections
+```
+
+### Modify existing selection interactively
+```bash
+sudo update-alternatives --config x-terminal-emulator
+```
+
+### Create a new selection
+```bash
+update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
+```
+
+### Example : Change default terminal
 will prompt you an interactive console to chose among recognized software
 ```bash
 sudo update-alternatives --config x-terminal-emulator
 ```
 
+
 # Process
 ## get processes info
-##### debian
 ```bash
+# debian style
 ps -ef
-```
-##### RedHat
-```bash
+
+# RedHat style
 ps aux
 ```
+## Kill etc
+```bash
+kill default TERM
+kill -l list all signals
+kill -l 15 get name of signal
+kill -s TERM PID 
+kill -TERM PID 
+kill -15 PID
+```
+
+## Shortcut
+| shortcut | meaning |
+|-|-|
+| ctrl + \   | SIGQUIT |
+| ctrl + C   | SIGINT |
+
+
+## signals list
+
+|Number | Name (short name) | Description Used for|
+|-|-|-|
+|0 SIGNULL (NULL)  | Null  | Check access to pid |
+|1 SIGHUP (HUP)  | Hangup  Terminate |  can be trapped |
+|2 SIGINT (INT)  | Interrupt Terminate |  can be trapped |
+|3 SIGQUIT (QUIT)  | Quit  Terminate with core dump |  can be trapped |
+|9 SIGKILL (KILL)  | Kill  Forced termination |  cannot be trapped |
+|15  SIGTERM (TERM)  | Terminate Terminate |  can be trapped |
+|24  SIGSTOP (STOP)  | Stop  Pause the process |  cannot be trapped. This is default if signal not provided to kill command. |
+|25  SIGTSTP (STP)  | Stop/pause the process |  can be trapped |
+|26  SIGCONT (CONT)  | Continue  | Run a stopped process |
+
+
+```bash
+xeyes &
+jobs -l
+kill -s STOP 3405
+jobs -l
+kill -s CONT 3405
+jobs -l
+kill -s TERM 3405
+```
+
 
 ## list every running process
 ```bash
@@ -846,12 +928,6 @@ While process substitution is not POSIX, it is supported by bash, ksh, and zsh.
 pidof iceweasel
 pgrep ssh-agent
 ```
-
-### Kill a running process
-```bash
-sudo kill -9
-```
-
 
 # Unix File types
 |Description   |   symbol |
@@ -1044,6 +1120,14 @@ ntpq -p
 # NGINX (Engine X)
 ### Various variables
 [HTTP variables](http://nginx.org/en/docs/http/ngx_http_core_module.html)
+### virtual host example
+#### Redirect HTTP to HTTPS
+```
+server {
+    listen 80;
+    return 301 https://$host$request_uri;
+}
+```
 
 
 
@@ -1144,11 +1228,28 @@ apt depends sendmail
 
 # Security
 ## Fail2Ban
-### Jail status
+### Useful commands
 ```bash
+# print jails
 fail2ban-client status
+
+# get banned ip and other info about a specific jail
 fail2ban-client status ssh
+
+# set banip triggers email send
+fail2ban-client set ssh banip 10.10.10.10
+
+# unbanip
+fail2ban-client set ssh unbanip 10.10.10.10
+
+# check a specific fail2ban chain
+iptables -nvL f2b-sshd
+
+fail2ban-client get dbpurgeage
+
+fail2ban-client get dbfile
 ```
+
 ### Mail sending
 
 __fail2ban will send mail using the MTA (mail transfer agent)__
@@ -1157,6 +1258,16 @@ __fail2ban will send mail using the MTA (mail transfer agent)__
 grep "mta =" /etc/fail2ban/jail.conf
 mta = sendmail
 ```
+
+### File locations
+global __default__ config
+* /etc/fail2ban/jail.conf
+
+will be override with this parameters
+__Centralized Control__ file
+This is here we enable jails
+
+* /etc/fail2ban/jail.local
 
 
 # Email
@@ -1250,6 +1361,7 @@ sed -i '1,42d' -i test.sql
 find . -maxdepth 1 -type l -ls
 find /opt -type f -mmin -5 -exec ls -ltr {} +
 find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
+ls 2019* | xargs -I % mv % ./working_sheet_of_the_day
 
 #list files with last modified date of LESS than 5 minutes
 find . -type f -mmin -5 -exec ls -ltr {} +
@@ -1315,6 +1427,14 @@ redis-cli FLUSHALL
 ### Delete all keys of the specified Redis database
 redis-cli -n <database_number> FLUSHDB
 
+### Redis cluster
+remove keys from file as input
+```bash
+redis --help
+-c                 Enable cluster mode (follow -ASK and -MOVED redirections).
+for line in $(cat lines.txt); do redis-cli -a xxxxxxxxx -p 7000 -c del $line; done
+```
+
 ### Check all databases
 ```bash
 CONFIG GET databases
@@ -1341,7 +1461,9 @@ redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
 php-fpm7.2 -t
 
 # Docker
-# Docker Swarm
+## Docker Swarm
+docker node ls
+docker
 
 
 # System performance
@@ -1369,3 +1491,34 @@ nproc --all
 # old fashion version
 grep -c ^processor /proc/cpuinfo
 ```
+
+# Graphic
+* Graphic server (often X11, Xorg, or just X, it's the same software)
+* Display Manager (SDDM, lightDM, gnome)
+* Windows Manager (i3-wm, gnome)
+
+## Display Manager
+
+### SDDM - lightweight
+Traduit de l'anglais-Simple Desktop Display Manager est un gestionnaire d’affichage pour les systèmes de fenêtrage X11 et Wayland. SDDM a été écrit à partir de zéro en C ++ 11 et supporte la thématisation via QML
+```bash
+service sddm status
+service sddm restart    : restart sddm (to load new monitor)
+```
+
+### Gnome - Nice display for personal laptop
+
+## Windows Manager
+### i3
+```bash
+update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
+```
+
+# HAProxy
+### Check config
+```bash
+haproxy -f /etc/haproxy/haproxy.cfg -c -V
+```
+
+# Markdown
+[GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
