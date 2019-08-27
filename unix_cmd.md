@@ -21,6 +21,11 @@ switch to b.dauphin
 su - b.dauphin
 ```
 
+### Change password of a specific user
+```bash
+echo 'root:toto' | chpasswd
+```
+
 ### sudo
 Switch to root
 You have to be __sudoer__ (i.e. being member of 'sudo' group)
@@ -260,8 +265,13 @@ nc -znv 10.10.10.10 3306
 echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 1514
 ```
 
-# OpenSSL, TLS, private key, rsa, ecdsa
+## Internet Exchange Point
+[FranceIX](https://www.franceix.net/en/technical/france-ix-route-servers/)
 
+
+# Public key certificate
+
+# OpenSSL, TLS, private key, rsa, ecdsa
 #### Get info of a certificate from internet
 ```
 openssl s_client -connect www.qwant.com:443 -servername www.qwant.com   < /dev/null | openssl x509 -text
@@ -289,11 +299,23 @@ sudo update-ca-certificates
 
 ### Generate __Certificate Signing Request__ (csr) + the associate private key
 Will generates both private key and csr token
+#### RSA style (old)
+```bash
+openssl req -nodes -newkey rsa:4096 -sha256 -keyout $(SUB.MYDOMAIN.TLD).key -out $(SUB.MYDOMAIN.TLD).csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=$(SUB.MYDOMAIN.TLD)"
 ```
-openssl req -nodes -newkey rsa:4096 -sha256 -keyout sub.mydomain.tld.key -out sub.mydomain.tld.csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=sub.mydomain.tld"
+
+#### Elliptic Curve (ECDSA) style (new)
+```bash
+# generate private key
+openssl ecparam -out $(SUB.MYDOMAIN.TLD).key -name sect571r1 -genkey
+# generate csr
+openssl req -new -sha256 -key $(SUB.MYDOMAIN.TLD).key -nodes -out $(SUB.MYDOMAIN.TLD).csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=$(SUB.MYDOMAIN.TLD)"
 ```
+
 You can verify the content of your csr token here :
 [DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
+
+
 
 
 # Systemd
@@ -514,8 +536,19 @@ git checkout master
 git checkout branch
 ```
 ## Diff
+Specific file
 ```bash
 git diff -- scripts/post_login_scripts/startup.sh
+```
+
+Global diff between your __unstagged__ changes and the index
+```bash
+git diff
+```
+
+Global diff between your __stagged__ changes and remote works
+```bash
+git diff --staged
 ```
 
 ## Commit
@@ -603,16 +636,22 @@ git log --author="b.dauphin" \
 git log --since="2 week ago" \
     --pretty=format:"%an"
 ```
-##### hash, author name, date, message
+#### hash, author name, date, message
 ```bash
 git log --author="b.dauphin"  \
     --since="2 week ago" \
     --pretty=format:"%h - %an, %ar : %s"
 ```
 
-##### Show modification of specific commits
+#### Show modification of specific commits
 ```bash
 git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af05daad8b40
+```
+
+#### See changes to a specific file using git
+```bash
+git log --follow -p -- file
+git --no-pager log --follow -p -- file
 ```
 
 # Tmux
@@ -758,6 +797,13 @@ gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasen
 ```bash
 mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
 ```
+
+# Percona XtraDB Cluster (open source, cost-effective, and robust MySQL clustering)
+Test replication from reverse proxy
+```bash
+for i in `seq 1 6`; do mysql -u clustercheckuser -p -e "show variables like 'server_id'; select user()" ; done
+```
+
 
 # Wireshark
 ## DNS Analysis with Tshark
@@ -1116,6 +1162,11 @@ sudo service ntp restart
 ntpq -p
 ```
 
+# Apache
+### Validate config before reload/restart
+```bash
+apachectl configtest
+```
 
 # NGINX (Engine X)
 ### Various variables
@@ -1225,6 +1276,10 @@ apt-cache search sendmail
 #### Show dependencies for a given package(s)
 apt depends sendmail
 
+### Clean cache space in /var/cache/apt/archives/
+```bash
+apt-get clean
+```
 
 # Security
 ## Fail2Ban
@@ -1326,6 +1381,19 @@ echo -n "Subject: hello\n\nDo see my mail" | sendmail baptistedauphin76@gmail.co
 You run the command... and, oops: sendmail: Cannot open mailhub:25. The reason for this is that we didn't provide mailhub settings at all. In order to forward messages, you need an SMTP server configured. That's where SSMTP performs really well: you just need to edit its configuration file once, and you are good to go.
 
 
+# grep
+
+# less
+### Start at the end of a file
+
++ will run an initial command when the file is opened
+G jumps to the end
+
+```bash
+less +G app.log
+```
+
+
 
 
 # sed (Stream editor)
@@ -1356,6 +1424,7 @@ sed -i '1,42d' -i test.sql
 ```
 
 # Find
+
 ##### Various example, with xargs
 ```bash
 find . -maxdepth 1 -type l -ls
@@ -1458,17 +1527,23 @@ redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
 
 # Php-FPM
 ### check config
+```bash
 php-fpm7.2 -t
+```
 
 # Docker
 ## Docker Swarm
+```bash
 docker node ls
 docker
+```
 
 
 # System performance
+```bash
 htop
 nload
+```
 
 ## Get memory physical size
 
