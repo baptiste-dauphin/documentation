@@ -17,7 +17,7 @@ usermod -aG wireshark b.dauphin
 switch to root
 ```bash
 su -
-switch to b.dauphin
+# switch to b.dauphin
 su - b.dauphin
 ```
 
@@ -30,6 +30,9 @@ echo 'root:toto' | chpasswd
 Switch to root
 You have to be __sudoer__ (i.e. being member of 'sudo' group)
 ```bash
+# ensure you're in sudo group, by checking groups you belong to
+groups
+
 sudo su
 ```
 
@@ -541,12 +544,12 @@ Specific file
 git diff -- scripts/post_login_scripts/startup.sh
 ```
 
-Global diff between your __unstagged__ changes and the index
+Global diff between your __unstagged changes__ (workspace) and the index
 ```bash
 git diff
 ```
 
-Global diff between your __stagged__ changes and remote works
+Global diff between your __stagged changes__ (index) and local repository
 ```bash
 git diff --staged
 ```
@@ -1463,7 +1466,8 @@ find . -type f -mtime -10 -exec ls -ltr {} +
 ```
 
 
-# Mount
+# FileSystem
+## Mount
 ### When lost remote access to machine.
 press `e` to edit grub
 After editing grub, add this at the end of __linux__ line
@@ -1485,6 +1489,70 @@ to exit the prompt and reboot the computer.
 ```bash
 exec /sbin/init
 ```
+
+### List read only filesystem
+```bash
+awk '$4~/(^|,)ro($|,)/' /proc/mounts
+```
+
+### Unmount partition
+```bash
+umount /mnt
+```
+
+you do so, you will get the “umount: /mnt: device is busy.” error as shown below.
+```bash
+umount /mnt
+umount: /mnt: device is busy.
+        (In some cases useful info about processes that use
+         the device is found by lsof(8) or fuser(1))
+```
+
+Use fuser command to find out __which process is accessing the device__ along with the user name.
+```bash
+fuser -mu /mnt/
+/mnt/:                2677c(sathiya)
+```
+
+* fuser – command used to identify processes using the files / directories
+* -m – specify the directory or block device along with this, which will list all the processes using it.
+* 
+-u – shows the owner of the process 
+
+You got two choice here.
+1. Ask the owner of the process to properly terminate it or
+2. You can kill the process with super user privileges and unmount the device.
+
+###### Forcefully umount a busy device
+
+When you cannot wait to properly umount a busy device, use umount -f as shown below.
+```bash
+umount -f /mnt
+```
+
+If it still doesn’t work, lazy unmount should do the trick. Use umount -l as shown below.
+```bash
+umount -l /mnt
+```
+
+
+
+### Check filesystem
+```bash
+fsck.ext4 /dev/mapper/vg_data-lv_data
+e2fsck 1.43.4 (31-Jan-2017)
+/dev/mapper/VgData-LvData contient un système de fichiers comportant des erreurs, vérification forcée. 
+Passe 1 : vérification des i-noeuds, des blocs et des tailles
+Passe 2 : vérification de la structure des répertoires
+Passe 3 : vérification de la connectivité des répertoires
+Passe 4 : vérification des compteurs de référence
+Passe 5 : vérification de l information du sommaire de groupe
+```
+
+## Raid
+### mdadm
+To be updated
+
 
 # redis
 ### Get info about __master/slave__ replication
@@ -1537,6 +1605,8 @@ php-fpm7.2 -t
 docker node ls
 docker
 ```
+## Docker proxy
+[Explanations](https://windsock.io/the-docker-proxy/)
 
 
 # System performance
@@ -1597,3 +1667,33 @@ haproxy -f /etc/haproxy/haproxy.cfg -c -V
 
 # Markdown
 [GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
+
+
+# Java
+## JDK
+version
+```bash
+java -version
+openjdk version "1.8.0_222"
+OpenJDK Runtime Environment (build 1.8.0_222-b10)
+OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
+```
+
+
+# Python
+### check the protocols supported by your Python version
+```bash
+vim /tmp/testPythonProtocols.py
+```
+
+```python
+#!/usr/bin/env python
+import ssl;
+for i in dir(ssl): 
+  if i.startswith("PROTOCOL"):
+    print(i)
+```
+
+```bash
+/tmp/testPythonProtocols.py
+```
