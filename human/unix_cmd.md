@@ -705,6 +705,7 @@ __Ctrl + B__ : (to press __each time before another command__)
 | ":set synchronise-panes on" :|  synchronise_all_panes in the current session (to execute parallel tasks like multiple iperfs client)" |
 
 
+<<<<<<< Updated upstream
 # MySQL
 
 ## User, Password
@@ -1696,4 +1697,36 @@ for i in dir(ssl):
 
 ```bash
 /tmp/testPythonProtocols.py
+```
+
+# Kernel
+## Using Module Commands
+```bash
+# Show the module dependencies.
+depmod -n
+
+# Install some module
+insmod --autoclean [modnam]
+
+# This lists all currently loaded modules, lsmod takes no useful parameters
+lsmod 
+
+# Display information about module eepro100
+modinfo --author --description --parameters eepro100
+
+# Removing a module (don't use the example)
+rmmod --all --stacks ip_tables
+```
+
+### List all loadable kernel modules
+By default modprobe loads modules from subdirectories located in the /lib/modules/$(uname -r) directory. Usually all files have extension .ko, so you can list them with
+
+```bash
+find /lib/modules/$(uname -r) -type f -name '*.ko'
+```
+
+or, taking into account compressed files:
+
+```bash
+find /lib/modules/$(uname -r) -type f -name '*.ko*'
 ```
