@@ -1032,7 +1032,7 @@ slappasswd -h {SSHA}
 ```
 
 #### Content of .ldif
-```bash
+```
 dn: cn=b.dauphin@github.com,ou=people,c=fr,dc=company,dc=fr
 changetype: modify
 replace: userPassword
@@ -1040,20 +1040,28 @@ userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
 ```
 
 # SaltStack
-### salt-key
+### Example
 ```bash
-salt-call --local key.finger  : Print the minion key fingerprint (when directly SSH connected)
-salt-key -F master          : Print the master key fingerprint
--p PRINT, --print=PRINT       : Print the specified public key.                         
--P, --print-all  : Print all public keys.
--d DELETE, --delete=DELETE      : Delete the specified key. Globs are supported.
--D, --delete-all          : Delete all keys.
--f FINGER, --finger=FINGER      : Print the specified key's fingerprint.'
--F, --finger-all        : Print all keys's fingerprints.'
+salt '*' cmd.run "cat /etc/hosts | wc -l"
+
 ```
 
+### salt-key
+| command | meaning |
+|-|-|
+| salt-call --local key.finger | Print the minion key fingerprint (when directly SSH connected) |
+| salt-key -F master | Print the master key fingerprint |
+| -p PRINT, --print=PRINT | Print the specified public key.                          |
+| -P, --print-all | Print all public keys. |
+| -d DELETE, --delete=DELETE | Delete the specified key. Globs are supported. |
+| -D, --delete-all | Delete all keys. |
+| -f FINGER, --finger=FINGER | Print the specified key's fingerprint.' |
+| -F, --finger-all | Print all keys's fingerprints.' |
+
 ### Targeting
+```bash
 salt -S 192.168.40.20 test.version
+```
 
 # Iptables
 [Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
@@ -1557,13 +1565,19 @@ To be updated
 
 # redis
 ### Get info about __master/slave__ replication
+```bash
 redis-cli -h 10.10.10.10 -p 6379 -a $PASSWORD info replication
+```
 
 ### FLUSH all keys of all databases
+```bash
 redis-cli FLUSHALL
+```
 
 ### Delete all keys of the specified Redis database
+```bash
 redis-cli -n <database_number> FLUSHDB
+```
 
 ### Redis cluster
 remove keys from file as input
