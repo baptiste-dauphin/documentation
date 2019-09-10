@@ -36,6 +36,20 @@ groups
 sudo su
 ```
 
+# stream redirection
+The `>` operator redirects the output usually to a file but it can be to a device. You can also use `>>` to append.
+If you don't specify a number then the standard output stream is assumed but you can also redirect errors
+
+* `>`file redirects stdout to file
+* `1>` file redirects stdout to file
+* `2>` file redirects stderr to file
+* `&>`file redirects stdout and stderr to file
+
+/dev/null is the null device it takes any input you want and throws it away. It can be used to suppress any output. 
+
+is there a difference between `> /dev/null 2>&1` and `&> /dev/null` ?
+> &> is new in Bash 4, the former is just the traditional way, I am just so used to it (easy to remember)
+
 
 # Bash test
 |Operator   |   Description|
@@ -204,12 +218,35 @@ netstat -salope
 netstat -tupac
 # ça donne un peu plus dinfo sur les process qui listen
 ss -tulipe
-
 ```
 
+### TcpDump
+Just see what’s going on, by looking at all interfaces.
+```bash
+tcpdump -i any -w capturefile.pcap
+tcpdump port 80 -w capture_file
+tcpdump 'tcp[32:4] = 0x47455420'
+```
+https://danielmiessler.com/study/tcpdump/
+
+#### Real time
+```bash
+tcpdump -n dst host ip
+tcpdump -vv -i any port 514
+tcpdump -i any -XXXvvv src net 10.0.0.0/8 and dst port 1234 or dst port 4321 | ccze -A
+tcpdump -i any port not ssh and port not domain and port not zabbix-agent | ccze -A
+```
+
+#### udp dump
+```bash
+tcpdump -i lo udp port 123 -vv -X
+tcpdump -vv -x -X -s 1500 -i any 'port 25' | ccze -A
+https://danielmiessler.com/study/tcpdump/#source-destination
+tcpflow -c port 443
+```
 
 #### List ports a process PID is listening on
-```
+```bash
 lsof -Pan -p $PID -i
 # ss version
 ss -l -p -n | grep ",1234,"
@@ -289,6 +326,73 @@ openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
 # debian 7, openssl style
 openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
 ```
+
+| openssl s_client   args | comments |
+|-|-|
+|  -host host     | use -connect instead |
+|  -port port     | use -connect instead |
+|  -connect host:port | who to connect to (default is localhost:4433) |
+|  -verify_hostname host | check peer certificate matches "host" |
+|  -verify_email email | check peer certificate matches "email" |
+|  -verify_ip ipaddr | check peer certificate matches "ipaddr" |
+|  -verify arg   | turn on peer certificate verification |
+|  -verify_return_error | return verification errors |
+|  -cert arg     | certificate file to use, PEM format assumed |
+|  -certform arg | certificate format (PEM or DER) PEM default |
+|  -key arg      | Private key file to use, in cert file if not specified but cert file is.
+|  -keyform arg  | key format (PEM or DER) PEM default |
+|  -pass arg     | private key file pass phrase source |
+|  -CApath arg   | PEM format directory of CA's |
+|  -CAfile arg   | PEM format file of CA's |
+|  -trusted_first | Use trusted CA's first when building the trust chain |
+|  -no_alt_chains | only ever use the first certificate chain found |
+|  -reconnect    | Drop and re-make the connection with the same Session-ID |
+|  -pause        | sleep(1) after each read(2) and write(2) system call |
+|  -prexit       | print session information even on connection failure |
+|  -showcerts    | show all certificates in the chain |
+|  -debug        | extra output |
+|  -msg          | Show protocol messages |
+|  -nbio_test    | more ssl protocol testing |
+|  -state        | print the 'ssl' states |
+|  -nbio         | Run with non-blocking IO |
+|  -crlf         | convert LF from terminal into CRLF |
+|  -quiet        | no s_client output |
+|  -ign_eof      | ignore input eof (default when -quiet) |
+|  -no_ign_eof   | don't ignore input eof |
+|  -psk_identity arg | PSK identity |
+|  -psk arg      | PSK in hex (without 0x) |
+|  -ssl3         | just use SSLv3 |
+|  -tls1_2       | just use TLSv1.2 |
+|  -tls1_1       | just use TLSv1.1 |
+|  -tls1         | just use TLSv1 |
+|  -dtls1        | just use DTLSv1 |
+|  -fallback_scsv | send TLS_FALLBACK_SCSV |
+|  -mtu          | set the link layer MTU |
+|  -no_tls1_2/-no_tls1_1/-no_tls1/-no_ssl3/-no_ssl2 | turn off that protocol |
+|  -bugs         | Switch on all SSL implementation bug workarounds |
+|  -cipher       | preferred cipher to use, use the 'openssl ciphers' command to see what is available
+|  -starttls prot | use the STARTTLS command before starting TLS for those protocols that support it, where 'prot' defines which one to assume. Currently, only "smtp", "pop3", "imap", "ftp", "xmpp", "xmpp-server", "irc", "postgres", "lmtp", "nntp", "sieve" and "ldap" are supported. |
+|  -xmpphost host | Host to use with "-starttls xmpp[-server]" |
+|  -name host     | Hostname to use for "-starttls lmtp" or "-starttls smtp" |
+|  -krb5svc arg  | Kerberos service name |
+|  -engine id    | Initialise and use the specified engine -rand file:file:...
+|  -sess_out arg | file to write SSL session to |
+|  -sess_in arg  | file to read SSL session from |
+|  -servername host  | Set TLS extension servername in ClientHello |
+|  -tlsextdebug      | hex dump of all TLS extensions received |
+|  -status           | request certificate status from server |
+|  -no_ticket        | disable use of RFC4507bis session tickets |
+|  -serverinfo types | send empty ClientHello extensions (comma-separated numbers) |
+|  -curves arg       | Elliptic curves to advertise (colon-separated list) |
+|  -sigalgs arg      | Signature algorithms to support (colon-separated list) |
+|  -client_sigalgs arg | Signature algorithms to support for client certificate authentication (colon-separated list)
+|  -nextprotoneg arg | enable NPN extension, considering named protocols supported (comma-separated list) |
+|  -alpn arg         | enable ALPN extension, considering named protocols supported (comma-separated list) |
+|  -legacy_renegotiation | enable use of legacy renegotiation (dangerous) |
+|  -use_srtp profiles | Offer SRTP key management with a colon-separated profile list |
+|  -keymatexport label   | Export keying material using label |
+|  -keymatexportlen len  | Export len bytes of keying material (default 20) |
+
 
 #### get system CA
 ```
@@ -512,12 +616,12 @@ git remote -v
 git branch -v
 ```
 
-## Edit remote URL
+### Edit remote URL
 ```bash
 git remote set-url origin git@git.baptiste-dauphin.com:GROUP/SUB_GROUP/project_name
 ```
 
-## Tag
+## Git Tag
 ```bash
 # create tag at your current commit
 git tag temp_tag_2
@@ -532,16 +636,16 @@ git tag -l
 git tag -d temp_tag_2
 ```
 
-## Branch
+## Git Checkout (branch)
 ```bash
 git checkout dev
 git checkout master
 git checkout branch
 ```
-## Diff
+## Git Diff
 Specific file
 ```bash
-git diff -- scripts/post_login_scripts/startup.sh
+git diff -- human/lvm.md
 ```
 
 Global diff between your __unstagged changes__ (workspace) and the index
@@ -559,7 +663,7 @@ git diff --staged
 git checkout ac92da0124997377a3ee30f3159cdee838bd5b0b
 ```
 
-## Stash
+## Undo/move your work or avoid conflicts with __Git reset__ and __Git stash__
 ```bash
 # (go at the previous commit)
 # will uncommit your last changes
@@ -577,6 +681,32 @@ git stash pop
 history | grep "git commit" | tail
 git commit "copy-paste history commit message :)"
 ```
+
+## Git Stash
+To list the stashed modifications
+
+```bash
+git stash list
+```
+
+To show files changed in the last stash
+
+```bash
+git stash show
+```
+
+So, to view the content of the most recent stash, run
+
+```bash
+git stash show -p
+```
+
+To view the content of an arbitrary stash, run something like
+
+```bash
+git stash show -p stash@{1}
+```
+
 
 ## Git Merge conflict
 In case of conflict when pulling, by default git will conserve both version of file(s)
@@ -609,7 +739,7 @@ git pull -X ours origin master
 git pull -X theirs origin master
 ```
 
-## Tag
+### Tag
 ```
 ### checkout to a specific tag
 ```bash
@@ -656,6 +786,22 @@ git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af
 git log --follow -p -- file
 git --no-pager log --follow -p -- file
 ```
+
+## Git Revert
+The git revert command can be considered an 'undo' type command, however, it is not a traditional undo operation. __INSTEAD OF REMOVING the commit from the project history__, it figures out how to __invert the changes introduced by the commit and appends a new commit with the resulting INVERSE CONTENT__. This prevents Git from losing history, which is important for the integrity of your revision history and for reliable collaboration.
+
+Reverting should be used when you want to apply the inverse of a commit from your project history. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
+
+![GitHub Logo](../src/git_revert.svg)
+
+## Git Reset
+The __git reset__ command is a complex and versatile tool for undoing changes. It has three primary forms of invocation. These forms correspond to command line arguments __--soft__, __--mixed__, __--hard__. The three arguments each correspond to Git's three internal state management mechanism's, The Commit Tree (HEAD), The Staging Index, and The Working Directory.
+
+Git reset & three trees of Git
+
+To properly understand git reset usage, we must first understand Git's internal state management systems. Sometimes these mechanisms are called Git's "three trees".
+
+![GitHub Logo](../src/git_reset.svg)
 
 # Tmux
 
@@ -711,10 +857,12 @@ __Ctrl + B__ : (to press __each time before another command__)
 ```sql
 CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'api_153'@'10.10.%.%' IDENTIFIED BY 'password';
+SELECT user, host FROM mysql.user;
+SHOW CREATE USER api
 ```
 ## GRANT (rights)
 ```sql
-GRANT SELECT, INSERT, UPDATE, DELETE ON `qwant`.* TO 'api_153'@'10.10.%.%';
+GRANT SELECT, INSERT, UPDATE, DELETE ON `github`.* TO 'api_153'@'10.10.%.%';
 GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
 
 -- Apply GRANT
@@ -731,6 +879,33 @@ SELECT user, host FROM mysql.user;
 
 
 ## System
+
+#### Log Rotate
+don't do anything just checkconfig
+```bash
+logrotate -d /etc/logrotate/logrotate.conf
+```
+
+#### run logrotate
+```bash
+logrotate /etc/logrotate.conf -v
+```
+
+#### Exemple
+```
+/var/log/dpkg.* {
+  monthly
+  rotate 12
+  size 100M
+  compress
+  delaycompress
+  missingok
+  notifempty
+  create 644 root root
+}
+```
+
+[Other exemple](https://doc.ubuntu-fr.org/logrotate#exemple)
 
 ### Log
 The file mysql-bin.[index] keeps a list of all binary logs mysqld has generated and auto-rotated. The mechanisms for cleaning out the binlogs in conjunction with mysql-bin.[index] are:
@@ -1052,7 +1227,19 @@ salt-key -F master          : Print the master key fingerprint
 ```
 
 ### Targeting
+```bash
 salt -S 192.168.40.20 test.version
+salt -S 192.168.40.0/24 test.version
+# compound match
+salt -C 'S@10.0.0.0/24 and G@os:Debian' test.version
+```
+[full doc](https://docs.saltstack.com/en/latest/topics/targeting/globbing.html)
+[Compound matchers](https://docs.saltstack.com/en/latest/topics/targeting/compound.html)
+
+### Various useful module
+```bash
+salt '*' network.ip_addrs 
+```
 
 # Iptables
 [Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
@@ -1093,7 +1280,7 @@ iptables --list-rules          Print rules in iptables readable format
 iptables -v -L -n
 ```
 
-#### range multiport
+#### Range multiport
 ```bash
 iptables -A OUTPUT -d 10.10.10.10/32 -p tcp -m state --state NEW -m tcp --match multiport --dports 4506:10000 -j ACCEPT
 ```
@@ -1273,11 +1460,16 @@ https://company.tld/*$INDEX*/_stats?pretty=true
 
 # Apt
 ### Show available package(s)
+```bash
 apt update
 apt-cache search sendmail
+apt-cache search --names-only 'icedtea?'
+```
 
 #### Show dependencies for a given package(s)
+```bash
 apt depends sendmail
+```
 
 ### Clean cache space in /var/cache/apt/archives/
 ```bash
@@ -1308,7 +1500,7 @@ fail2ban-client get dbpurgeage
 fail2ban-client get dbfile
 ```
 
-### Mail sending
+### Mail sending
 
 __fail2ban will send mail using the MTA (mail transfer agent)__
 
@@ -1599,32 +1791,42 @@ redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
 php-fpm7.2 -t
 ```
 
-# Docker
+# Docker
 ## Docker Swarm
 ```bash
 docker node ls
 docker
 ```
-## Docker proxy
+## Docker-proxy
 [Explanations](https://windsock.io/the-docker-proxy/)
+
+## Dockerd
 
 
 # System performance
 ```bash
 htop
 nload
+# memory
+free -g
 ```
 
 ## Get memory physical size
 
 ##### Kilobyte
+```bash
 grep MemTotal /proc/meminfo | awk '{print $2}'
+```
 
 ##### MegaByte
+```bash
 grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^1" | bc
+```
 
 ##### GigaByte
+```bash
 grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^2" | bc
+```
 
 ## Get number processing units (CPU / cores)
 ```bash
@@ -1679,6 +1881,18 @@ OpenJDK Runtime Environment (build 1.8.0_222-b10)
 OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
 ```
 
+## Java - certificate authority 
+Java doesn't use system CA but a specific `keystore`
+You can manage the keystore with `keytool`
+```bash
+keytool -list -v -keystore /usr/jdk64/jdk1.7.0_62/jre/lib/security/cacerts
+
+keytool -import -alias dolphin_ltd_root_ca -file /etc/pki/ca-trust/source/anchors/dolphin_ltd_root_ca.crt -keystore /usr/jdk64/jdk1.7.0_62/jre/lib/security/cacerts
+keytool -import -alias dolphin_ltd_subordinate_ca -file /etc/pki/ca-trust/source/anchors/dolphin_ltd_subordinate_ca.crt -keystore /usr/jdk64/jdk1.7.0_62/jre/lib/security/cacerts
+
+keytool -delete -alias dolphin_ltd_root_ca -keystore /usr/jdk64/jdk1.7.0_62/jre/lib/security/cacerts
+keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_62/jre/lib/security/cacerts
+```
 
 # Python
 ### check the protocols supported by your Python version
@@ -1697,3 +1911,24 @@ for i in dir(ssl):
 ```bash
 /tmp/testPythonProtocols.py
 ```
+
+# InfluxDB
+get prompt
+```bash
+influx
+```
+### Retention policy
+```sql
+USE lands
+SHOW RETENTION POLICIES ON "lands"
+```
+
+DATABASE
+MEASUREMENT
+SERIES
+
+```sql
+SHOW series ON database FROM virtualmachine WHERE cluster = 'PROD'
+```
+
+
