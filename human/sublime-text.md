@@ -28,10 +28,13 @@ Name | Usage | __insp__ name| URL
 ----|----|-----|------
 Markdown Preview | To see a preview of your README.md files before commit them | `MarkdownPreview` | https://facelessuser.github.io/MarkdownPreview/install/
 Compare Side-By-Side | Compares two tabs | `Compare Side-By-Side` | https://packagecontrol.io/packages/Compare%20Side-By-Side
-Syntax Generic config | 
-
+Generic Config | Syntax generic config colorization |
+PowerCursors | multiple cursors placements |
+Materialize | Nice theme
+MarkdownPreview | Preview your .md file 
 
 ### Shortcut
+
 Name | shortcut
 -----|---------
 Jump at a specific line | `ctrl + G`
