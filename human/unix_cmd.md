@@ -36,7 +36,22 @@ groups
 sudo su
 ```
 
+# stream redirection
+The `>` operator redirects the output usually to a file but it can be to a device. You can also use `>>` to append.
+If you don't specify a number then the standard output stream is assumed but you can also redirect errors
 
+* `>`file redirects stdout to file
+* `1>` file redirects stdout to file
+* `2>` file redirects stderr to file
+* `&>`file redirects stdout and stderr to file
+
+/dev/null is the null device it takes any input you want and throws it away. It can be used to suppress any output. 
+
+is there a difference between `> /dev/null 2>&1` and `&> /dev/null` ?
+> &> is new in Bash 4, the former is just the traditional way, I am just so used to it (easy to remember)
+
+
+# Bash test
 |Operator   |   Description|
 |-------------------|-------------|
 |! EXPRESSION  |  The EXPRESSION is false.|
@@ -294,7 +309,6 @@ echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 151
 [FranceIX](https://www.franceix.net/en/technical/france-ix-route-servers/)
 
 
-
 # Public key certificate
 
 # OpenSSL, TLS, private key, rsa, ecdsa
@@ -308,6 +322,77 @@ openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/n
 #### Get info about a certificate from the file (.pem)
 ```
 openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
+
+# debian 7, openssl style
+openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
+```
+
+| openssl s_client   args | comments |
+|-|-|
+|  -host host     | use -connect instead |
+|  -port port     | use -connect instead |
+|  -connect host:port | who to connect to (default is localhost:4433) |
+|  -verify_hostname host | check peer certificate matches "host" |
+|  -verify_email email | check peer certificate matches "email" |
+|  -verify_ip ipaddr | check peer certificate matches "ipaddr" |
+|  -verify arg   | turn on peer certificate verification |
+|  -verify_return_error | return verification errors |
+|  -cert arg     | certificate file to use, PEM format assumed |
+|  -certform arg | certificate format (PEM or DER) PEM default |
+|  -key arg      | Private key file to use, in cert file if not specified but cert file is.
+|  -keyform arg  | key format (PEM or DER) PEM default |
+|  -pass arg     | private key file pass phrase source |
+|  -CApath arg   | PEM format directory of CA's |
+|  -CAfile arg   | PEM format file of CA's |
+|  -trusted_first | Use trusted CA's first when building the trust chain |
+|  -no_alt_chains | only ever use the first certificate chain found |
+|  -reconnect    | Drop and re-make the connection with the same Session-ID |
+|  -pause        | sleep(1) after each read(2) and write(2) system call |
+|  -prexit       | print session information even on connection failure |
+|  -showcerts    | show all certificates in the chain |
+|  -debug        | extra output |
+|  -msg          | Show protocol messages |
+|  -nbio_test    | more ssl protocol testing |
+|  -state        | print the 'ssl' states |
+|  -nbio         | Run with non-blocking IO |
+|  -crlf         | convert LF from terminal into CRLF |
+|  -quiet        | no s_client output |
+|  -ign_eof      | ignore input eof (default when -quiet) |
+|  -no_ign_eof   | don't ignore input eof |
+|  -psk_identity arg | PSK identity |
+|  -psk arg      | PSK in hex (without 0x) |
+|  -ssl3         | just use SSLv3 |
+|  -tls1_2       | just use TLSv1.2 |
+|  -tls1_1       | just use TLSv1.1 |
+|  -tls1         | just use TLSv1 |
+|  -dtls1        | just use DTLSv1 |
+|  -fallback_scsv | send TLS_FALLBACK_SCSV |
+|  -mtu          | set the link layer MTU |
+|  -no_tls1_2/-no_tls1_1/-no_tls1/-no_ssl3/-no_ssl2 | turn off that protocol |
+|  -bugs         | Switch on all SSL implementation bug workarounds |
+|  -cipher       | preferred cipher to use, use the 'openssl ciphers' command to see what is available
+|  -starttls prot | use the STARTTLS command before starting TLS for those protocols that support it, where 'prot' defines which one to assume. Currently, only "smtp", "pop3", "imap", "ftp", "xmpp", "xmpp-server", "irc", "postgres", "lmtp", "nntp", "sieve" and "ldap" are supported. |
+|  -xmpphost host | Host to use with "-starttls xmpp[-server]" |
+|  -name host     | Hostname to use for "-starttls lmtp" or "-starttls smtp" |
+|  -krb5svc arg  | Kerberos service name |
+|  -engine id    | Initialise and use the specified engine -rand file:file:...
+|  -sess_out arg | file to write SSL session to |
+|  -sess_in arg  | file to read SSL session from |
+|  -servername host  | Set TLS extension servername in ClientHello |
+|  -tlsextdebug      | hex dump of all TLS extensions received |
+|  -status           | request certificate status from server |
+|  -no_ticket        | disable use of RFC4507bis session tickets |
+|  -serverinfo types | send empty ClientHello extensions (comma-separated numbers) |
+|  -curves arg       | Elliptic curves to advertise (colon-separated list) |
+|  -sigalgs arg      | Signature algorithms to support (colon-separated list) |
+|  -client_sigalgs arg | Signature algorithms to support for client certificate authentication (colon-separated list)
+|  -nextprotoneg arg | enable NPN extension, considering named protocols supported (comma-separated list) |
+|  -alpn arg         | enable ALPN extension, considering named protocols supported (comma-separated list) |
+|  -legacy_renegotiation | enable use of legacy renegotiation (dangerous) |
+|  -use_srtp profiles | Offer SRTP key management with a colon-separated profile list |
+|  -keymatexport label   | Export keying material using label |
+|  -keymatexportlen len  | Export len bytes of keying material (default 20) |
+
 
 #### get system CA
 ```
@@ -394,7 +479,6 @@ journalctl --priority=0..3 --since "12 hours ago"
 6: info
 7: debug
 ```
-
 
 
 #### Paging through Your Logs
