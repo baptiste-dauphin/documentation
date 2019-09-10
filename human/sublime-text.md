@@ -40,3 +40,4 @@ Switch to a specific tab | `ctrl + p`, and write name of your tab (file)
 Move a line or a block of line | `ctrl + shift + arrow up` \ `ctrl + shift + arrow down`
 Switch upper case | `Ctrl + k` and then `Ctrl + u`
 Switch lower case | `Ctrl + k` and then `Ctrl + l`
+Sort Lines | `F9` (Edit > Sort Lines)
