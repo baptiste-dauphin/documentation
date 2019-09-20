@@ -794,6 +794,14 @@ Reverting should be used when you want to apply the inverse of a commit from you
 
 ![GitHub Logo](../src/git_revert.svg)
 
+```bash
+git revert <commit hash>
+git revert c6c94d459b4e1ed81d523d53ef81b6a4744eac12
+
+# find a specific commit
+git log --pretty=format:"%h - %an, %ar : %s"
+```
+
 ## Git Reset
 The __git reset__ command is a complex and versatile tool for undoing changes. It has three primary forms of invocation. These forms correspond to command line arguments __--soft__, __--mixed__, __--hard__. The three arguments each correspond to Git's three internal state management mechanism's, The Commit Tree (HEAD), The Staging Index, and The Working Directory.
 
@@ -1072,6 +1080,7 @@ sudo update-alternatives --config x-terminal-emulator
 ```bash
 # debian style
 ps -ef
+ps -o pid,user,%mem,command ax
 
 # RedHat style
 ps aux
@@ -1343,7 +1352,80 @@ conntrack -S
 ```
 
 # NTP (Network Time Protocol)
-###
+![GitHub Logo](../src/ntp_stratum.png)
+
+### Client
+Debian, Ubuntu, Fedora, CentOS, and most operating system vendors, __don't package NTP into client and server packages separately__. When you install NTP, you've made your computer __both a server, and a client simultaneously.__
+
+### NTP Pool Project
+As a client, rather than pointing your servers to static IP addresses, you may want to consider using the NTP pool project. Various people all over the world have donated their stratum 1 and stratum 2 servers to the pool, Microsoft, XMission, and even myself have offered their servers to the project. As such, clients can point their NTP configuration to the pool, which will round robin and load balance which server you will be connecting to.
+
+There are a number of different domains that you can use for the round robin. For example, if you live in the United States, you could use:
+
+* 0.us.pool.ntp.org
+* 1.us.pool.ntp.org
+* 2.us.pool.ntp.org
+* 3.us.pool.ntp.org
+
+There are round robin domains for each continent, minus Antarctica, and for many countries in each of those continents. There are also round robin servers for projects, such as Ubuntu and Debian:
+
+* 0.debian.pool.ntp.org
+* 1.debian.pool.ntp.org
+* 2.debian.pool.ntp.org
+* 3.debian.pool.ntp.org
+
+
+On my public NTP stratum 2 server, I run the following command to see its status:
+
+```bash
+$ ntpq -pn
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*198.60.22.240   .GPS.            1 u  912 1024  377    0.488   -0.016   0.098
++199.104.120.73  .GPS.            1 u   88 1024  377    0.966    0.014   1.379
+-155.98.64.225   .GPS.            1 u   74 1024  377    2.782    0.296   0.158
+-137.190.2.4     .GPS.            1 u 1020 1024  377    5.248    0.194   0.371
+-131.188.3.221   .DCFp.           1 u  952 1024  377  147.806   -3.160   0.198
+-217.34.142.19   .LFa.            1 u  885 1024  377  161.499   -8.044   5.839
+-184.22.153.11   .WWVB.           1 u  167 1024  377   65.175   -8.151   0.131
++216.218.192.202 .CDMA.           1 u   66 1024  377   39.293    0.003   0.121
+-64.147.116.229  .ACTS.           1 u   62 1024  377   16.606    4.206   0.216
+```
+
+We need to understand each of the columns, so we understand what this is saying:
+
+Column | Meaning
+-|-
+remote | The remote server you wish to synchronize your clock with
+refid | The upstream stratum to the remote server. For stratum 1 servers, this will be the stratum 0 source.
+st | The stratum level, 0 through 16.
+t | The type of connection. Can be "u" for unicast or manycast, "b" for broadcast or multicast, "l" for local reference clock, "s" for symmetric peer, "A" for a manycast server, "B" for a broadcast server, or "M" for a multicast server
+when | The last time when the server was queried for the time. Default is seconds, or "m" will be displayed for minutes, "h" for hours and "d" for days.
+poll | How often the server is queried for the time, with a minimum of 16 seconds to a maximum of 36 hours. It's also displayed as a value from a power of two. Typically, it's between 64 seconds and 1024 seconds.
+reach | This is an 8-bit left shift octal value that shows the success and failure rate of communicating with the remote server. Success means the bit is set, failure means the bit is not set. 377 is the highest value.
+delay | This value is displayed in milliseconds, and shows the round trip time (RTT) of your computer communicating with the remote server.
+offset | This value is displayed in milliseconds, using root mean squares, and shows how far off your clock is from the reported time the server gave you. It can be positive or negative.
+jitter | This number is an absolute value in milliseconds, showing the root mean squared deviation of your offsets.
+
+
+Next to the remote server, you'll notice a single character. This character is referred to as the "tally code", and indicates whether or not NTP is or will be using that remote server in order to synchronize your clock. Here are the possible values:
+
+__remote single character__ | Meaning
+-|-
+__whitespace__ | Discarded as not valid. Could be that you cannot communicate with the remote machine (it's not online), this time source is a ".LOCL." refid time source, it's a high stratum server, or the remote server is using this computer as an NTP server.
+__x__ | Discarded by the intersection algorithm.
+__.__ | Discarded by table overflow (not used).
+__-__ | Discarded by the cluster algorithm.
+__+__ | Included in the combine algorithm. This is a good candidate if the current server we are synchronizing with is discarded for any reason.
+__#__ | Good remote server to be used as an alternative backup. This is only shown if you have more than 10 remote servers.
+__*__ | The current system peer. The computer is using this remote server as its time source to synchronize the clock
+__o__ | Pulse per second (PPS) peer. This is generally used with GPS time sources, although any time source delivering a PPS will do. This tally code and the previous tally code "*" will not be displayed simultaneously.
+
+
+[Sources](https://pthree.org/2013/11/05/real-life-ntp/)
+
+### NTP Management
+
 ```bash
 apt-get install ntp
 ntpq -p
@@ -1919,19 +2001,71 @@ influx
 ```
 ### Retention policy
 ```sql
+SHOW databases;
 USE lands
+
 SHOW RETENTION POLICIES ON "lands"
 ```
-
-DATABASE
-MEASUREMENT
-SERIES
+### MySQL equivalent
+MySQL | Influx
+|-|-|
+| DATABASE | DATABASE |
+| MEASUREMENT | TABLE |
+| COLUMN | FIELD && TAG |
 
 ```sql
 SHOW series ON database FROM virtualmachine WHERE cluster = 'PROD'
 ```
 
+### InfluxDB paradygm
+
+Each record stored inside of a __measurement__ is known as a __point__ . Points are made up of the following:
+
+* pretime : Timestamp that represents the time in which the data was recorded.
+* field : Contain the actual measurement data, e.g 5% CPU utilisation. Each point  must contain one or more fields .
+* tags : Metadata about the data being recorded, e.g the hostname of the device whose CPU is being monitored. Each point  can contain zero or more tags .
+
+(Note that both the fields and tags can be thought of as columns in the database table. We’ll see why in a moment.)
+
+```sql
+-- default on all measurement
+SHOW field keys
+
+-- default on all measurement
+SHOW tag keys
+
+SELECT usage_user,cpu,host
+FROM cpu 
+WHERE cpu='cpu-total' 
+AND host='ubuntu'
+AND time > now() - 30s
+```
+
+* [Good tuto](http://www.oznetnerd.com/getting-know-influxdb/)
+* [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
+
+
+
 
 # Regex
 Online tester
 https://regex101.com/
+
+## user's IPC shared memory, semaphores, and message queues 
+
+```bash
+USERNAME=$1
+
+# Type of IPC object. Possible values are:
+#   q -- message queue
+#   m -- shared memory
+#   s -- semaphore
+TYPE=$2
+
+ipcs -$TYPE | grep $USERNAME | awk ' { print $2 } ' | xargs -I {} ipcrm -$TYPE {}
+ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
+```
+
+
+# RabbitMQ
+https://www.rabbitmq.com/management.html
