@@ -1,0 +1,15 @@
+#!/bin/bash
+
+request_url=$1
+
+# case no arg is given
+if [[ $request_url = "" ]]; then
+	echo "You have to specify the EXACT url"
+	echo "Usage : ./get_http_response_status_code https://www.qwant.com/"
+    exit
+fi
+
+response_status_code=$(curl --write-out %{http_code} --silent --output /dev/null $request_url)
+
+echo $response_status_code
+
