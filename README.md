@@ -1,12 +1,15 @@
 # Link
-## Various Unix Commands
+## Unix Commands
 [:book: doc](human/unix_cmd.md)
 
-## Various CentOS Commands
+## CentOS Commands
 [:book: doc](human/centos.md)
 
 ## ArchLinux
 [:book: doc](human/archlinux.md)
 
-## Logical Volume Manager
+## LVM (Logical Volume Manager)
 [:book: doc](human/lvm.md)
+
+## Sublime-text
+[:book: doc](human/sublime-text.md)
