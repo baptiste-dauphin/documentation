@@ -30,7 +30,7 @@ Markdown Preview | To see a preview of your README.md files before commit them |
 Compare Side-By-Side | Compares two tabs | `Compare Side-By-Side` | https://packagecontrol.io/packages/Compare%20Side-By-Side
 Generic Config | Syntax generic config colorization |
 PowerCursors | multiple cursors placements |
-Materialize | Nice theme
+Materialize | Several beautiful __color scheme__
 MarkdownPreview | Preview your .md file 
 
 ### Shortcut
