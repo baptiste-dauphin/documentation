@@ -1518,27 +1518,17 @@ curl \
 
 
 # Elastic Search
-#### es nodes et la load+... jdk vers
-```
-https://company.tld/_cat/nodes?v&h=name,ip,load_1m,heapPercent,disk.used_percent,segments.count,jdk
-```
-#### info plus précises sur les index
-```
-https://company.tld/_cat/indices/*$INDEX*/?v&h=index,health,pri,rep,docs.count,store.size,search.query_current,segments,memory.total  
-```
-#### (compter le nombre de doc)
-```
-https://company.tld/_cat/count/*$INDEX*/?v&h=dc 
-```
-#### (savoir l'état du cluster à un instant T)
-```
-https://company.tld/_cat/health 
-```
-#### (full stats index en mode json à parser)
-```
-https://company.tld/*$INDEX*/_stats?pretty=true 
-```
 
+By default, each index in Elasticsearch is allocated __5 primary shards__ and __1 replica__ which means that if you have at least two nodes in your cluster, your index will have 5 primary shards and another 5 replica shards (1 complete replica) for a __total of 10 shards per index.__
+
+Meaning | end point (http://ip:9200)
+-|-
+Nodes name, load, heap, Disk used, segments, JDK version | /\_cat/nodes?v&h=name,ip,load_1m,heapPercent,disk.used_percent,segments.count,jdk
+info plus précises sur les index | /_cat/indices/__INDEX__/?v&h=index,health,pri,rep,docs.count,store.size,search.query_current,segments,memory.total
+compter le nombre de doc | /_cat/count/__INDEX__/?v&h=dc
+savoir l'état du cluster à un instant T | /_cat/health
+full stats index | /__INDEX__/_stats?pretty=true
+Kopg plugin | /_plugin/kopf
 
 # Apt
 ### Show available package(s)
@@ -1582,8 +1572,6 @@ fail2ban-client get dbpurgeage
 fail2ban-client get dbfile
 ```
 
-### Mail sending
-
 __fail2ban will send mail using the MTA (mail transfer agent)__
 
 ```bash
@@ -1602,7 +1590,20 @@ This is here we enable jails
 * /etc/fail2ban/jail.local
 
 
-# Email
+# Email system
+
+There are three main functions that make up an e-mail system.
+* First there is the Mail User Agent (MUA) which is the program a user actually uses to compose and read mails.
+* Then there is the Mail Transfer Agent (MTA) that takes care of transferring messages from one computer to another.
+* And last there is the Mail Delivery Agent (MDA) that takes care of delivering incoming mail to the user's inbox. 
+
+Function | Name | Tool which do this
+-|-|-
+Compose and read | MUA (User Agent) | mutt, thunderbird
+Transferring | MTA (Transfer Agent) | msmtp,  __exim4__, thunderbird
+Delivering incoming mail to user's inbox | MDA (Devliery agent) | __exim4__, thunderbird
+
+### MTA
 It exists two types of MTA (Mail Transfert Agent)
 
 - __Mail server__ : like postfix, or sendmail-server 
@@ -1823,20 +1824,27 @@ Passe 4 : vérification des compteurs de référence
 Passe 5 : vérification de l information du sommaire de groupe
 ```
 
-## Raid
+## Raid
+
 ### mdadm
 To be updated
 
 
 # redis
 ### Get info about __master/slave__ replication
+```bash
 redis-cli -h 10.10.10.10 -p 6379 -a $PASSWORD info replication
+```
 
 ### FLUSH all keys of all databases
+```bash
 redis-cli FLUSHALL
+```
 
 ### Delete all keys of the specified Redis database
+```bash
 redis-cli -n <database_number> FLUSHDB
+```
 
 ### Redis cluster
 remove keys from file as input
@@ -2051,7 +2059,7 @@ AND time > now() - 30s
 Online tester
 https://regex101.com/
 
-## user's IPC shared memory, semaphores, and message queues 
+# User's IPC shared memory, semaphores, and message queues 
 
 ```bash
 USERNAME=$1
