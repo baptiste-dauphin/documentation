@@ -1882,10 +1882,20 @@ php-fpm7.2 -t
 ```
 
 # Docker
-## Docker Swarm
+### Docker Swarm
+(On swarm __manager__) find where an app is running
 ```bash
+docker service ps <app_name>
+```
+
+Useful commands
+```bash
+# print cluster nodes
 docker node ls
-docker
+
+# print address + role
+for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
+
 ```
 ## Docker-proxy
 [Explanations](https://windsock.io/the-docker-proxy/)
@@ -1958,6 +1968,7 @@ haproxy -f /etc/haproxy/haproxy.cfg -c -V
 ```
 
 # Markdown
+[Support highlight syntax](https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown)
 [GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
 
 
@@ -1985,6 +1996,103 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 # Python
+#### list all versions of python (system wide)
+```bash
+ls -ls /usr/bin/python*
+
+apt-get install build-essential python3-dev python3-pip
+pip install  --trusted-host pypi.python.org virtualenv
+pip install --trusted-host github-production-release-asset-2e65be.s3.amazonaws.com --trusted-host github.com https://github.com/Exodus-Privacy/exodus-core/releases/download/v1.0.13/exodus_core-1.0.13.tar.gz
+pip3 show package-name
+pip3 freeze
+python setup.py install --record files.txt
+pip --proxy http://ip:port install docker
+
+pip3 install docker
+pipdeptree -p uwsgi : print dependencies tree of a specified package
+python3 -m site   : global site-packages ("dist-packages") directories
+python3 -c "import site; print(site.getsitepackages())"   : more concise list
+```
+
+Note: With virtualenvs getsitepackages is not available, sys.path from above will list the virtualenv s site-packages directory correctly, though.
+
+### Build a package
+Create python package (to be downloaded in site-packages local dir)
+#### 1) Make the following directory structure in your local dev machine
+```bash
+-----------------------------
+some_root_dir/
+|-- README
+|-- setup.py
+|-- an_example_pypi_project
+|   |-- __init__.py
+|   |-- useful_1.py
+|   |-- useful_2.py
+|-- tests
+|-- |-- __init__.py
+|-- |-- runall.py
+|-- |-- test0.py
+----------------------------
+```
+
+#### 2) setup.py content (in the dir)
+```bash
+---------------------------------------------
+import os
+from setuptools import setup
+
+# Utility function to read the README file.
+# Used for the long_description.  It's nice, because now 1) we have a top level
+# README file and 2) it's easier to type in the README file than to put a raw
+# string in below ...
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+setup(
+    name = "an_example_pypi_project",
+    version = "0.0.4",
+    author = "Andrew Carter",
+    author_email = "andrewjcarter@gmail.com",
+    description = ("An demonstration of how to create, document, and publish "
+               "to the cheese shop a5 pypi.org."),
+    license = "BSD",
+    keywords = "example documentation tutorial",
+    url = "http://packages.python.org/an_example_pypi_project",
+    packages=['an_example_pypi_project', 'tests'],
+    long_description=read('README'),
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Topic :: Utilities",
+        "License :: OSI Approved :: BSD License",
+    ],
+)
+---------------------------------------------
+```
+
+#### 3) create ".whl" with wheel
+within the root directory
+```bash
+python setup.py sdist bdist_wheel
+=> Your package have been built in ./dist/$(package-name)-$(version)-$(py2-compatible)-$(py3-compatible)-any.whl
+example : ./dist/dns_admin-1.0.0-py2-none-any.whl
+```
+
+### virtualenv venv
+```bash
+apt install python-pip python3-pip
+pip install pipenv
+
+# cd into your project folder
+pipenv --python 3.5
+
+# generate PipFile.lock
+pipenv lock
+
+# Installs all packages specified in Pipfile.lock.
+pipenv sync
+```
+
+
 ### check the protocols supported by your Python version
 ```bash
 vim /tmp/testPythonProtocols.py
@@ -2003,7 +2111,7 @@ for i in dir(ssl):
 ```
 
 # InfluxDB
-get prompt
+##### get prompt
 ```bash
 influx
 ```
@@ -2016,7 +2124,7 @@ SHOW RETENTION POLICIES ON "lands"
 ```
 ### MySQL equivalent
 MySQL | Influx
-|-|-|
+-|-
 | DATABASE | DATABASE |
 | MEASUREMENT | TABLE |
 | COLUMN | FIELD && TAG |
@@ -2077,3 +2185,198 @@ ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
 
 # RabbitMQ
 https://www.rabbitmq.com/management.html
+
+
+
+# Ansible
+Command | Meaning | default | SaltStack equivalent
+-|-|-|-
+--check | Dry run | __no__ dry run | test=True
+-b, --become | run operations with become | __no__ password prompting
+-K, --ask-become-pass | ask for privilege escalation password | 
+--become-method=__BECOME_METHOD__ | privilege escalation method to use valid choices: [ sudo \| su \| pbrun \| pfexec \| doas \| dzdo \| ksu \| runas \| pmrun \| enable \| machinectl ] | sudo
+--become-user=__BECOME_USER__ | run operations as this user | root
+
+
+
+Example | meaning
+-|-
+ansible-playbook playbook.yml --user=b.dauphin --become-method=su -b -K | su b.dauphin + password prompting
+ansible-playbook playbook.yml --check --diff --limit 1.2.3.4 | Dry run + show only diff + limit inventory to host 1.2.3.4
+
+### service module
+```bash
+ansible webservers -m service -a "name=httpd state=restarted"
+ansible all -m ping -u user1 --private-key /home/baptiste/.ssh/id_rsa
+
+# Specify python interpreter path
+ansible 1.2.3.4 -m ping -e 'ansible_python_interpreter=/usr/bin/python3'
+
+# list available variables
+ansible 10.10.10.10 -m setup
+# get specific fact
+ansible 10.10.10.10 -m setup -a 'filter=ansible_python_version'
+```
+
+### enable usage of operations like __<__ __>__ __|__ __&__
+##### the remote system has to got the package __python-apt__
+```yaml
+apt install python-apt
+- debug: var=ansible_facts
+```
+
+#### Playbook start __at__ a specific task
+```bash
+ansible-playbook --start-at-task="Gather Networks Facts into Variable"
+```
+
+##### start __only__ specific task
+```bash
+ansible-playbook --tags "docker_login"
+```
+
+##### Debug ansible playbook
+###### print a specific var. __Warning__ does not print vars in __group_vars__ nor __host_vars__
+```yaml
+[...]
+msg: "{{ lookup('vars', ansible_dns) }}"
+[...]
+```
+
+```yaml
+[...]
+- name: Gather Networks Facts into Variable
+  setup:
+  register: setup
+
+- name: Debug Set Facts
+  debug:
+    var: setup.ansible_facts.ansible_python_version
+```
+
+##### Variables usage
+```yaml
+---
+- hosts: webservers
+  vars:
+    syslog_protocol_lvl_4: udp
+    syslog_port: 514
+    ansible_python_interpreter: /bin/python
+    ansible_ssh_user: root
+```
+
+##### Variables assignment
+```bash
+ansible-playbook release.yml --extra-vars '{"version":"1.23.45","other_variable":"foo"}'
+ansible-playbook arcade.yml --extra-vars '{"pacman":"mrs","ghosts":["inky","pinky","clyde","sue"]}'
+
+# override playbook-defined variables (keep your playbook unmodified)
+ansible-playbook lvm.yml --extra-vars "host=es_data_group remote_user=b.dauphin" -i ../inventory/es_data_staging.yml
+
+```
+[Full doc of passing-variables-on-the-command-line](https://docs.ansible.com/ansible/latest/user_guide/playbooks_variables.html#passing-variables-on-the-command-line)
+
+##### Variable precedence - Where should I put a variable ?
+Here is the order of precedence __from least to greatest__ (the last listed variables winning prioritization):
+
+* command line values (eg “-u user”)
+* role defaults [1]
+* inventory file or script group vars [2]
+* inventory group_vars/all [3]
+* playbook group_vars/all [3]
+* inventory group_vars/* [3]
+* playbook group_vars/* [3]
+* inventory file or script host vars [2]
+* inventory host_vars/* [3]
+* playbook host_vars/* [3]
+* host facts / cached set_facts [4]
+* play vars
+* play vars_prompt
+* play vars_files
+* role vars (defined in role/vars/main.yml)
+* block vars (only for tasks in block)
+* task vars (only for the task)
+* include_vars
+* set_facts / registered vars
+* role (and include_role) params
+* include params
+* extra vars (__always win precedence__)
+
+
+
+# Node js
+### NPM (Node Package Manager)
+npm est le gestionnaire de paquets officiel de Node.js. Depuis la version 0.6.3 de Node.js, npm fait partie de l'environnement et est donc automatiquement installé par défaut. npm fonctionne avec un terminal et gère les dépendances pour une application.
+```bash
+npm config set proxy http://ip:port
+npm config set https-proxy http://ip:port
+
+# Print the effective node_modules FOLDER to standard out.
+npm root
+npm root -g
+
+# display a tree of every package found in the user’s folders (without the -g option it only shows the current directory’s packages)
+npm list -g --depth 0
+
+# To show the package registry entry for the connect package, you can do this:
+npm view ghost-cli
+npm info ghost-cli
+```
+
+### NPM Script
+```bash
+
+```
+
+### NVM (Node Version Manager)
+```bash
+nvm install 8.9.4
+```
+
+
+# Yarn
+### Usage
+```bash
+# will read yarn.lock (like PipFile.lock)
+yarn setup
+
+# verify dep tree is ok
+yarn --check-files
+[grunt]
+
+# The JavaScript Task Runner
+# find available command for Grunt
+grep grunt.registerTask Gruntfile.js
+[knex-migrator]
+```
+
+# Varnish
+### Varnishadm
+```bash
+varnishadm -S /etc/varnish/secret
+
+# For states of backend
+varnishadm -S /etc/varnish/secret debug.health
+# new version
+varnishadm -S /etc/varnish/secret backend.list
+
+# After a crash of varnish:
+varnishadm -S /etc/varnish/secret panic.show
+```
+### VarnishLog
+```bash
+# Log hash with filter for request number 
+varnishlog -c -i Hash
+```
+
+### varnishncsa
+Not enabled by default
+```bash
+# exemple de commandes  pour  tracker les requêtes ayant pris plus de 10 seconde
+varnishncsa -F '%t "%r" %s %{Varnish:time_firstbyte}x %{VCL_Log:backend}x' -q "Timestamp:Process[2] > 10.0"
+```
+
+#### Varnish Purge
+```bash
+CURL -X PURGE  "http://IP/object"
+```
