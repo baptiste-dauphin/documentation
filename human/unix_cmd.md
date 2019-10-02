@@ -77,6 +77,7 @@ is there a difference between `> /dev/null 2>&1` and `&> /dev/null` ?
 |||
 
 # Bash worth known commands
+```bash
 file
 tail -n 15 -f
 head -n 15
@@ -89,8 +90,15 @@ echo app.$(date +%Y_%m_%d)
 touch app.$(date +%Y_%m_%d)
 mkdir app.$(date +%Y_%m_%d)
 
+sh
+bash
+zsh
+```
+
 #### remove some characters __(__ and __)__ if found
+```bash
 .. | tr -d '()'
+```
 
 
 ```bash
@@ -154,15 +162,15 @@ ln -sfTv /opt/DSS/DnsAdminWUI_$TAG /opt/DSS/DnsAdminWUI_current
 
 ## Environment variable
 #### set variables to current __shell__
-```
+```bash
 export http_proxy=http://10.10.10.10:9999
 ```
 #### set variables only for the next line __execution__
-```
+```bash
 http_proxy=http://10.10.10.10:9999 wget -O - https://repo.saltstack.com/apt/debian/9/amd64/latest/SALTSTACK-GPG-KEY.pub
 ```
 #### Export multiple env var
-```
+```bash
 export {http,https,ftp}_proxy="http://10.10.10.10:9999"
 
 export http_proxy=http://10.10.10.10:9999/
@@ -172,45 +180,51 @@ export rsync_proxy=$http_proxy
 export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 ```
 #### Unset env var
-```
+```bash
 unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
+```
+
+# Ssh daemon (sshd)
+##### Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)
+```bash
+sshd -t
 ```
 
 # OpenVpn
 #### Run OpenVpn client in background, immune to hangups, with output to a non-tty
-```
+```bash
 cd /home/baptiste/.openvpn && \
 nohup sudo openvpn /home/baptiste/.openvpn/b_dauphin@vpn.domain.com.ovpn
 ```
 
 # Network
 #### ifconfig, netstat, rarp, route
-```
+```bash
 apt install net-tools iproute2
 ```
 ##### get IP of the system
-```
+```bash
 ip a
 ```
 ##### get routes of the system
-```
+```bash
 ip r
 ```
 ##### modify default route
-```
+```bash
 ip route change default via 99.99.99.99 dev ens8 proto dhcp metric 100
 ```
 ##### add (failover) IP to a NIC
-```
+```bash
 ip addr add 88.88.88.88/32 dev ens4
 ```
 
 ##### netplan, new ubuntu network manager
-```
+```bash
 cat /{lib,etc,run}/netplan/*.yaml
 ```
 ##### Show connections, listening process etc
-```
+```bash
 netstat -plnt : p(PID), l(LISTEN), t(tcp), n(Convert names) 
 netstat -pat : p(PID), a(all)(ESTABLISHED (default) + LISTEN), t(tcp)
 netstat -lapute
@@ -811,6 +825,29 @@ To properly understand git reset usage, we must first understand Git's internal 
 
 ![GitHub Logo](../src/git_reset.svg)
 
+## Submodules
+__First time__, clone a repo including its submodules
+```bash
+git clone --recurse-submodules -j8 git@github.com:FataPlex/documentation.git
+```
+
+Update an __existing__ local repositories after adding submodules or updating them
+```bash
+git pull --recurse-submodules 
+git submodule update --init --recursive
+```
+
+### Remove a submodule you need to:
+* Delete the relevant section from the __.gitmodules__ file
+* Stage the .gitmodules changes __git add .gitmodules__
+* Delete the relevant section from __.git/config__
+* Run __git rm --cached path_to_submodule__  (no trailing slash)
+* Run __rm -rf .git/modules/path_to_submodule__ (no trailing slash).
+* Commit __git commit -m "Removed submodule"__
+* Delete the now untracked submodule files __rm -rf path_to_submodule__
+
+
+
 # Tmux
 
 Depuis le shell, avant de rentrer dans une session tmux
@@ -868,7 +905,7 @@ CREATE USER 'api_153'@'10.10.%.%' IDENTIFIED BY 'password';
 SELECT user, host FROM mysql.user;
 SHOW CREATE USER api
 ```
-## GRANT (rights)
+#### GRANT (rights)
 ```sql
 GRANT SELECT, INSERT, UPDATE, DELETE ON `github`.* TO 'api_153'@'10.10.%.%';
 GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
@@ -876,6 +913,12 @@ GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
 -- Apply GRANT
 FLUSH PRIVILEGES;
 ```
+#### Revoke (revert GRANT)
+```sql
+REVOKE INSERT ON *.* FROM 'jeffrey'@'localhost';
+REVOKE ALL PRIVILEGES ON `github`.* FROM 'jeffrey'@'localhost';
+```
+
 ## From shell (outside of a MySQL prompt)
 ```bash
 mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
@@ -1051,7 +1094,9 @@ tar xf file.tar -C /path/to/directory
 ```
 
 # update-alternatives - Default system software (Debian)
+```bash
  update-alternatives - maintain symbolic links determining default commands 
+ ```
 
 ### List existing selections
 ```bash
@@ -1223,17 +1268,14 @@ userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
 ```
 
 # SaltStack
-### salt-key
-```bash
-salt-call --local key.finger  : Print the minion key fingerprint (when directly SSH connected)
-salt-key -F master          : Print the master key fingerprint
--p PRINT, --print=PRINT       : Print the specified public key.                         
--P, --print-all  : Print all public keys.
--d DELETE, --delete=DELETE      : Delete the specified key. Globs are supported.
--D, --delete-all          : Delete all keys.
--f FINGER, --finger=FINGER      : Print the specified key's fingerprint.'
--F, --finger-all        : Print all keys's fingerprints.'
-```
+##### Saltstack master key management
+--list=$ARG | definition
+-|-
+__pre__,__un__,__unaccepted__ | list unaccepted/unsigned keys.
+__acc__ or __accepted__ | list accepted/signed keys.
+__rej__ or __rejected__ | list rejected keys
+__den__ or __denied__| list denied keys
+__all__| list all above keys
 
 ### Targeting
 ```bash
@@ -1247,7 +1289,161 @@ salt -C 'S@10.0.0.0/24 and G@os:Debian' test.version
 
 ### Various useful module
 ```bash
-salt '*' network.ip_addrs 
+salt '*' network.ip_addrs
+salt '*' cmd.run
+salt '*' state.Apply
+salt '*' test.ping
+salt '*' test.version
+salt '*' grains.get
+salt '*' grains.item
+salt '*' grains.items
+salt '*' grains.ls
+```
+
+##### salt diff between 2 servers
+```bash
+salt-run survey.diff '*' cmd.run "ls /home"
+```
+
+##### SaltStack - cache
+Forcibly removes all caches on a minion.
+WARNING: The safest way to clear a minion cache is by first stopping the minion and then deleting the cache files before restarting it.
+```bash
+salt '*' saltutil.clear_cache
+
+systemctl stop salt-minion \
+&& rm -rf /var/cache/salt/minion/ \
+&& systemctl start salt-minion
+
+# Signal the minion to refresh the pillar data.
+salt '*' saltutil.refresh_pillar
+
+# synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.
+salt '*' saltutil.sync_all
+
+# Sends a kill signal (SIGKILL 9) to all currently running jobs
+salt '*' saltutil.kill_all_jobs
+```
+
+##### Classic grains
+```bash
+    - SSDs
+    - biosreleasedate
+    - biosversion
+    - cpu_flags
+    - cpu_model
+    - cpuarch
+    - disks
+    - dns
+    - domain
+    - fqdn
+    - fqdn_ip4
+    - fqdn_ip6
+    - gid
+    - gpus
+    - groupname
+    - host
+    - hwaddr_interfaces
+    - id
+    - init
+    - ip4_gw
+    - ip4_interfaces
+    - ip6_gw
+    - ip6_interfaces
+    - ip_gw
+    - ip_interfaces
+    - ipv4
+    - ipv6
+    - kernel
+    - kernelrelease
+    - kernelversion
+    - locale_info
+    - localhost
+    - lsb_distrib_codename
+    - lsb_distrib_id
+    - machine_id
+    - manufacturer
+    - master
+    - mdadm
+    - mem_total
+    - nodename
+    - num_cpus
+    - num_gpus
+    - os
+    - os_family
+    - osarch
+    - oscodename
+    - osfinger
+    - osfullname
+    - osmajorrelease
+    - osrelease
+    - osrelease_info
+    - path
+    - pid
+    - productname
+    - ps
+    - pythonexecutable
+    - pythonpath
+    - pythonversion
+    - saltpath
+    - saltversion
+    - saltversioninfo
+    - selinux
+    - serialnumber
+    - server_id
+    - shell
+    - swap_total
+    - systemd
+    - uid
+    - username
+    - uuid
+    - virtual
+    - zfs_feature_flags
+    - zfs_support
+    - zmqversion
+```
+
+##### grains containing 'os' (for targeting)
+```bash
+    os:
+        Debian
+    os_family:
+        Debian
+    osarch:
+        amd64
+    oscodename:
+        stretch
+    osfinger:
+        Debian-9
+    osfullname:
+        Debian
+    osmajorrelease:
+        9
+    osrelease:
+        9.5
+    osrelease_info:
+        - 9
+        - 5
+```
+##### Upgrade Salt-Minion - FROM STATE
+```yaml
+Upgrade Salt-Minion:
+  cmd.run:
+    - name: |
+        exec 0>&- # close stdin
+        exec 1>&- # close stdout
+        exec 2>&- # close stderr
+        nohup /bin/sh -c 'salt-call --local pkg.install salt-minion && salt-call --local service.restart salt-minion' &
+    - onlyif: "[[ $(salt-call --local pkg.upgrade_available salt-minion 2>&1) == *'True'* ]]" 
+```
+
+##### Upgrade Salt-Minion - FROM STATE
+[Upgrade salt-minion bash script](../scripts/salt-minion_upgrade.bash)
+
+#### Saltstack Python Templating - Jinja2 example
+```python
+{% set ipaddr = grains['fqdn_ip4'][0] %}
+{% if (key | regex_match('.*dyn.company.tld.*', ignorecase=True)) != None %}
 ```
 
 # Iptables
@@ -1658,6 +1854,31 @@ echo -n "Subject: hello\n\nDo see my mail" | sendmail baptistedauphin76@gmail.co
 ```
 You run the command... and, oops: sendmail: Cannot open mailhub:25. The reason for this is that we didn't provide mailhub settings at all. In order to forward messages, you need an SMTP server configured. That's where SSMTP performs really well: you just need to edit its configuration file once, and you are good to go.
 
+
+#### Send mail using open (smtp) relay
+```bash
+telnet smtp.free.fr 25
+# or nc smtp.free.fr 25
+Trying 212.27.48.4...
+Connected to smtp.free.fr.
+Escape character is '^]'.
+220 smtp4-g21.free.fr ESMTP Postfix
+HELO test.domain.com
+250 smtp4-g21.free.fr
+MAIL FROM:<test@domain.com>
+250 2.1.0 Ok
+RCPT TO:<toto@domain.fr>
+250 2.1.5 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Subject: test message
+This is the body of the message!
+.
+250 2.0.0 Ok: queued as 2D8FD4C80FF
+quit
+221 2.0.0 Bye
+Connection closed by foreign host.
+```
 
 # grep
 
