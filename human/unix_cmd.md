@@ -1309,20 +1309,21 @@ salt-run survey.diff '*' cmd.run "ls /home"
 Forcibly removes all caches on a minion.
 WARNING: The safest way to clear a minion cache is by first stopping the minion and then deleting the cache files before restarting it.
 ```bash
+# soft way
 salt '*' saltutil.clear_cache
 
+# sure way
 systemctl stop salt-minion \
 && rm -rf /var/cache/salt/minion/ \
 && systemctl start salt-minion
-
+```
+##### SaltStack - pillar, custom modules, states, beacons, grains, returners, output modules, renderers, and utils
+```bash
 # Signal the minion to refresh the pillar data.
 salt '*' saltutil.refresh_pillar
 
 # synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.
 salt '*' saltutil.sync_all
-
-# Sends a kill signal (SIGKILL 9) to all currently running jobs
-salt '*' saltutil.kill_all_jobs
 ```
 
 ##### Classic grains
@@ -2217,22 +2218,43 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 # Python
-#### list all versions of python (system wide)
+#### Common commands
 ```bash
+# list all versions of python (system wide)
 ls -ls /usr/bin/python*
 
+# install pip3
 apt-get install build-essential python3-dev python3-pip
-pip install  --trusted-host pypi.python.org virtualenv
-pip install --trusted-host github-production-release-asset-2e65be.s3.amazonaws.com --trusted-host github.com https://github.com/Exodus-Privacy/exodus-core/releases/download/v1.0.13/exodus_core-1.0.13.tar.gz
-pip3 show package-name
-pip3 freeze
-python setup.py install --record files.txt
-pip --proxy http://ip:port install docker
 
-pip3 install docker
-pipdeptree -p uwsgi : print dependencies tree of a specified package
-python3 -m site   : global site-packages ("dist-packages") directories
-python3 -c "import site; print(site.getsitepackages())"   : more concise list
+# install 
+pip install virtualenv
+
+pip --proxy http://10.10.10.10:5000 \
+    install docker
+
+# install without TLS verif (not recommended)
+pip install --trusted-host pypi.python.org \
+            --trusted-host github-production-release-asset-2e65be.s3.amazonaws.com \
+            --trusted-host github.com \
+            https://github.com/Exodus-Privacy/exodus-core/releases/download/v1.0.13/exodus_core-1.0.13.tar.gz
+
+# Show information about one or more installed packages
+pip3 show $package_name
+pip3 show virtualenv
+
+# print all installed package (depends on your environement venv or system-wide)
+pip3 freeze
+
+# install from local sources (setup.py required)
+python setup.py install --record files.txt
+
+# print dependencies tree of a specified package
+pipdeptree -p uwsgi
+
+# global site-packages ("dist-packages") directories
+python3 -m site
+# more concise list
+python3 -c "import site; print(site.getsitepackages())"
 ```
 
 Note: With virtualenvs getsitepackages is not available, sys.path from above will list the virtualenv s site-packages directory correctly, though.
@@ -2257,7 +2279,7 @@ some_root_dir/
 ```
 
 #### 2) setup.py content (in the dir)
-```bash
+```python
 ---------------------------------------------
 import os
 from setuptools import setup
@@ -2294,7 +2316,7 @@ setup(
 within the root directory
 ```bash
 python setup.py sdist bdist_wheel
-=> Your package have been built in ./dist/$(package-name)-$(version)-$(py2-compatible)-$(py3-compatible)-any.whl
+# Your package have been built in ./dist/$(package-name)-$(version)-$(py2-compatible)-$(py3-compatible)-any.whl
 example : ./dist/dns_admin-1.0.0-py2-none-any.whl
 ```
 
