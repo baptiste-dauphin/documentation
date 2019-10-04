@@ -32,6 +32,7 @@ Generic Config | Syntax generic config colorization |
 PowerCursors | multiple cursors placements |
 Materialize | Several beautiful __color scheme__
 MarkdownPreview | Preview your .md file 
+Markdown​TOC | Generate your Table of content of MarkDown files
 
 ### Shortcut
 
