@@ -1,31 +1,130 @@
-# shell
-### User
+<!-- MarkdownTOC levels="1,2" autolink="true" -->
+
+- [Definitions](#definitions)
+- [System](#system)
+  - [User](#user)
+  - [Group](#group)
+  - [shell](#shell)
+  - [Environment variable](#environment-variable)
+  - [Ssh](#ssh)
+  - [FileSystem](#filesystem)
+  - [System control](#system-control)
+  - [Journal](#journal)
+- [Network](#network)
+  - [Common packages](#common-packages)
+  - [Command commands](#command-commands)
+  - [systemd-networkd debian 9 network management](#systemd-networkd-debian-9-network-management)
+  - [network - ENI - old management](#network---eni---old-management)
+  - [Activer le NAT](#activer-le-nat)
+  - [OpenVpn](#openvpn)
+  - [nc - TCP/IP swiss army knife](#nc---tcpip-swiss-army-knife)
+  - [Internet Exchange Point](#internet-exchange-point)
+- [Security](#security)
+  - [Public Key Infrastructure - OpenSSL](#public-key-infrastructure---openssl)
+- [Git](#git)
+  - [Global info](#global-info)
+  - [Git Tag](#git-tag)
+  - [Git Checkout \(branch\)](#git-checkout-branch)
+  - [Git Diff](#git-diff)
+  - [Commit](#commit)
+  - [Undo/move your work or avoid conflicts with __Git reset__ and __Git stash__](#undomove-your-work-or-avoid-conflicts-with-_git-reset__-and-__git-stash_)
+  - [Git Stash](#git-stash)
+  - [Git Merge conflict](#git-merge-conflict)
+- [count total dns query](#count-total-dns-query)
+- [debian style](#debian-style)
+- [RedHat style](#redhat-style)
+- [ldapmodify \](#ldapmodify-)
+- [.ldif must contains modification data](#ldif-must-contains-modification-data)
+- [will prompt you the string you wanna hash, and generate it in stout](#will-prompt-you-the-string-you-wanna-hash-and-generate-it-in-stout)
+- [compound match](#compound-match)
+- [soft way](#soft-way)
+- [sure way](#sure-way)
+- [Signal the minion to refresh the pillar data.](#signal-the-minion-to-refresh-the-pillar-data)
+- [synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.](#synchronizes-custom-modules-states-beacons-grains-returners-output-modules-renderers-and-utils)
+- [remote           refid      st t when poll reach   delay   offset  jitter](#remote-refid-st-t-when-poll-reach-delay-offset-jitter)
+- [print jails](#print-jails)
+- [get banned ip and other info about a specific jail](#get-banned-ip-and-other-info-about-a-specific-jail)
+- [set banip triggers email send](#set-banip-triggers-email-send)
+- [unbanip](#unbanip)
+- [check a specific fail2ban chain](#check-a-specific-fail2ban-chain)
+- [Valeurs par défaut pour tous les comptes.](#valeurs-par-d%C3%A9faut-pour-tous-les-comptes)
+- [Exemple pour un compte Gmail](#exemple-pour-un-compte-gmail)
+- [Définir le compte par défaut](#d%C3%A9finir-le-compte-par-d%C3%A9faut)
+- [or nc smtp.free.fr 25](#or-nc-smtpfreefr-25)
+- [list files with last modified date of LESS than 5 minutes](#list-files-with-last-modified-date-of-less-than-5-minutes)
+- [xargs](#xargs)
+- [Keyspace](#keyspace)
+- [print cluster nodes](#print-cluster-nodes)
+- [print address + role](#print-address--role)
+- [memory](#memory)
+- [available to the current process \(may be less than all online\)](#available-to-the-current-process-may-be-less-than-all-online)
+- [all online](#all-online)
+- [old fashion version](#old-fashion-version)
+  - [```bash](#bash)
+  - [|-- |-- test0.py](#%7C---%7C---test0py)
+- [Utility function to read the README file.](#utility-function-to-read-the-readme-file)
+- [Used for the long_description.  It's nice, because now 1) we have a top level](#used-for-the-long_description-its-nice-because-now-1-we-have-a-top-level)
+- [README file and 2) it's easier to type in the README file than to put a raw](#readme-file-and-2-its-easier-to-type-in-the-readme-file-than-to-put-a-raw)
+- [string in below ...](#string-in-below-)
+- [Your package have been built in ./dist/$\(package-name\)-$\(version\)-$\(py2-compatible\)-$\(py3-compatible\)-any.whl](#your-package-have-been-built-in-dist%24package-name-%24version-%24py2-compatible-%24py3-compatible-anywhl)
+- [cd into your project folder](#cd-into-your-project-folder)
+- [generate PipFile.lock](#generate-pipfilelock)
+- [Installs all packages specified in Pipfile.lock.](#installs-all-packages-specified-in-pipfilelock)
+- [!/usr/bin/env python](#usrbinenv-python)
+- [Type of IPC object. Possible values are:](#type-of-ipc-object-possible-values-are)
+- [q -- message queue](#q----message-queue)
+- [m -- shared memory](#m----shared-memory)
+- [s -- semaphore](#s----semaphore)
+- [Specify python interpreter path](#specify-python-interpreter-path)
+- [list available variables](#list-available-variables)
+- [get specific fact](#get-specific-fact)
+  - [```yaml](#yaml)
+- [override playbook-defined variables \(keep your playbook unmodified\)](#override-playbook-defined-variables-keep-your-playbook-unmodified)
+- [Print the effective node_modules FOLDER to standard out.](#print-the-effective-node_modules-folder-to-standard-out)
+- [display a tree of every package found in the user’s folders \(without the -g option it only shows the current directory’s packages\)](#display-a-tree-of-every-package-found-in-the-user%E2%80%99s-folders-without-the--g-option-it-only-shows-the-current-directory%E2%80%99s-packages)
+- [To show the package registry entry for the connect package, you can do this:](#to-show-the-package-registry-entry-for-the-connect-package-you-can-do-this)
+- [For states of backend](#for-states-of-backend)
+- [new version](#new-version)
+- [After a crash of varnish:](#after-a-crash-of-varnish)
+- [Log hash with filter for request number](#log-hash-with-filter-for-request-number)
+- [exemple de commandes  pour  tracker les requêtes ayant pris plus de 10 seconde](#exemple-de-commandes-pour-tracker-les-requ%C3%AAtes-ayant-pris-plus-de-10-seconde)
+
+<!-- /MarkdownTOC -->
+
+
+# Definitions
+Name | TLDR meaning | further explanations
+-|-|-
+TLDR | Too long I didn't read | [:book:](https://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn%27t_read)
+CLI / Promt| Command Line Interpreter / Interface en ligne de commande. Different from Graphical mouse clickable | [:book:]()
+Shell Linux | CLI of Linux (sh,bash,dash,csh,tcsh,zsh) | [:book](https://fr.wikipedia.org/wiki/Shell_Unix#Shells)
+Java Heap | shared among all Java virtual machine threads. The heap is the runtime data area from which memory for all __class__ instances and __arrays__ is allocated. | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
+Java Stack | Each Java virtual machine thread has a private Java virtual machine stack holding __local variables__ and partial results, and plays a part in __method invocation__ and __return__ | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
+
+
+
+# System
+## User
+### Add
 ```bash
 useradd -m -s /bin/bash b.dauphin
 -m create home dir
 -s shell path
 ```
-
-### Group
-Add user baptiste to sudoer
+### Change password
 ```bash
-usermod -aG sudo baptiste
-usermod -aG wireshark b.dauphin
+echo 'root:toto' | chpasswd
+# or get prompt for changing your current user
+passwd
+# prompt...
 ```
-
-### Change user
+### impersonate
 switch to root
 ```bash
 su -
 # switch to b.dauphin
 su - b.dauphin
 ```
-
-### Change password of a specific user
-```bash
-echo 'root:toto' | chpasswd
-```
-
 ### sudo
 Switch to root
 You have to be __sudoer__ (i.e. being member of 'sudo' group)
@@ -36,7 +135,17 @@ groups
 sudo su
 ```
 
-# stream redirection
+## Group
+### Add
+Add user baptiste to sudoer
+```bash
+usermod -aG sudo baptiste
+usermod -aG wireshark b.dauphin
+```
+
+## shell
+### Stream
+#### Redirection
 The `>` operator redirects the output usually to a file but it can be to a device. You can also use `>>` to append.
 If you don't specify a number then the standard output stream is assumed but you can also redirect errors
 
@@ -50,61 +159,65 @@ If you don't specify a number then the standard output stream is assumed but you
 is there a difference between `> /dev/null 2>&1` and `&> /dev/null` ?
 > &> is new in Bash 4, the former is just the traditional way, I am just so used to it (easy to remember)
 
-
-# Bash test
-|Operator   |   Description|
-|-------------------|-------------|
-|! EXPRESSION  |  The EXPRESSION is false.|
-|-n STRING   |  The length of STRING is greater than zero.|
-|-z STRING   |  The lengh of STRING is zero (ie it is empty).|
-|STRING1 = STRING2 |STRING1 is equal to STRING2|
-|STRING1 != STRING2 | STRING1 is not equal to STRING2|
-|INTEGER1 -eq INTEGER2  | INTEGER1 is numerically equal to INTEGER2|
-|INTEGER1 -gt INTEGER2  | INTEGER1 is numerically greater than INTEGER2|
-|INTEGER1 -lt INTEGER2  | INTEGER1 is numerically less than INTEGER2|
-|-d FILE  | FILE exists and is a directory.|
-|-e FILE |  FILE exists.|
-|-f FILE |  True if file exists AND is a regular file.|
-|-r FILE |  FILE exists and the read permission is granted.|
-|-s FILE |  FILE exists and its size is greater than zero (ie. it is not empty).|
-|-w FILE |  FILE exists and the write permission is granted.|
-|-x FILE |  FILE exists and the execute permission is granted.|
-|-eq 0    |        COMMAND result equal to 0|
-|$?| last exit code|
-|$# | Number of parameters |
-|$@ |expands to all the parameters|
-|||
-|||
-
-# Bash worth known commands
-```bash
-file
-tail -n 15 -f
-head -n 15
-w
-who
-wall
-sudo updatedb
-locate $file_name
-echo app.$(date +%Y_%m_%d)
-touch app.$(date +%Y_%m_%d)
-mkdir app.$(date +%Y_%m_%d)
-
-sh
-bash
-zsh
-```
-
-#### remove some characters __(__ and __)__ if found
+#### output modification
+remove some characters __(__ and __)__ if found
 ```bash
 .. | tr -d '()'
 ```
 
+### Bash
+#### Common commands
 
+| Command                     | meaning                                                                                   |
+|:----------------------------|:------------------------------------------------------------------------------------------|
+| file                        | get meta info about that file                                                             |
+| tail -n 15 -f               | print content of file begining by end, for n lines, with keep following new files entries |
+| head -n 15                  | print content of a file begining by begining                                              |
+| who                         | info about connected users                                                                |
+| w                           | same with more info                                                                       |
+| wall                        | print on all TTY (for all connected user)                                                 |
+| sudo updatedb               | update the local database of the files present in the filesystem                          |
+| locate file_name            | Search into this databases                                                                |
+| echo app.$(date +%Y_%m_%d)  | print a string based on subshell return                                                   |
+| touch app.$(date +%Y_%m_%d) | create empty file named on string based on subshell return                                |
+| mkdir app.$(date +%Y_%m_%d) | create directory named on string based on subshell return                                 |
+| sh                          | run a 'sh' shell, very old shell                                                          |
+| bash                        | run a 'bash' shell, classic shell of debian 7,8,9                                         |
+| zsh                         | run a 'zsh' shell, new shell                                                              |
+
+#### Operator
+| Operator              | Description                                                          |
+|:----------------------|:---------------------------------------------------------------------|
+| ! EXPRESSION          | The EXPRESSION is false.                                             |
+| -n STRING             | The length of STRING is greater than zero.                           |
+| -z STRING             | The lengh of STRING is zero (ie it is empty).                        |
+| STRING1 = STRING2     | STRING1 is equal to STRING2                                          |
+| STRING1 != STRING2    | STRING1 is not equal to STRING2                                      |
+| INTEGER1 -eq INTEGER2 | INTEGER1 is numerically equal to INTEGER2                            |
+| INTEGER1 -gt INTEGER2 | INTEGER1 is numerically greater than INTEGER2                        |
+| INTEGER1 -lt INTEGER2 | INTEGER1 is numerically less than INTEGER2                           |
+| -d FILE               | FILE exists and is a directory.                                      |
+| -e FILE               | FILE exists.                                                         |
+| -f FILE               | True if file exists AND is a regular file.                           |
+| -r FILE               | FILE exists and the read permission is granted.                      |
+| -s FILE               | FILE exists and its size is greater than zero (ie. it is not empty). |
+| -w FILE               | FILE exists and the write permission is granted.                     |
+| -x FILE               | FILE exists and the execute permission is granted.                   |
+| -eq 0                 | COMMAND result equal to 0                                            |
+| $?                    | last exit code                                                       |
+| $#                    | Number of parameters                                                 |
+| $@                    | expands to all the parameters                                        |
+
+##### example
 ```bash
-if [ -f /tmp/test.txt ]; then echo "true"; else echo "false"; fi
+if [ -f /tmp/test.txt ];
+  then 
+    echo "true";
+  else
+    echo "false";
+fi
 ```
-## Boolean
+
 ```bash
 $ true && echo howdy!
 howdy!
@@ -113,33 +226,33 @@ $ false || echo howdy!
 howdy!
 ```
 
-### For
+```bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR="$(dirname "$0")"
+```
+
+##### For
 ```bash
 for i in `seq 1 6`
 do
 mysql -h 127.0.0.1 -u user -p password -e "show variables like 'server_id'; select user()"
 done
 ```
-### Bash valide exemples
-```bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-DIR="$(dirname "$0")"
-```
 
-## Bash knowledge
-### Why is $(...) preferred over `...` (backticks)?
+#### Bash knowledge
+##### Why is $(...) preferred over `...` (backticks)?
 `...` is the legacy syntax required by only the very oldest of non-POSIX-compatible bourne-shells. There are several reasons to always prefer the $(...) syntax: 
-#### Backslashes (\) inside backticks are handled in a non-obvious manner: 
+###### Backslashes (\) inside backticks are handled in a non-obvious manner: 
 ```
 $ echo "`echo \\a`" "$(echo \\a)"
-  a \a
-  $ echo "`echo \\\\a`" "$(echo \\\\a)"
-  \a \\a
-  # Note that this is true for *single quotes* too!
-  $ foo=`echo '\\'`; bar=$(echo '\\'); echo "foo is $foo, bar is $bar" 
-  foo is \, bar is \\
+a \a
+$ echo "`echo \\\\a`" "$(echo \\\\a)"
+\a \\a
+# Note that this is true for *single quotes* too!
+$ foo=`echo '\\'`; bar=$(echo '\\'); echo "foo is $foo, bar is $bar" 
+foo is \, bar is \\
 ```
-#### Nested quoting inside $() is far more convenient.
+###### Nested quoting inside $() is far more convenient.
 ```
 echo "x is $(sed ... <<<"$y")"
 ```
@@ -148,309 +261,240 @@ In this example, the quotes around $y are treated as a pair, because they are in
 echo "x is `sed ... <<<\"$y\"`"
 ```
 
-#### It makes nesting command substitutions easier. Compare: 
+###### It makes nesting command substitutions easier. Compare: 
 ```
 x=$(grep "$(dirname "$path")" file)
 x=`grep "\`dirname \"$path\"\`" file`
 ```
 
-# symbolic link
-## update sym link
-```bash
-ln -sfTv /opt/DSS/DnsAdminWUI_$TAG /opt/DSS/DnsAdminWUI_current
-```
-
 ## Environment variable
-#### set variables to current __shell__
+Be very careful to the context of their definition
+
+> set variable to __current shell__
 ```bash
 export http_proxy=http://10.10.10.10:9999
+echo $http_proxy
+# should print the value
 ```
-#### set variables only for the next line __execution__
+
+> set variables only for the __current line execution__
 ```bash
 http_proxy=http://10.10.10.10:9999 wget -O - https://repo.saltstack.com/apt/debian/9/amd64/latest/SALTSTACK-GPG-KEY.pub
+echo $http_proxy
+# will return nothing because it doesn't exist anymore
 ```
-#### Export multiple env var
+> Export multiple env var
 ```bash
 export {http,https,ftp}_proxy="http://10.10.10.10:9999"
-
+```
+> Useful common usage
+```bash
 export http_proxy=http://10.10.10.10:9999/
 export https_proxy=$http_proxy
 export ftp_proxy=$http_proxy
 export rsync_proxy=$http_proxy
 export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 ```
-#### Unset env var
+> __Remove variable__
 ```bash
+unset http_proxy
 unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
 
-# Ssh daemon (sshd)
-##### Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)
+## Ssh
+Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)
+sshd = ssh daemon
 ```bash
 sshd -t
 ```
 
-# OpenVpn
-#### Run OpenVpn client in background, immune to hangups, with output to a non-tty
+## FileSystem
+### Mount
 ```bash
-cd /home/baptiste/.openvpn && \
-nohup sudo openvpn /home/baptiste/.openvpn/b_dauphin@vpn.domain.com.ovpn
+# list physical disk
+lsblk
+# or
+fdisk -l
+
+# and then, mount them of your filesystem
+sudo mount /dev/sdb1 /mnt/usb
 ```
 
-# Network
-#### ifconfig, netstat, rarp, route
+### List read only filesystem
 ```bash
-apt install net-tools iproute2
+awk '$4~/(^|,)ro($|,)/' /proc/mounts
 ```
-##### get IP of the system
+
+### Unmount
 ```bash
-ip a
+umount /mnt
 ```
-##### get routes of the system
+
+you do so, you will get the “umount: /mnt: device is busy.” error as shown below.
 ```bash
-ip r
+umount /mnt
+umount: /mnt: device is busy.
+        (In some cases useful info about processes that use
+         the device is found by lsof(8) or fuser(1))
 ```
-##### modify default route
+
+Use fuser command to find out __which process is accessing the device__ along with the user name.
 ```bash
-ip route change default via 99.99.99.99 dev ens8 proto dhcp metric 100
+fuser -mu /mnt/
+/mnt/:                2677c(sathiya)
 ```
-##### add (failover) IP to a NIC
+
+* fuser – command used to identify processes using the files / directories
+* -m – specify the directory or block device along with this, which will list all the processes using it.
+* 
+-u – shows the owner of the process 
+
+You got two choice here.
+1. Ask the owner of the process to properly terminate it or
+2. You can kill the process with super user privileges and unmount the device.
+
+#### Forcefully umount a busy device
+
+When you cannot wait to properly umount a busy device, use umount -f as shown below.
 ```bash
-ip addr add 88.88.88.88/32 dev ens4
+umount -f /mnt
 ```
 
-##### netplan, new ubuntu network manager
+If it still doesn’t work, lazy unmount should do the trick. Use umount -l as shown below.
 ```bash
-cat /{lib,etc,run}/netplan/*.yaml
+umount -l /mnt
 ```
-##### Show connections, listening process etc
+
+### How to 'root a system' after lost root password
+When lost remote access to machine.  
+Reboot the system  
+press `e` to edit grub  
+After editing grub, add this at the end of __linux__ line  
+` init=/bin/bash`  
+> grub config extract
 ```bash
-netstat -plnt : p(PID), l(LISTEN), t(tcp), n(Convert names) 
-netstat -pat : p(PID), a(all)(ESTABLISHED (default) + LISTEN), t(tcp)
-netstat -lapute
-netstat -salope
-netstat -tupac
-# ça donne un peu plus dinfo sur les process qui listen
-ss -tulipe
+menuentry 'Debian GNU/Linux, with Linux 4.9.0-8-amd64  {
+  load_video
+  insmod gzio
+  if [ x$grub_platform = xxen ]; then insmod xzio; insmod lzopio; fi
+  insmod part_gpt
+  insmod ext2
+  ...
+  ...
+  ...
+  echo  'Loading Linux 4.9.0-8-amd64 ...'
+  linux /vmlinuz-4.9.0-8-amd64 root=/dev/mapper/debian--baptiste--vg-root ro  quiet
+  echo  'Loading initial ramdisk ...'
+  initrd  /initrd.img-4.9.0-8-amd64
+}
 ```
-
-### TcpDump
-Just see what’s going on, by looking at all interfaces.
+Change this line
 ```bash
-tcpdump -i any -w capturefile.pcap
-tcpdump port 80 -w capture_file
-tcpdump 'tcp[32:4] = 0x47455420'
+linux /vmlinuz-4.9.0-8-amd64 root=/dev/mapper/debian--baptiste--vg-root ro quiet
 ```
-https://danielmiessler.com/study/tcpdump/
-
-#### Real time
+into this
 ```bash
-tcpdump -n dst host ip
-tcpdump -vv -i any port 514
-tcpdump -i any -XXXvvv src net 10.0.0.0/8 and dst port 1234 or dst port 4321 | ccze -A
-tcpdump -i any port not ssh and port not domain and port not zabbix-agent | ccze -A
+linux /vmlinuz-4.9.0-8-amd64 root=/dev/mapper/debian--baptiste--vg-root rw quiet init=/bin/bash
 ```
 
-#### udp dump
+
+F10 to boot with the current config  
+Make writable the root filesystem (useless if you switched 'ro' into 'rw')  
 ```bash
-tcpdump -i lo udp port 123 -vv -X
-tcpdump -vv -x -X -s 1500 -i any 'port 25' | ccze -A
-https://danielmiessler.com/study/tcpdump/#source-destination
-tcpflow -c port 443
+mount -n -o remount,rw /
 ```
 
-#### List ports a process PID is listening on
+Make your modifications
 ```bash
-lsof -Pan -p $PID -i
-# ss version
-ss -l -p -n | grep ",1234,"
+passwd user_you_want_to_modify
+# or
+vim /etc/iptables/rules.v4
 ```
 
-
-
-
-#### Systemd (-networkd) network management with [debian 9]
-```
-vim /etc/systemd/network/50-default.network
-systemctl status systemd-networkd
-systemctl restart systemd-networkd
-```
-
-#### network - ENI - old management
-##### vlan tagging and route add 
-```
-auto enp61s0f1.3200
-iface enp61s0f1.3200 inet static
-  address 10.10.10.20/22
-  vlan-raw-device enp61s0f1
-  post-up ip route add 10.0.0.0/8 via 10.10.10.254
-
-# with package "ifupdown"
-auto eth0
-    iface eth0 inet static
-        address 192.0.2.7/30
-        gateway 192.0.2.254
-```
-
-
-
-## Activer le NAT
-```
-iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
-```
-
-## netcat
-### Listen
-```
-nc -l 127.0.0.1 -p 80
-nc -lvup 514
-
-# listen all ip on tcp port 443
-nc -lvtp 443
-```
-### Check port opening
-only for TCP (obviously), UDP is not connected protocol
-```
-nc -znv 10.10.10.10 3306
-```
-
-### fake network message with netcat
-```
-echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 1514
-```
-
-## Internet Exchange Point
-[FranceIX](https://www.franceix.net/en/technical/france-ix-route-servers/)
-
-
-# Public key certificate
-
-# OpenSSL, TLS, private key, rsa, ecdsa
-#### Get info of a certificate from internet
-```
-openssl s_client -connect www.qwant.com:443 -servername www.qwant.com   < /dev/null | openssl x509 -text
-openssl s_client -connect qwant.com:443 -servername qwant.com           < /dev/null | openssl x509 -noout -fingerprint
-openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/null | openssl x509 -text -noout -dates
-```
-
-#### Get info about a certificate from the file (.pem)
-```
-openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
-
-# debian 7, openssl style
-openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
-```
-
-| openssl s_client   args | comments |
-|-|-|
-|  -host host     | use -connect instead |
-|  -port port     | use -connect instead |
-|  -connect host:port | who to connect to (default is localhost:4433) |
-|  -verify_hostname host | check peer certificate matches "host" |
-|  -verify_email email | check peer certificate matches "email" |
-|  -verify_ip ipaddr | check peer certificate matches "ipaddr" |
-|  -verify arg   | turn on peer certificate verification |
-|  -verify_return_error | return verification errors |
-|  -cert arg     | certificate file to use, PEM format assumed |
-|  -certform arg | certificate format (PEM or DER) PEM default |
-|  -key arg      | Private key file to use, in cert file if not specified but cert file is.
-|  -keyform arg  | key format (PEM or DER) PEM default |
-|  -pass arg     | private key file pass phrase source |
-|  -CApath arg   | PEM format directory of CA's |
-|  -CAfile arg   | PEM format file of CA's |
-|  -trusted_first | Use trusted CA's first when building the trust chain |
-|  -no_alt_chains | only ever use the first certificate chain found |
-|  -reconnect    | Drop and re-make the connection with the same Session-ID |
-|  -pause        | sleep(1) after each read(2) and write(2) system call |
-|  -prexit       | print session information even on connection failure |
-|  -showcerts    | show all certificates in the chain |
-|  -debug        | extra output |
-|  -msg          | Show protocol messages |
-|  -nbio_test    | more ssl protocol testing |
-|  -state        | print the 'ssl' states |
-|  -nbio         | Run with non-blocking IO |
-|  -crlf         | convert LF from terminal into CRLF |
-|  -quiet        | no s_client output |
-|  -ign_eof      | ignore input eof (default when -quiet) |
-|  -no_ign_eof   | don't ignore input eof |
-|  -psk_identity arg | PSK identity |
-|  -psk arg      | PSK in hex (without 0x) |
-|  -ssl3         | just use SSLv3 |
-|  -tls1_2       | just use TLSv1.2 |
-|  -tls1_1       | just use TLSv1.1 |
-|  -tls1         | just use TLSv1 |
-|  -dtls1        | just use DTLSv1 |
-|  -fallback_scsv | send TLS_FALLBACK_SCSV |
-|  -mtu          | set the link layer MTU |
-|  -no_tls1_2/-no_tls1_1/-no_tls1/-no_ssl3/-no_ssl2 | turn off that protocol |
-|  -bugs         | Switch on all SSL implementation bug workarounds |
-|  -cipher       | preferred cipher to use, use the 'openssl ciphers' command to see what is available
-|  -starttls prot | use the STARTTLS command before starting TLS for those protocols that support it, where 'prot' defines which one to assume. Currently, only "smtp", "pop3", "imap", "ftp", "xmpp", "xmpp-server", "irc", "postgres", "lmtp", "nntp", "sieve" and "ldap" are supported. |
-|  -xmpphost host | Host to use with "-starttls xmpp[-server]" |
-|  -name host     | Hostname to use for "-starttls lmtp" or "-starttls smtp" |
-|  -krb5svc arg  | Kerberos service name |
-|  -engine id    | Initialise and use the specified engine -rand file:file:...
-|  -sess_out arg | file to write SSL session to |
-|  -sess_in arg  | file to read SSL session from |
-|  -servername host  | Set TLS extension servername in ClientHello |
-|  -tlsextdebug      | hex dump of all TLS extensions received |
-|  -status           | request certificate status from server |
-|  -no_ticket        | disable use of RFC4507bis session tickets |
-|  -serverinfo types | send empty ClientHello extensions (comma-separated numbers) |
-|  -curves arg       | Elliptic curves to advertise (colon-separated list) |
-|  -sigalgs arg      | Signature algorithms to support (colon-separated list) |
-|  -client_sigalgs arg | Signature algorithms to support for client certificate authentication (colon-separated list)
-|  -nextprotoneg arg | enable NPN extension, considering named protocols supported (comma-separated list) |
-|  -alpn arg         | enable ALPN extension, considering named protocols supported (comma-separated list) |
-|  -legacy_renegotiation | enable use of legacy renegotiation (dangerous) |
-|  -use_srtp profiles | Offer SRTP key management with a colon-separated profile list |
-|  -keymatexport label   | Export keying material using label |
-|  -keymatexportlen len  | Export len bytes of keying material (default 20) |
-
-
-#### get system CA
-```
-ls -l /usr/local/share/ca-certificates
-ls -l /etc/ssl/certs/
-```
-#### refresh system CA after changing files in the folder
-```
-sudo update-ca-certificates
-```
-
-### Generate __Certificate Signing Request__ (csr) + the associate private key
-Will generates both private key and csr token
-#### RSA style (old)
+to exit the prompt and reboot the computer.
 ```bash
-openssl req -nodes -newkey rsa:4096 -sha256 -keyout $(SUB.MYDOMAIN.TLD).key -out $(SUB.MYDOMAIN.TLD).csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=$(SUB.MYDOMAIN.TLD)"
+exec /sbin/init
 ```
 
-#### Elliptic Curve (ECDSA) style (new)
+
+### Check filesystem
 ```bash
-# generate private key
-openssl ecparam -out $(SUB.MYDOMAIN.TLD).key -name sect571r1 -genkey
-# generate csr
-openssl req -new -sha256 -key $(SUB.MYDOMAIN.TLD).key -nodes -out $(SUB.MYDOMAIN.TLD).csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=$(SUB.MYDOMAIN.TLD)"
+fsck.ext4 /dev/mapper/vg_data-lv_data
+e2fsck 1.43.4 (31-Jan-2017)
+/dev/mapper/VgData-LvData contient un système de fichiers comportant des erreurs, vérification forcée. 
+Passe 1 : vérification des i-noeuds, des blocs et des tailles
+Passe 2 : vérification de la structure des répertoires
+Passe 3 : vérification de la connectivité des répertoires
+Passe 4 : vérification des compteurs de référence
+Passe 5 : vérification de l information du sommaire de groupe
 ```
 
-You can verify the content of your csr token here :
-[DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
+### symbolic link
+#### update an existing
+```bash
+ln -sfTv /opt/app_$TAG /opt/app_current
+```
 
 
+## System control
+### init.d (aka SystemV) (old way)
+Based on __directly modifiable__ bash script located under `/etc/init.d/`
+usage
+```bash
+service rsyslog status
+```
+> change process management
+
+```bash
+vim /etc/init.d/rsyslog
+```
+
+### Systemd (new way)
+Based on internal and templated management. The only way to interact with systemd is by modifying __instructions__ (but not directly code) on `service file`.  
+The can be located under different directories.  
+
+> Where are Systemd Unit Files Found?
+
+The files that define how systemd will handle a unit can be found in many different locations, each of which have different priorities and implications.
+
+The system’s copy of unit files are generally kept in the /lib/systemd/system directory. When software installs unit files on the system, this is the location where they are placed by default.
+
+Unit files stored here are able to be started and stopped on-demand during a session. This will be the generic, vanilla unit file, often written by the upstream project’s maintainers that should work on any system that deploys systemd in its standard implementation. You should not edit files in this directory. Instead you should override the file, if necessary, using another unit file location which will supersede the file in this location.
+
+If you wish to modify the way that a unit functions, the best location to do so is within the /etc/systemd/system directory. Unit files found in this directory location take precedence over any of the other locations on the filesystem. If you need to modify the system’s copy of a unit file, putting a replacement in this directory is the safest and most flexible way to do this.
+
+If you wish to override only specific directives from the system’s unit file, you can actually provide unit file snippets within a subdirectory. These will append or modify the directives of the system’s copy, allowing you to specify only the options you want to change.
+
+The correct way to do this is to create a directory named after the unit file with .d appended on the end. So for a unit called example.service, a subdirectory called example.service.d could be created. Within this directory a file ending with .conf can be used to override or extend the attributes of the system’s unit file.
+
+There is also a location for run-time unit definitions at /run/systemd/system. Unit files found in this directory have a priority landing between those in /etc/systemd/system and /lib/systemd/system. Files in this location are given less weight than the former location, but more weight than the latter.
+
+The systemd process itself uses this location for dynamically created unit files created at runtime. This directory can be used to change the system’s unit behavior for the duration of the session. All changes made in this directory will be lost when the server is rebooted.
+
+Resume
+
+Location | override/supersede priority (higher takes precedence) | Meaning
+-|-|-
+/run/systemd/system | 1 | Run-time only, lost after systemd reboot
+/etc/systemd/system directory | 2 | SysAdmin maintained
+/lib/systemd/system directory | 3 | Packages vendor maintained (apt, rpm, pacman, ...)
 
 
-# Systemd
-## Systemctl (system control)
-
-#### show all installed unit files
+#### Usage
+```bash
+# show all installed unit files
 systemctl list-unit-files --type=service
 
-#### active / running / loaded
-```bash
+# loaded
 systemctl list-units --type=service --state=loaded
+# active
 systemctl list-units --type=service --state=active
+# running
 systemctl list-units --type=service --state=running
+
+# show a specific property (service var value)
 systemctl show --property=Environment docker
+# print all content
 systemctl show docker --no-pager | grep proxy
 ```
 
@@ -498,25 +542,25 @@ journalctl --priority=0..3 --since "12 hours ago"
 #### Paging through Your Logs
 
 ##### journalctl pipes its output to the __less__ command
-| Key command       |      Action |
-|-------------------|-------------|
-| down arrow key, enter, e, or j | Move down one line. |
-| up arrow key, y, or k |  Move up one line. |
-| space bar  | Move down one page. |
-| b |  Move up one page. |
-| right arrow key |  Scroll horizontally to the right. |
-| left arrow key | Scroll horizontally to the left. |
-| g  | Go to the first line. |
-| G  | Go to the last line. |
-| 10g  | Go to the 10th line. Enter a different number to go to other lines. |
-| 50p or 50% | Go to the line half-way through the output. Enter a different number to go to other percentage positions. |
-| /search term | Search forward from the current position for the search term string. |
-| ?search term | Search backward from the current position for the search term string. |
-| n |  When searching, go to the next occurrence. |
-| N  | When searching, go to the previous occurrence. |
-| m<c> | Set a mark, which saves your current position. Enter a single character in place of <c> to label the mark with that character. |
-| '<c> | Return to a mark, where <c> is the single character label for the mark. Note that ' is the single-quote. |
-| q  | Quit less |
+| Key command                    | Action                                                                                                                         |
+|:-------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|
+| down arrow key, enter, e, or j | Move down one line.                                                                                                            |
+| up arrow key, y, or k          | Move up one line.                                                                                                              |
+| space bar                      | Move down one page.                                                                                                            |
+| b                              | Move up one page.                                                                                                              |
+| right arrow key                | Scroll horizontally to the right.                                                                                              |
+| left arrow key                 | Scroll horizontally to the left.                                                                                               |
+| g                              | Go to the first line.                                                                                                          |
+| G                              | Go to the last line.                                                                                                           |
+| 10g                            | Go to the 10th line. Enter a different number to go to other lines.                                                            |
+| 50p or 50%                     | Go to the line half-way through the output. Enter a different number to go to other percentage positions.                      |
+| /search term                   | Search forward from the current position for the search term string.                                                           |
+| ?search term                   | Search backward from the current position for the search term string.                                                          |
+| n                              | When searching, go to the next occurrence.                                                                                     |
+| N                              | When searching, go to the previous occurrence.                                                                                 |
+| m<c>                           | Set a mark, which saves your current position. Enter a single character in place of <c> to label the mark with that character. |
+| '<c>                           | Return to a mark, where <c> is the single character label for the mark. Note that ' is the single-quote.                       |
+| q                              | Quit less                                                                                                                      |
 
 ##### View journalctl without PagingPermalink
 ```
@@ -545,13 +589,13 @@ journalctl -k
 ```
 
 ##### Change the Log Output FormatPermalink
-| Format Name  | Description |
-|----------|-------------|
-| short |  The default option, displays logs in the traditional syslog format. |
-| verbose  | Displays all information in the log record structure. |
-| json | Displays logs in JSON format, with one log per line. |
-| json-pretty  | Displays logs in JSON format across multiple lines for better readability. |
-| cat  | Displays only the message from each log without any other metadata. |
+| Format Name | Description                                                                |
+|:------------|:---------------------------------------------------------------------------|
+| short       | The default option, displays logs in the traditional syslog format.        |
+| verbose     | Displays all information in the log record structure.                      |
+| json        | Displays logs in JSON format, with one log per line.                       |
+| json-pretty | Displays logs in JSON format across multiple lines for better readability. |
+| cat         | Displays only the message from each log without any other metadata.        |
 
 ```
 journalctl -o json-pretty
@@ -569,12 +613,12 @@ systemctl restart systemd-journald
 #### Control the Size of Your Logs’ Disk UsagePermalink
 The following settings in journald.conf control how large your logs’ size can grow to when persisted on disk:
 
-| Setting  | Description |
-|----------|-------------|
-| SystemMaxUse | The total maximum disk space that can be used for your logs. |
-| SystemKeepFree | The minimum amount of disk space that should be kept free for uses outside of systemd-journald’s logging functions. |
-| SystemMaxFileSize  | The maximum size of an individual journal file. |
-| SystemMaxFiles | The maximum number of journal files that can be kept on disk. |
+| Setting           | Description                                                                                                         |
+|:------------------|:--------------------------------------------------------------------------------------------------------------------|
+| SystemMaxUse      | The total maximum disk space that can be used for your logs.                                                        |
+| SystemKeepFree    | The minimum amount of disk space that should be kept free for uses outside of systemd-journald’s logging functions. |
+| SystemMaxFileSize | The maximum size of an individual journal file.                                                                     |
+| SystemMaxFiles    | The maximum number of journal files that can be kept on disk.                                                       |
 
 systemd-journald will respect both SystemMaxUse and SystemKeepFree, and it will set your journals’ disk usage to meet whichever setting results in a smaller size.
 
@@ -599,26 +643,265 @@ journalctl --vacuum-time=1years
 ```
 
 
-# Monitor, screen
-### Xrandr
+# Network
+## Common packages
+ifconfig, netstat, rarp, route
+```bash
+apt install net-tools iproute2
 ```
-xrandr --help
-xrandr --current
+## Command commands
+| Command                                                                | meaning                    |
+|:-----------------------------------------------------------------------|:---------------------------|
+| ip a                                                                   | get IP of the system       |
+| ip r                                                                   | get routes of the system   |
+| ip route change default via 99.99.99.99 dev ens8 proto dhcp metric 100 | modify default route       |
+| ip addr add 88.88.88.88/32 dev ens4                                    | add (failover) IP to a NIC |
 
-xrandr --output DP-2 --mode 1680x1050 --primary
-xrandr --output DP-1 --mode 1280x1024 --right-of DP-2
 
-xrandr --output DP-1 --auto --right-of eDP-1
-xrandr --output HDMI-1 --auto --right-of DP-1
+### netplan, new ubuntu network manager
+```bash
+cat /{lib,etc,run}/netplan/*.yaml
+```
+### Show network connections, listening process
+#### Netstat (old way)
+```bash
+| command         | specification                               |
+|:----------------|:--------------------------------------------|
+| netstat -t      | list tcp connections                        |
+| netstat -lt     | list listening tcp socket                   |
+| netstat -lu     | list listening udp socket                   |
+| netstat -ltu    | list listening udp + tcp socket             |
+| netstat -lx     | list listening unix socket                  |
+| netstat -ltup   | same as above, with info on process         |
+| netstat -ltupn  | p(PID), l(LISTEN), t(tcp), n(Convert names) |
+| netstat -ltpa   | all = ESTABLISHED (default) LISTEN          |
+| netstat -lapute | classic useful usage                        |
+| netstat -salope | same                                        |
+| netstat -tupac  | same                                        |
+```
+#### ss (new quicker way)
+| command    | specification                        |
+|:-----------|:-------------------------------------|
+| ss -tulipe | more info on listening process       |
+| ss tlpn    | print listen tcp socket with process |
 
+#### Tcp dump
+Real time, just see what’s going on, by looking at all interfaces.
+```bash
+tcpdump -i any -w capturefile.pcap
+tcpdump port 80 -w capture_file
+tcpdump 'tcp[32:4] = 0x47455420'
+tcpdump -n dst host ip
+tcpdump -vv -i any port 514
+tcpdump -i any -XXXvvv src net 10.0.0.0/8 and dst port 1234 or dst port 4321 | ccze -A
+tcpdump -i any port not ssh and port not domain and port not zabbix-agent | ccze -A
 ```
-#### Troubleshooting
-__Monitor plugged in but not displaying anything__
+https://danielmiessler.com/study/tcpdump/
+
+#### UDP dump
+```bash
+tcpdump -i lo udp port 123 -vv -X
+tcpdump -vv -x -X -s 1500 -i any 'port 25' | ccze -A
+https://danielmiessler.com/study/tcpdump/#source-destination
+tcpflow -c port 443
 ```
-xrandr --auto
-sudo dpkg-reconfigure libxrandr2
-logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
+
+#### List ports a process PID is listening on
+```bash
+lsof -Pan -p $PID -i
+# ss version
+ss -l -p -n | grep ",1234,"
 ```
+
+
+
+
+## systemd-networkd debian 9 network management
+```
+vim /etc/systemd/network/50-default.network
+systemctl status systemd-networkd
+systemctl restart systemd-networkd
+```
+
+## network - ENI - old management
+### vlan tagging and route add 
+```bash
+auto enp61s0f1.3200
+iface enp61s0f1.3200 inet static
+  address 10.10.10.20/22
+  vlan-raw-device enp61s0f1
+  post-up ip route add 10.0.0.0/8 via 10.10.10.254
+
+# with package "ifupdown"
+auto eth0
+    iface eth0 inet static
+        address 192.0.2.7/30
+        gateway 192.0.2.254
+```
+
+
+
+## Activer le NAT
+```
+iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
+```
+
+## OpenVpn
+Run OpenVpn client in background, immune to hangups, with output to a non-tty
+```bash
+cd /home/baptiste/.openvpn && \
+nohup sudo openvpn /home/baptiste/.openvpn/b_dauphin@vpn.domain.com.ovpn
+```
+
+## nc - TCP/IP swiss army knife
+Netcat (network catch)
+### Listen
+```bash
+nc -l 127.0.0.1 -p 80
+nc -lvup 514
+
+# listen all ip on tcp port 443
+nc -lvtp 443
+```
+### Check port opening
+only for TCP (obviously), UDP is not connected protocol
+```bash
+nc -znv 10.10.10.10 3306
+```
+
+### manually write tcp packet
+```
+echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 1514
+```
+
+## Internet Exchange Point
+[FranceIX](https://www.franceix.net/en/technical/france-ix-route-servers/)
+
+
+# Security
+## Public Key Infrastructure - OpenSSL
+### Definitions
+| Keywork     | meaning |
+|:------------|:--------|
+| SSL         |         |
+| TLS         |         |
+| Private key |         |
+| Public key  |         |
+| RSA         |         |
+| ECDSA       |         |
+
+#### Get info of a certificate from __network__
+```bash
+openssl s_client -connect www.qwant.com:443 -servername www.qwant.com   < /dev/null | openssl x509 -text
+openssl s_client -connect qwant.com:443 -servername qwant.com           < /dev/null | openssl x509 -noout -fingerprint
+openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/null | openssl x509 -text -noout -dates
+```
+
+#### Get info about a certificate from __file__
+(.pem)
+```bash
+openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
+
+# debian 7, openssl style
+openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
+```
+
+##### openssl s_client all arguments
+| args                                             | comments                                                                                                                                                                                                                                                               |
+|:-------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -host host                                       | use -connect instead                                                                                                                                                                                                                                                   |
+| -port port                                       | use -connect instead                                                                                                                                                                                                                                                   |
+| -connect host:port                               | who to connect to (default is localhost:4433)                                                                                                                                                                                                                          |
+| -verify_hostname host                            | check peer certificate matches "host"                                                                                                                                                                                                                                  |
+| -verify_email email                              | check peer certificate matches "email"                                                                                                                                                                                                                                 |
+| -verify_ip ipaddr                                | check peer certificate matches "ipaddr"                                                                                                                                                                                                                                |
+| -verify arg                                      | turn on peer certificate verification                                                                                                                                                                                                                                  |
+| -verify_return_error                             | return verification errors                                                                                                                                                                                                                                             |
+| -cert arg                                        | certificate file to use, PEM format assumed                                                                                                                                                                                                                            |
+| -certform arg                                    | certificate format (PEM or DER) PEM default                                                                                                                                                                                                                            |
+| -key arg                                         | Private key file to use, in cert file if not specified but cert file is.                                                                                                                                                                                               |
+| -keyform arg                                     | key format (PEM or DER) PEM default                                                                                                                                                                                                                                    |
+| -pass arg                                        | private key file pass phrase source                                                                                                                                                                                                                                    |
+| -CApath arg                                      | PEM format directory of CA's                                                                                                                                                                                                                                           |
+| -CAfile arg                                      | PEM format file of CA's                                                                                                                                                                                                                                                |
+| -trusted_first                                   | Use trusted CA's first when building the trust chain                                                                                                                                                                                                                   |
+| -no_alt_chains                                   | only ever use the first certificate chain found                                                                                                                                                                                                                        |
+| -reconnect                                       | Drop and re-make the connection with the same Session-ID                                                                                                                                                                                                               |
+| -pause                                           | sleep(1) after each read(2) and write(2) system call                                                                                                                                                                                                                   |
+| -prexit                                          | print session information even on connection failure                                                                                                                                                                                                                   |
+| -showcerts                                       | show all certificates in the chain                                                                                                                                                                                                                                     |
+| -debug                                           | extra output                                                                                                                                                                                                                                                           |
+| -msg                                             | Show protocol messages                                                                                                                                                                                                                                                 |
+| -nbio_test                                       | more ssl protocol testing                                                                                                                                                                                                                                              |
+| -state                                           | print the 'ssl' states                                                                                                                                                                                                                                                 |
+| -nbio                                            | Run with non-blocking IO                                                                                                                                                                                                                                               |
+| -crlf                                            | convert LF from terminal into CRLF                                                                                                                                                                                                                                     |
+| -quiet                                           | no s_client output                                                                                                                                                                                                                                                     |
+| -ign_eof                                         | ignore input eof (default when -quiet)                                                                                                                                                                                                                                 |
+| -no_ign_eof                                      | don't ignore input eof                                                                                                                                                                                                                                                 |
+| -psk_identity arg                                | PSK identity                                                                                                                                                                                                                                                           |
+| -psk arg                                         | PSK in hex (without 0x)                                                                                                                                                                                                                                                |
+| -ssl3                                            | just use SSLv3                                                                                                                                                                                                                                                         |
+| -tls1_2                                          | just use TLSv1.2                                                                                                                                                                                                                                                       |
+| -tls1_1                                          | just use TLSv1.1                                                                                                                                                                                                                                                       |
+| -tls1                                            | just use TLSv1                                                                                                                                                                                                                                                         |
+| -dtls1                                           | just use DTLSv1                                                                                                                                                                                                                                                        |
+| -fallback_scsv                                   | send TLS_FALLBACK_SCSV                                                                                                                                                                                                                                                 |
+| -mtu                                             | set the link layer MTU                                                                                                                                                                                                                                                 |
+| -no_tls1_2/-no_tls1_1/-no_tls1/-no_ssl3/-no_ssl2 | turn off that protocol                                                                                                                                                                                                                                                 |
+| -bugs                                            | Switch on all SSL implementation bug workarounds                                                                                                                                                                                                                       |
+| -cipher                                          | preferred cipher to use, use the 'openssl ciphers' command to see what is available                                                                                                                                                                                    |
+| -starttls prot                                   | use the STARTTLS command before starting TLS for those protocols that support it, where 'prot' defines which one to assume. Currently, only "smtp", "pop3", "imap", "ftp", "xmpp", "xmpp-server", "irc", "postgres", "lmtp", "nntp", "sieve" and "ldap" are supported. |
+| -xmpphost host                                   | Host to use with "-starttls xmpp[-server]"                                                                                                                                                                                                                             |
+| -name host                                       | Hostname to use for "-starttls lmtp" or "-starttls smtp"                                                                                                                                                                                                               |
+| -krb5svc arg                                     | Kerberos service name                                                                                                                                                                                                                                                  |
+| -engine id                                       | Initialise and use the specified engine -rand file:file:...                                                                                                                                                                                                            |
+| -sess_out arg                                    | file to write SSL session to                                                                                                                                                                                                                                           |
+| -sess_in arg                                     | file to read SSL session from                                                                                                                                                                                                                                          |
+| -servername host                                 | Set TLS extension servername in ClientHello                                                                                                                                                                                                                            |
+| -tlsextdebug                                     | hex dump of all TLS extensions received                                                                                                                                                                                                                                |
+| -status                                          | request certificate status from server                                                                                                                                                                                                                                 |
+| -no_ticket                                       | disable use of RFC4507bis session tickets                                                                                                                                                                                                                              |
+| -serverinfo types                                | send empty ClientHello extensions (comma-separated numbers)                                                                                                                                                                                                            |
+| -curves arg                                      | Elliptic curves to advertise (colon-separated list)                                                                                                                                                                                                                    |
+| -sigalgs arg                                     | Signature algorithms to support (colon-separated list)                                                                                                                                                                                                                 |
+| -client_sigalgs arg                              | Signature algorithms to support for client certificate authentication (colon-separated list)                                                                                                                                                                           |
+| -nextprotoneg arg                                | enable NPN extension, considering named protocols supported (comma-separated list)                                                                                                                                                                                     |
+| -alpn arg                                        | enable ALPN extension, considering named protocols supported (comma-separated list)                                                                                                                                                                                    |
+| -legacy_renegotiation                            | enable use of legacy renegotiation (dangerous)                                                                                                                                                                                                                         |
+| -use_srtp profiles                               | Offer SRTP key management with a colon-separated profile list                                                                                                                                                                                                          |
+| -keymatexport label                              | Export keying material using label                                                                                                                                                                                                                                     |
+| -keymatexportlen len                             | Export len bytes of keying material (default 20)                                                                                                                                                                                                                       |
+
+
+#### get system CA
+```bash
+ls -l /usr/local/share/ca-certificates
+ls -l /etc/ssl/certs/
+```
+#### refresh system CA after changing files in the folder
+```bash
+sudo update-ca-certificates
+```
+
+### Generate Certificate Signing Request (csr) + the associate private key
+Will generates both private key and csr token
+#### RSA style (old way)
+```bash
+openssl req -nodes -newkey rsa:4096 -sha256 -keyout $(SUB.MYDOMAIN.TLD).key -out $(SUB.MYDOMAIN.TLD).csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=$(SUB.MYDOMAIN.TLD)"
+```
+
+#### Elliptic Curve (ECDSA) (much more secure, new way)
+```bash
+# generate private key
+openssl ecparam -out $(SUB.MYDOMAIN.TLD).key -name sect571r1 -genkey
+# generate csr
+openssl req -new -sha256 -key $(SUB.MYDOMAIN.TLD).key -nodes -out $(SUB.MYDOMAIN.TLD).csr -subj "/C=FR/ST=France/L=PARIS/O=My Company/CN=$(SUB.MYDOMAIN.TLD)"
+```
+
+You can verify the content of your csr token here :
+[DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
+
 
 
 # Git
@@ -811,10 +1094,13 @@ Reverting should be used when you want to apply the inverse of a commit from you
 ```bash
 git revert <commit hash>
 git revert c6c94d459b4e1ed81d523d53ef81b6a4744eac12
-
-# find a specific commit
+```
+> find a specific commit
+```bash
 git log --pretty=format:"%h - %an, %ar : %s"
 ```
+
+
 
 ## Git Reset
 The __git reset__ command is a complex and versatile tool for undoing changes. It has three primary forms of invocation. These forms correspond to command line arguments __--soft__, __--mixed__, __--hard__. The three arguments each correspond to Git's three internal state management mechanism's, The Commit Tree (HEAD), The Staging Index, and The Working Directory.
@@ -873,27 +1159,27 @@ set-window-option -g xterm-keys on
 
 __Ctrl + B__ : (to press __each time before another command__)
 
-| Command |  meaning |
-|---------|----------|
-| Flèches | = se déplacer dans le splitage des fenêtres |
-| N | "Next window" |
-| P | "Previous window" |
-| z | : zoom in/out in the current span |
-| d | : detach from the current and let it running on the background (to be reattached to later) |
-| x | : kill |
-| % |  vertical split |
-| " |  horizontal split |
-| o | : swap panes |
-| q | : show pane numbers |
-| x | : kill pane |
-| + | : break pane into window (e.g. to select text by mouse to copy) |
-| - | : restore pane from window |
-| ⍽ | : space - toggle between layouts |
-| q | (Show pane numbers, when the numbers show up type the key to goto that pane) |
-| { | (Move the current pane left) |
-| } | (Move the current pane right) |
-| z | toggle pane zoom |
-| ":set synchronise-panes on" :|  synchronise_all_panes in the current session (to execute parallel tasks like multiple iperfs client)" |
+| Command                       | meaning                                                                                               |
+|:------------------------------|:------------------------------------------------------------------------------------------------------|
+| Flèches                       | = se déplacer dans le splitage des fenêtres                                                           |
+| N                             | "Next window"                                                                                         |
+| P                             | "Previous window"                                                                                     |
+| z                             | : zoom in/out in the current span                                                                     |
+| d                             | : detach from the current and let it running on the background (to be reattached to later)            |
+| x                             | : kill                                                                                                |
+| %                             | vertical split                                                                                        |
+| "                             | horizontal split                                                                                      |
+| o                             | : swap panes                                                                                          |
+| q                             | : show pane numbers                                                                                   |
+| x                             | : kill pane                                                                                           |
+| +                             | : break pane into window (e.g. to select text by mouse to copy)                                       |
+| -                             | : restore pane from window                                                                            |
+| ⍽                             | : space - toggle between layouts                                                                      |
+| q                             | (Show pane numbers, when the numbers show up type the key to goto that pane)                          |
+| {                             | (Move the current pane left)                                                                          |
+| }                             | (Move the current pane right)                                                                         |
+| z                             | toggle pane zoom                                                                                      |
+| ":set synchronise-panes on" : | synchronise_all_panes in the current session (to execute parallel tasks like multiple iperfs client)" |
 
 
 # MySQL
@@ -1069,16 +1355,16 @@ tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.
 tar --help
 ```
 
-| Command |  meaning |
-|---------|----------|
-| -c | create   (name your file .tar) |
-| -(c)z | archive type gzip    (name your file .tar.gz) |
-| -(c)j | archive type bzip2 |
-| -x | extract |
-| -f | file |
-| -v | verbose |
-| -C | Set dir name to extract files |
-| --directory | same |
+| Command     | meaning                                       |
+|:------------|:----------------------------------------------|
+| -c          | create   (name your file .tar)                |
+| -(c)z       | archive type gzip    (name your file .tar.gz) |
+| -(c)j       | archive type bzip2                            |
+| -x          | extract                                       |
+| -f          | file                                          |
+| -v          | verbose                                       |
+| -C          | Set dir name to extract files                 |
+| --directory | same                                          |
 
 
 #### compress
@@ -1142,9 +1428,9 @@ kill -15 PID
 
 ## Shortcut
 | shortcut | meaning |
-|-|-|
-| ctrl + \   | SIGQUIT |
-| ctrl + C   | SIGINT |
+|:---------|:--------|
+| ctrl + \ | SIGQUIT |
+| ctrl + C | SIGINT  |
 
 
 ## signals list
@@ -1208,16 +1494,16 @@ pgrep ssh-agent
 ```
 
 # Unix File types
-|Description   |   symbol |
-|-------------------|-------------|
-| Regular file  | - |
-| Directory  | d |
-| Special files  | (5 sub types in it) |
-| block file | b |
-| Character device file | c |
-| Named pipe file or just a pipe file | p |
-| Symbolic link file | l |
-| Socket file | s |
+| Description                         | symbol              |
+|:------------------------------------|:--------------------|
+| Regular file                        | -                   |
+| Directory                           | d                   |
+| Special files                       | (5 sub types in it) |
+| block file                          | b                   |
+| Character device file               | c                   |
+| Named pipe file or just a pipe file | p                   |
+| Symbolic link file                  | l                   |
+| Socket file                         | s                   |
 
 # LDAP // Activate Directory
 
@@ -1269,13 +1555,13 @@ userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
 
 # SaltStack
 ##### Saltstack master key management
---list=$ARG | definition
--|-
-__pre__,__un__,__unaccepted__ | list unaccepted/unsigned keys.
-__acc__ or __accepted__ | list accepted/signed keys.
-__rej__ or __rejected__ | list rejected keys
-__den__ or __denied__| list denied keys
-__all__| list all above keys
+| --list=$ARG                   | definition                     |
+|:------------------------------|:-------------------------------|
+| __pre__,__un__,__unaccepted__ | list unaccepted/unsigned keys. |
+| __acc__ or __accepted__       | list accepted/signed keys.     |
+| __rej__ or __rejected__       | list rejected keys             |
+| __den__ or __denied__         | list denied keys               |
+| __all__                       | list all above keys            |
 
 ### Targeting
 ```bash
@@ -1591,32 +1877,32 @@ $ ntpq -pn
 
 We need to understand each of the columns, so we understand what this is saying:
 
-Column | Meaning
--|-
-remote | The remote server you wish to synchronize your clock with
-refid | The upstream stratum to the remote server. For stratum 1 servers, this will be the stratum 0 source.
-st | The stratum level, 0 through 16.
-t | The type of connection. Can be "u" for unicast or manycast, "b" for broadcast or multicast, "l" for local reference clock, "s" for symmetric peer, "A" for a manycast server, "B" for a broadcast server, or "M" for a multicast server
-when | The last time when the server was queried for the time. Default is seconds, or "m" will be displayed for minutes, "h" for hours and "d" for days.
-poll | How often the server is queried for the time, with a minimum of 16 seconds to a maximum of 36 hours. It's also displayed as a value from a power of two. Typically, it's between 64 seconds and 1024 seconds.
-reach | This is an 8-bit left shift octal value that shows the success and failure rate of communicating with the remote server. Success means the bit is set, failure means the bit is not set. 377 is the highest value.
-delay | This value is displayed in milliseconds, and shows the round trip time (RTT) of your computer communicating with the remote server.
-offset | This value is displayed in milliseconds, using root mean squares, and shows how far off your clock is from the reported time the server gave you. It can be positive or negative.
-jitter | This number is an absolute value in milliseconds, showing the root mean squared deviation of your offsets.
+| Column | Meaning                                                                                                                                                                                                                                 |
+|:-------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| remote | The remote server you wish to synchronize your clock with                                                                                                                                                                               |
+| refid  | The upstream stratum to the remote server. For stratum 1 servers, this will be the stratum 0 source.                                                                                                                                    |
+| st     | The stratum level, 0 through 16.                                                                                                                                                                                                        |
+| t      | The type of connection. Can be "u" for unicast or manycast, "b" for broadcast or multicast, "l" for local reference clock, "s" for symmetric peer, "A" for a manycast server, "B" for a broadcast server, or "M" for a multicast server |
+| when   | The last time when the server was queried for the time. Default is seconds, or "m" will be displayed for minutes, "h" for hours and "d" for days.                                                                                       |
+| poll   | How often the server is queried for the time, with a minimum of 16 seconds to a maximum of 36 hours. It's also displayed as a value from a power of two. Typically, it's between 64 seconds and 1024 seconds.                           |
+| reach  | This is an 8-bit left shift octal value that shows the success and failure rate of communicating with the remote server. Success means the bit is set, failure means the bit is not set. 377 is the highest value.                      |
+| delay  | This value is displayed in milliseconds, and shows the round trip time (RTT) of your computer communicating with the remote server.                                                                                                     |
+| offset | This value is displayed in milliseconds, using root mean squares, and shows how far off your clock is from the reported time the server gave you. It can be positive or negative.                                                       |
+| jitter | This number is an absolute value in milliseconds, showing the root mean squared deviation of your offsets.                                                                                                                              |
 
 
 Next to the remote server, you'll notice a single character. This character is referred to as the "tally code", and indicates whether or not NTP is or will be using that remote server in order to synchronize your clock. Here are the possible values:
 
-__remote single character__ | Meaning
--|-
-__whitespace__ | Discarded as not valid. Could be that you cannot communicate with the remote machine (it's not online), this time source is a ".LOCL." refid time source, it's a high stratum server, or the remote server is using this computer as an NTP server.
-__x__ | Discarded by the intersection algorithm.
-__.__ | Discarded by table overflow (not used).
-__-__ | Discarded by the cluster algorithm.
-__+__ | Included in the combine algorithm. This is a good candidate if the current server we are synchronizing with is discarded for any reason.
-__#__ | Good remote server to be used as an alternative backup. This is only shown if you have more than 10 remote servers.
-__*__ | The current system peer. The computer is using this remote server as its time source to synchronize the clock
-__o__ | Pulse per second (PPS) peer. This is generally used with GPS time sources, although any time source delivering a PPS will do. This tally code and the previous tally code "*" will not be displayed simultaneously.
+| __remote single character__ | Meaning                                                                                                                                                                                                                                             |
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| __whitespace__              | Discarded as not valid. Could be that you cannot communicate with the remote machine (it's not online), this time source is a ".LOCL." refid time source, it's a high stratum server, or the remote server is using this computer as an NTP server. |
+| __x__                       | Discarded by the intersection algorithm.                                                                                                                                                                                                            |
+| __.__                       | Discarded by table overflow (not used).                                                                                                                                                                                                             |
+| __-__                       | Discarded by the cluster algorithm.                                                                                                                                                                                                                 |
+| __+__                       | Included in the combine algorithm. This is a good candidate if the current server we are synchronizing with is discarded for any reason.                                                                                                            |
+| __#__                       | Good remote server to be used as an alternative backup. This is only shown if you have more than 10 remote servers.                                                                                                                                 |
+| __*__                       | The current system peer. The computer is using this remote server as its time source to synchronize the clock                                                                                                                                       |
+| __o__                       | Pulse per second (PPS) peer. This is generally used with GPS time sources, although any time source delivering a PPS will do. This tally code and the previous tally code "*" will not be displayed simultaneously.                                 |
 
 
 [Sources](https://pthree.org/2013/11/05/real-life-ntp/)
@@ -1718,14 +2004,14 @@ curl \
 
 By default, each index in Elasticsearch is allocated __5 primary shards__ and __1 replica__ which means that if you have at least two nodes in your cluster, your index will have 5 primary shards and another 5 replica shards (1 complete replica) for a __total of 10 shards per index.__
 
-Meaning | end point (http://ip:9200)
--|-
-Nodes name, load, heap, Disk used, segments, JDK version | /\_cat/nodes?v&h=name,ip,load_1m,heapPercent,disk.used_percent,segments.count,jdk
-info plus précises sur les index | /_cat/indices/__INDEX__/?v&h=index,health,pri,rep,docs.count,store.size,search.query_current,segments,memory.total
-compter le nombre de doc | /_cat/count/__INDEX__/?v&h=dc
-savoir l'état du cluster à un instant T | /_cat/health
-full stats index | /__INDEX__/_stats?pretty=true
-Kopg plugin | /_plugin/kopf
+| Meaning                                                  | end point (http://ip:9200)                                                                                         |
+|:---------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------|
+| Nodes name, load, heap, Disk used, segments, JDK version | /\_cat/nodes?v&h=name,ip,load_1m,heapPercent,disk.used_percent,segments.count,jdk                                  |
+| info plus précises sur les index                         | /_cat/indices/__INDEX__/?v&h=index,health,pri,rep,docs.count,store.size,search.query_current,segments,memory.total |
+| compter le nombre de doc                                 | /_cat/count/__INDEX__/?v&h=dc                                                                                      |
+| savoir l'état du cluster à un instant T                  | /_cat/health                                                                                                       |
+| full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
+| Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
 # Apt
 ### Show available package(s)
@@ -1962,90 +2248,6 @@ list in the current directory, all files last modifed __less__ (-10) than 10 day
 find . -type f -mtime -10 -exec ls -ltr {} +
 ```
 
-
-# FileSystem
-## Mount
-### When lost remote access to machine.
-press `e` to edit grub
-After editing grub, add this at the end of __linux__ line
-` init=/bin/bash`
-F10 to boot with the current config
-Make writable the root filesystem
-```bash
-mount -n -o remount,rw /
-```
-
-Make your modifications
-```bash
-passwd user_you_want_to_modify
-# or
-vim /etc/iptables/rules.v4
-```
-
-to exit the prompt and reboot the computer.
-```bash
-exec /sbin/init
-```
-
-### List read only filesystem
-```bash
-awk '$4~/(^|,)ro($|,)/' /proc/mounts
-```
-
-### Unmount partition
-```bash
-umount /mnt
-```
-
-you do so, you will get the “umount: /mnt: device is busy.” error as shown below.
-```bash
-umount /mnt
-umount: /mnt: device is busy.
-        (In some cases useful info about processes that use
-         the device is found by lsof(8) or fuser(1))
-```
-
-Use fuser command to find out __which process is accessing the device__ along with the user name.
-```bash
-fuser -mu /mnt/
-/mnt/:                2677c(sathiya)
-```
-
-* fuser – command used to identify processes using the files / directories
-* -m – specify the directory or block device along with this, which will list all the processes using it.
-* 
--u – shows the owner of the process 
-
-You got two choice here.
-1. Ask the owner of the process to properly terminate it or
-2. You can kill the process with super user privileges and unmount the device.
-
-###### Forcefully umount a busy device
-
-When you cannot wait to properly umount a busy device, use umount -f as shown below.
-```bash
-umount -f /mnt
-```
-
-If it still doesn’t work, lazy unmount should do the trick. Use umount -l as shown below.
-```bash
-umount -l /mnt
-```
-
-
-
-### Check filesystem
-```bash
-fsck.ext4 /dev/mapper/vg_data-lv_data
-e2fsck 1.43.4 (31-Jan-2017)
-/dev/mapper/VgData-LvData contient un système de fichiers comportant des erreurs, vérification forcée. 
-Passe 1 : vérification des i-noeuds, des blocs et des tailles
-Passe 2 : vérification de la structure des répertoires
-Passe 3 : vérification de la connectivité des répertoires
-Passe 4 : vérification des compteurs de référence
-Passe 5 : vérification de l information du sommaire de groupe
-```
-
 ## Raid
 
 ### mdadm
@@ -2096,6 +2298,19 @@ db3:keys=1,expires=0
 redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
 ```
 
+### Resolve warning
+```bash
+cat /etc/systemd/system/disable-transparent-huge-pages.service 
+[Unit]
+Description=Disable Transparent Huge Pages
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "/bin/echo "never" | tee /sys/kernel/mm/transparent_hugepage/enabled"
+
+[Install]
+WantedBy=multi-user.target
+```
 
 # Php-FPM
 ### check config
@@ -2194,8 +2409,8 @@ haproxy -f /etc/haproxy/haproxy.cfg -c -V
 [GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
 
 
-# Java
-## JDK
+## Java
+### JDK
 version
 ```bash
 java -version
@@ -2203,8 +2418,10 @@ openjdk version "1.8.0_222"
 OpenJDK Runtime Environment (build 1.8.0_222-b10)
 OpenJDK 64-Bit Server VM (build 25.222-b10, mixed mode)
 ```
+### Memory management
+[Heap, stack etc](https://alvinalexander.com/blog/post/java/java-xmx-xms-memory-heap-size-control)
 
-## Java - certificate authority 
+### Java - certificate authority 
 Java doesn't use system CA but a specific `keystore`
 You can manage the keystore with `keytool`
 ```bash
@@ -2217,43 +2434,65 @@ keytool -delete -alias dolphin_ltd_root_ca -keystore /usr/jdk64/jdk1.7.0_62/jre/
 keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_62/jre/lib/security/cacerts
 ```
 
-# Python
+## Python
 #### Common commands
+> list all versions of python (system wide)
 ```bash
-# list all versions of python (system wide)
 ls -ls /usr/bin/python*
+```
 
-# install pip3
+> install pip3
+```bash
 apt-get install build-essential python3-dev python3-pip
+```
 
-# install 
+> install a package
+```bash
 pip install virtualenv
 
-pip --proxy http://10.10.10.10:5000 \
-    install docker
+pip --proxy http://10.10.10.10:5000 install docker
+```
 
-# install without TLS verif (not recommended)
+> install without TLS verif (not recommended)
+```bash
 pip install --trusted-host pypi.python.org \
-            --trusted-host github-production-release-asset-2e65be.s3.amazonaws.com \
             --trusted-host github.com \
             https://github.com/Exodus-Privacy/exodus-core/releases/download/v1.0.13/exodus_core-1.0.13.tar.gz
+```
 
-# Show information about one or more installed packages
+> Show information about one or more installed packages
+
+```bash
 pip3 show $package_name
 pip3 show virtualenv
+```
 
-# print all installed package (depends on your environement venv or system-wide)
+> print all installed package (depends on your environement venv or system-wide)
+
+```bash
 pip3 freeze
+```
 
-# install from local sources (setup.py required)
+> install from local sources (setup.py required)
+
+```bash
 python setup.py install --record files.txt
+```
 
-# print dependencies tree of a specified package
+> print dependencies tree of a specified package
+```bash
 pipdeptree -p uwsgi
+```
 
-# global site-packages ("dist-packages") directories
+> global site-packages ("dist-packages") directories
+
+```bash
 python3 -m site
-# more concise list
+```
+
+> more concise list
+
+```bash
 python3 -c "import site; print(site.getsitepackages())"
 ```
 
@@ -2278,9 +2517,8 @@ some_root_dir/
 ----------------------------
 ```
 
-#### 2) setup.py content (in the dir)
+#### 2) setup.py content (in the dir)
 ```python
----------------------------------------------
 import os
 from setuptools import setup
 
@@ -2309,10 +2547,9 @@ setup(
         "License :: OSI Approved :: BSD License",
     ],
 )
----------------------------------------------
 ```
 
-#### 3) create ".whl" with wheel
+#### 3) create ".whl" with wheel
 within the root directory
 ```bash
 python setup.py sdist bdist_wheel
@@ -2336,7 +2573,7 @@ pipenv sync
 ```
 
 
-### check the protocols supported by your Python version
+### check the protocols supported by your Python version
 ```bash
 vim /tmp/testPythonProtocols.py
 ```
@@ -2366,11 +2603,11 @@ USE lands
 SHOW RETENTION POLICIES ON "lands"
 ```
 ### MySQL equivalent
-MySQL | Influx
--|-
-| DATABASE | DATABASE |
-| MEASUREMENT | TABLE |
-| COLUMN | FIELD && TAG |
+| MySQL       | Influx       |
+|:------------|:-------------|
+| DATABASE    | DATABASE     |
+| MEASUREMENT | TABLE        |
+| COLUMN      | FIELD && TAG |
 
 ```sql
 SHOW series ON database FROM virtualmachine WHERE cluster = 'PROD'
@@ -2432,20 +2669,20 @@ https://www.rabbitmq.com/management.html
 
 
 # Ansible
-Command | Meaning | default | SaltStack equivalent
+| Command                           | Meaning                                                    | default                   | SaltStack equivalent
 -|-|-|-
---check | Dry run | __no__ dry run | test=True
--b, --become | run operations with become | __no__ password prompting
--K, --ask-become-pass | ask for privilege escalation password | 
---become-method=__BECOME_METHOD__ | privilege escalation method to use valid choices: [ sudo \| su \| pbrun \| pfexec \| doas \| dzdo \| ksu \| runas \| pmrun \| enable \| machinectl ] | sudo
---become-user=__BECOME_USER__ | run operations as this user | root
+| --check                           | Dry run                                                    | __no__ dry run            | test=True
+| -b, --become                      | run operations with become                                 | __no__ password prompting |
+| -K, --ask-become-pass             | ask for privilege escalation password                      |
+| --become-method=__BECOME_METHOD__ | privilege escalation method to use valid choices: [ sudo su pbrun pfexec doas dzdo ksu runas pmrun enable machinectl sudo | sudo
+| --become-user=__BECOME_USER__     | run operations as this user                                | root
 
 
 
-Example | meaning
--|-
-ansible-playbook playbook.yml --user=b.dauphin --become-method=su -b -K | su b.dauphin + password prompting
-ansible-playbook playbook.yml --check --diff --limit 1.2.3.4 | Dry run + show only diff + limit inventory to host 1.2.3.4
+| Example                                                                 | meaning                                                    |
+|:------------------------------------------------------------------------|:-----------------------------------------------------------|
+| ansible-playbook playbook.yml --user=b.dauphin --become-method=su -b -K | su b.dauphin + password prompting                          |
+| ansible-playbook playbook.yml --check --diff --limit 1.2.3.4            | Dry run + show only diff + limit inventory to host 1.2.3.4 |
 
 ### service module
 ```bash
@@ -2578,17 +2815,14 @@ nvm install 8.9.4
 
 
 # Yarn
-### Usage
+### Usage
+> will read yarn.lock (like PipFile.lock)
 ```bash
-# will read yarn.lock (like PipFile.lock)
 yarn setup
-
-# verify dep tree is ok
+```
+> verify dep tree is ok
+```
 yarn --check-files
-[grunt]
-
-# The JavaScript Task Runner
-# find available command for Grunt
 grep grunt.registerTask Gruntfile.js
 [knex-migrator]
 ```
@@ -2623,3 +2857,124 @@ varnishncsa -F '%t "%r" %s %{Varnish:time_firstbyte}x %{VCL_Log:backend}x' -q "T
 ```bash
 CURL -X PURGE  "http://IP/object"
 ```
+
+# hardware
+## list hardware
+```bash
+lspci
+```
+## list you graphic card
+```bash
+lspci | grep -E "(VGA|3D)" -C 2
+lsusb
+lscpu : human readable of /proc/cpuinfon
+less /proc/cpuinfo
+cat /proc/meminfo
+nproc
+```
+## Memory
+Empty/clean
+```bash
+swapoff -a && swapon -a
+```
+
+## Monitor, screen
+### Xrandr
+```
+xrandr --help
+xrandr --current
+
+xrandr --output DP-2 --mode 1680x1050 --primary
+xrandr --output DP-1 --mode 1280x1024 --right-of DP-2
+
+xrandr --output DP-1 --auto --right-of eDP-1
+xrandr --output HDMI-1 --auto --right-of DP-1
+
+```
+#### Troubleshooting
+__Monitor plugged in but not displaying anything__
+```
+xrandr --auto
+sudo dpkg-reconfigure libxrandr2
+logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
+```
+
+
+# Work efficiency
+## Beauty
+### Pimp my terminal
+[Source](https://hackernoon.com/how-to-trick-out-terminal-287c0e93fce0)
+#### gnome-terminal
+GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
+
+##### Debian
+1- Ensure that your terminal is `gnome-terminal`
+```bash
+update-alternatives --get-selections | grep -i term
+x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
+```
+
+###### Graphicaly
+Install  `dconf`
+```bash
+sudo apt-get install dconf-tools
+dconf-editor
+```
+Run it and go to path `org` > `gnome` > `desktop` > `interface` > `monospace-font-name`
+
+
+###### CLI
+gsettings offers a simple commandline interface to GSettings. It lets you get, set or monitor an individual key for changes.  
+__To *Know* current settings type following commands in terminal :__
+```bash
+gsettings get org.gnome.desktop.interface document-font-name
+gsettings get org.gnome.desktop.interface font-name 
+gsettings get org.gnome.desktop.interface monospace-font-name
+gsettings get org.gnome.nautilus.desktop font
+```
+__You can *set* fonts by following commands in terminal :__
+For example `Monospace 11` do not support symbol. Which is uggly if you have a custom shell.  
+My choises which differs from default :  
+The last __number argument__ is the size
+> for terminal
+```bash
+gsettings set org.gnome.desktop.interface monospace-font-name 'Hack 12'
+```
+> for soft like Keepass2
+```bash
+gsettings set org.gnome.desktop.interface font-name 'Hack 12'
+```
+__Get list of available fonts__
+```bash
+fc-list | more
+fc-list | grep -i "word"
+fc-list | grep -i UbuntuMono
+```
+To lists font faces that cover Hindi language:
+```bash
+fc-list :lang=hi
+```
+search by family
+```bash
+fc-list  :family="NotoSansMono Nerd Font Mono"
+```
+search with complete name
+```bash
+fc-list  :fullname="Noto Sans Mono ExtraCondensed ExtraBold Nerd Font Complete Mono"
+```
+
+To find all similar keys on schema type following command:
+```bash
+gsettings list-recursively org.gnome.desktop.interface
+```
+To reset all valuses of keys run following command in terminal:
+```bash
+gsettings reset-recursively org.gnome.desktop.interface
+```
+
+
+
+
+##### ArchLinux
+To be updated...
+
