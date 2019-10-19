@@ -184,6 +184,7 @@ remove some characters __(__ and __)__ if found
 | sh                          | run a 'sh' shell, very old shell                                                          |
 | bash                        | run a 'bash' shell, classic shell of debian 7,8,9                                         |
 | zsh                         | run a 'zsh' shell, new shell                                                              |
+| 
 
 #### Operator
 | Operator              | Description                                                          |
@@ -1110,6 +1111,14 @@ Git reset & three trees of Git
 To properly understand git reset usage, we must first understand Git's internal state management systems. Sometimes these mechanisms are called Git's "three trees".
 
 ![GitHub Logo](../src/git_reset.svg)
+
+### Undo a commit and redo
+```bash
+git commit ...
+git reset --soft HEAD^
+edit
+git commit -a -c ORIG_HEAD
+```
 
 ## Submodules
 __First time__, clone a repo including its submodules
@@ -2859,7 +2868,38 @@ CURL -X PURGE  "http://IP/object"
 ```
 
 # hardware
+## Disk, SSD, SD card
+### List where your devices are located
+Your devices are hardwarely recognize by the kernel and then linked on the system with a file (because on linux, everything is a file) by udev (micro device) (systemd-udevd.service) `not file system related`
+```bash
+dmesg -T
+
+sudo udevadm monitor
+```
+
+### Burn a an image to an SD card
+```bash
+dd \
+if=/home/baptiste/Downloads/2019-09-26-raspbian-buster-lite.img \
+of=/dev/mmcblk0 \
+bs=64K \
+conv=noerror,sync \
+status=progress
+```
+[Full perfect archlinux doc](https://wiki.archlinux.org/index.php/Dd#Remove_bootloader)
 ## list hardware
+
+### Remove only the MBR of a disk
+How to zeroe the first 512 bytes (MBR size) of a disk
+```bash
+dd \
+if=/dev/zero \
+of=/dev/mmcblk0 \
+bs=512 count=1 \
+conv=noerror,sync \
+status=progress
+```
+
 ```bash
 lspci
 ```
