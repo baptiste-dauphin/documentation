@@ -308,6 +308,10 @@ sshd = ssh daemon
 ```bash
 sshd -t
 ```
+quickly copy your ssh public key to a remote server
+```bash
+cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+```
 
 ## FileSystem
 ### Mount
@@ -2887,7 +2891,6 @@ conv=noerror,sync \
 status=progress
 ```
 [Full perfect archlinux doc](https://wiki.archlinux.org/index.php/Dd#Remove_bootloader)
-## list hardware
 
 ### Remove only the MBR of a disk
 How to zeroe the first 512 bytes (MBR size) of a disk
@@ -2900,6 +2903,7 @@ conv=noerror,sync \
 status=progress
 ```
 
+## list hardware
 ```bash
 lspci
 ```
