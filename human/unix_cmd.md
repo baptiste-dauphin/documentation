@@ -9,6 +9,7 @@
   - [Ssh](#ssh)
   - [FileSystem](#filesystem)
   - [System control](#system-control)
+  - [Log Rotate](#log-rotate)
   - [Journal](#journal)
 - [Network](#network)
   - [Common packages](#common-packages)
@@ -33,7 +34,6 @@
 - [count total dns query](#count-total-dns-query)
 - [debian style](#debian-style)
 - [RedHat style](#redhat-style)
-- [ldapmodify \](#ldapmodify-)
 - [.ldif must contains modification data](#ldif-must-contains-modification-data)
 - [will prompt you the string you wanna hash, and generate it in stout](#will-prompt-you-the-string-you-wanna-hash-and-generate-it-in-stout)
 - [compound match](#compound-match)
@@ -62,14 +62,6 @@
 - [old fashion version](#old-fashion-version)
   - [```bash](#bash)
   - [|-- |-- test0.py](#%7C---%7C---test0py)
-- [Utility function to read the README file.](#utility-function-to-read-the-readme-file)
-- [Used for the long_description.  It's nice, because now 1) we have a top level](#used-for-the-long_description-its-nice-because-now-1-we-have-a-top-level)
-- [README file and 2) it's easier to type in the README file than to put a raw](#readme-file-and-2-its-easier-to-type-in-the-readme-file-than-to-put-a-raw)
-- [string in below ...](#string-in-below-)
-- [Your package have been built in ./dist/$\(package-name\)-$\(version\)-$\(py2-compatible\)-$\(py3-compatible\)-any.whl](#your-package-have-been-built-in-dist%24package-name-%24version-%24py2-compatible-%24py3-compatible-anywhl)
-- [cd into your project folder](#cd-into-your-project-folder)
-- [generate PipFile.lock](#generate-pipfilelock)
-- [Installs all packages specified in Pipfile.lock.](#installs-all-packages-specified-in-pipfilelock)
 - [!/usr/bin/env python](#usrbinenv-python)
 - [Type of IPC object. Possible values are:](#type-of-ipc-object-possible-values-are)
 - [q -- message queue](#q----message-queue)
@@ -302,13 +294,26 @@ unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
 
 ## Ssh
-Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)
+> Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
 ```bash
 sshd -t
 ```
+### rsync using ssh
+`-a` : archive mode
+`-u` : update mode, not full copy
+```bash
+rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
+```
 
 ## FileSystem
+### Show size
+```bash
+df -h
+du -sh --exclude=relative/path/to/uploads --exclude other/path/to/exclude
+du -hsx --exclude=/{proc,sys,dev} /*
+lsblk
+```
 ### Mount
 ```bash
 # list physical disk
@@ -435,6 +440,13 @@ Passe 5 : vérification de l information du sommaire de groupe
 ln -sfTv /opt/app_$TAG /opt/app_current
 ```
 
+### Open Files
+List open file, filter by deleted  
+Very useful when you have incoherence between result of `df -h` and `du -sh /*`  
+It may happens that you remove a file, but another process file descriptor is still using it. So, view from the filesystem, space is not released/free
+```bash
+lsof -nP | grep '(deleted)'
+```
 
 ## System control
 ### init.d (aka SystemV) (old way)
@@ -498,6 +510,32 @@ systemctl show --property=Environment docker
 systemctl show docker --no-pager | grep proxy
 ```
 
+## Log Rotate
+don't do anything just checkconfig
+```bash
+logrotate -d /etc/logrotate/logrotate.conf
+```
+
+#### run logrotate
+```bash
+logrotate /etc/logrotate.conf -v
+```
+
+#### Exemple
+```
+/var/log/dpkg.* {
+  monthly
+  rotate 12
+  size 100M
+  compress
+  delaycompress
+  missingok
+  notifempty
+  create 644 root root
+}
+```
+
+[Other exemple](https://doc.ubuntu-fr.org/logrotate#exemple)
 
 
 ## Journal
@@ -1183,15 +1221,14 @@ __Ctrl + B__ : (to press __each time before another command__)
 
 
 # MySQL
-
-## User, Password
+## User, Password
 ```sql
 CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 CREATE USER 'api_153'@'10.10.%.%' IDENTIFIED BY 'password';
 SELECT user, host FROM mysql.user;
 SHOW CREATE USER api
 ```
-#### GRANT (rights)
+##### GRANT (rights)
 ```sql
 GRANT SELECT, INSERT, UPDATE, DELETE ON `github`.* TO 'api_153'@'10.10.%.%';
 GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
@@ -1199,50 +1236,63 @@ GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
 -- Apply GRANT
 FLUSH PRIVILEGES;
 ```
-#### Revoke (revert GRANT)
+##### Revoke (revert GRANT)
 ```sql
 REVOKE INSERT ON *.* FROM 'jeffrey'@'localhost';
 REVOKE ALL PRIVILEGES ON `github`.* FROM 'jeffrey'@'localhost';
 ```
 
-## From shell (outside of a MySQL prompt)
+##### Table information
+```bash
+show table status like 'mytablename'\G
+```
+```sql
+*************************** 1. row ***************************
+           Name: mytablename
+         Engine: MyISAM
+        Version: 10
+     Row_format: Dynamic
+           Rows: 2444
+ Avg_row_length: 7536
+    Data_length: 564614700
+Max_data_length: 281474976710655
+   Index_length: 7218176
+      Data_free: 546194608
+ Auto_increment: 1187455
+    Create_time: 2008-03-19 10:33:13
+    Update_time: 2008-09-02 22:18:15
+     Check_time: 2008-08-27 23:07:48
+      Collation: latin1_swedish_ci
+       Checksum: NULL
+ Create_options: pack_keys=0
+        Comment:
+```
+
+## Worth known command
+##### From shell (outside of a MySQL prompt)
 ```bash
 mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
 ```
-## Show users and remote client IP or subnet etc
+##### Show users and remote client IP or subnet etc
 ```sql
 SELECT user, host FROM mysql.user;
 ```
 
-
-## System
-
-#### Log Rotate
-don't do anything just checkconfig
-```bash
-logrotate -d /etc/logrotate/logrotate.conf
+##### Show current queries
+```sql
+SHOW FULL PROCESSLIST;
 ```
 
-#### run logrotate
-```bash
-logrotate /etc/logrotate.conf -v
-```
+##### Variables, status
+`%` is a wildcard char like `*`
+```sql
+SHOW VARIABLES WHERE Variable_Name LIKE "%log%";
 
-#### Exemple
-```
-/var/log/dpkg.* {
-  monthly
-  rotate 12
-  size 100M
-  compress
-  delaycompress
-  missingok
-  notifempty
-  create 644 root root
-}
-```
+SHOW VARIABLES WHERE Variable_Name LIKE "wsrep%";
 
-[Other exemple](https://doc.ubuntu-fr.org/logrotate#exemple)
+SHOW STATUS like 'Bytes_received';
+SHOW STATUS like 'Bytes_sent';
+```
 
 ### Log
 The file mysql-bin.[index] keeps a list of all binary logs mysqld has generated and auto-rotated. The mechanisms for cleaning out the binlogs in conjunction with mysql-bin.[index] are:
@@ -1527,7 +1577,7 @@ ldapsearch -H ldap://10.10.10.10 \
 #### modify an acount (remotly)
 ```bash
 apt install ldap-utils
-#
+
 ldapmodify \
 -H ldaps://ldap.company.tld \
 -D "cn=b.dauphin,ou=people,c=fr,dc=company,dc=fr" \
@@ -2518,14 +2568,15 @@ some_root_dir/
 ```
 
 #### 2) setup.py content (in the dir)
+Utility function to read the README file.  
+Used for the long_description.  It's nice, because now 1) we have a top level  
+README file and 2) it's easier to type in the README file than to put a raw  
+string in below ...  
+
 ```python
 import os
 from setuptools import setup
 
-# Utility function to read the README file.
-# Used for the long_description.  It's nice, because now 1) we have a top level
-# README file and 2) it's easier to type in the README file than to put a raw
-# string in below ...
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
@@ -2550,26 +2601,66 @@ setup(
 ```
 
 #### 3) create ".whl" with wheel
-within the root directory
+within the root directory  
+Your package have been built in /dist/$(package-name)-$(version)-$(py2-compatible)-$(py3-compatible)-any.whl  
 ```bash
 python setup.py sdist bdist_wheel
-# Your package have been built in ./dist/$(package-name)-$(version)-$(py2-compatible)-$(py3-compatible)-any.whl
 example : ./dist/dns_admin-1.0.0-py2-none-any.whl
 ```
 
 ### virtualenv venv
+##### dependencies
 ```bash
 apt install python-pip python3-pip
 pip install pipenv
+``` 
 
-# cd into your project folder
-pipenv --python 3.5
+```bash
+Usage Examples:
+   Create a new project using Python 3.7, specifically:
+   $ pipenv --python 3.7
 
-# generate PipFile.lock
-pipenv lock
+   Remove project virtualenv (inferred from current directory):
+   $ pipenv --rm
 
-# Installs all packages specified in Pipfile.lock.
-pipenv sync
+   Install all dependencies for a project (including dev):
+   $ pipenv install --dev
+
+   Create a lockfile containing pre-releases:
+   $ pipenv lock --pre
+
+   Show a graph of your installed dependencies:
+   $ pipenv graph
+
+   Check your installed dependencies for security vulnerabilities:
+   $ pipenv check
+
+   Install a local setup.py into your virtual environment/Pipfile:
+   $ pipenv install -e .
+
+   Use a lower-level pip command:
+   $ pipenv run pip freeze
+
+Commands:
+  check      Checks for security vulnerabilities and against
+             PEP 508 markers provided in Pipfile.
+  clean      Uninstalls all packages not specified in
+             Pipfile.lock.
+  graph      Displays currently-installed dependency graph
+             information.
+  install    Installs provided packages and adds them to
+             Pipfile, or (if no packages are given),
+             installs all packages from Pipfile.
+  lock       Generates Pipfile.lock.
+  open       View a given module in your editor.
+  run        Spawns a command installed into the virtualenv.
+  shell      Spawns a shell within the virtualenv.
+  sync       Installs all packages specified in
+             Pipfile.lock.
+  uninstall  Un-installs a provided package and removes it
+             from Pipfile.
+  update     Runs lock, then sync.
+
 ```
 
 
