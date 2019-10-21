@@ -38,10 +38,15 @@ Markdown​TOC | Generate your Table of content of MarkDown files
 
 Name | shortcut
 -----|---------
-Jump at a specific line | `ctrl + G`
+Do anything (command palet) | `Ctrl + Shirt + P`
 Switch previous / next tab | `ctrl + shift + page_up` \ `ctrl + shift + page_down`
 Switch to a specific tab | `ctrl + p`, and write name of your tab (file)
 Move a line or a block of line | `ctrl + shift + arrow up` \ `ctrl + shift + arrow down`
 Switch upper case | `Ctrl + k` and then `Ctrl + u`
 Switch lower case | `Ctrl + k` and then `Ctrl + l`
 Sort Lines | `F9` (Edit > Sort Lines)
+Goto anywhere | `Ctrl + R`
+Open any file | `Ctrl + P`
+Goto line number | `ctrl + G`
+Spell check | `F6`
+New cursor above/below | `alt+shift+arrow`
