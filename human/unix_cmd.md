@@ -1,3 +1,4 @@
+<!-- autolink="true" -->
 <!-- MarkdownTOC levels="1,2,3" autolink="true" -->
 
 - [Definitions](#definitions)
@@ -54,54 +55,136 @@
   - [Global info](#global-info)
     - [Edit remote URL](#edit-remote-url)
   - [Git Tag](#git-tag)
-  - [Git Checkout \(branch\)](#git-checkout-branch)
+  - [Git Checkout \(branch / tag / commit\)](#git-checkout-branch--tag--commit)
+  - [Git branch](#git-branch)
   - [Git Diff](#git-diff)
-  - [Commit](#commit)
-  - [Undo/move your work or avoid conflicts with __Git reset__ and __Git stash__](#undomove-your-work-or-avoid-conflicts-with-_git-reset__-and-__git-stash_)
   - [Git Stash](#git-stash)
   - [Git Merge conflict](#git-merge-conflict)
-    - [Tag](#tag)
-- [count total dns query](#count-total-dns-query)
-- [debian style](#debian-style)
-- [RedHat style](#redhat-style)
-- [.ldif must contains modification data](#ldif-must-contains-modification-data)
-- [will prompt you the string you wanna hash, and generate it in stout](#will-prompt-you-the-string-you-wanna-hash-and-generate-it-in-stout)
-- [compound match](#compound-match)
-- [soft way](#soft-way)
-- [sure way](#sure-way)
-- [Signal the minion to refresh the pillar data.](#signal-the-minion-to-refresh-the-pillar-data)
-- [synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.](#synchronizes-custom-modules-states-beacons-grains-returners-output-modules-renderers-and-utils)
-- [remote           refid      st t when poll reach   delay   offset  jitter](#remote-refid-st-t-when-poll-reach-delay-offset-jitter)
-- [print jails](#print-jails)
-- [get banned ip and other info about a specific jail](#get-banned-ip-and-other-info-about-a-specific-jail)
-- [set banip triggers email send](#set-banip-triggers-email-send)
-- [unbanip](#unbanip)
-- [check a specific fail2ban chain](#check-a-specific-fail2ban-chain)
-- [Valeurs par défaut pour tous les comptes.](#valeurs-par-d%C3%A9faut-pour-tous-les-comptes)
-- [Exemple pour un compte Gmail](#exemple-pour-un-compte-gmail)
-- [Définir le compte par défaut](#d%C3%A9finir-le-compte-par-d%C3%A9faut)
-- [or nc smtp.free.fr 25](#or-nc-smtpfreefr-25)
-- [list files with last modified date of LESS than 5 minutes](#list-files-with-last-modified-date-of-less-than-5-minutes)
-- [xargs](#xargs)
-- [Keyspace](#keyspace)
-- [print cluster nodes](#print-cluster-nodes)
+    - [Undo/move your work](#undomove-your-work)
+    - [Override a given side by another](#override-a-given-side-by-another)
+    - [Log](#log)
+  - [Git Revert](#git-revert)
+  - [Git Reset](#git-reset)
+    - [Undo a commit and redo](#undo-a-commit-and-redo)
+  - [Submodules](#submodules)
+    - [Remove a submodule you need to:](#remove-a-submodule-you-need-to)
+- [Tmux](#tmux)
+  - [](#.tmux.conf)
+  - [Inside tmux](#inside-tmux)
+- [MySQL](#mysql)
+  - [User, Password](#user-password)
+  - [Worth known command](#worth-known-command)
+    - [Log](#log-1)
+    - [Analyze binary logs](#analyze-binary-logs)
+  - [Show](#show)
+  - [DUMP data \(mysqldump\)](#dump-data-mysqldump)
+    - [Feed database](#feed-database)
+    - [All in one usage <3](#all-in-one-usage-3)
+- [Percona XtraDB Cluster \(open source, cost-effective, and robust MySQL clustering\)](#percona-xtradb-cluster-open-source-cost-effective-and-robust-mysql-clustering)
+- [Wireshark](#wireshark)
+  - [DNS Analysis with Tshark](#dns-analysis-with-tshark)
+  - [HTTP](#http)
+    - [HTTP Analysis with Tshark](#http-analysis-with-tshark)
+    - [Parse User Agents and Frequency with Standard Shell Commands](#parse-user-agents-and-frequency-with-standard-shell-commands)
+    - [Using additional HTTP filters in Analysis](#using-additional-http-filters-in-analysis)
+    - [Using additional HTTP filters in Analysis](#using-additional-http-filters-in-analysis-1)
+- [Files](#files)
+  - [Tar](#tar)
+- [update-alternatives - Default system software \(Debian\)](#update-alternatives---default-system-software-debian)
+    - [List existing selections](#list-existing-selections)
+    - [Modify existing selection interactively](#modify-existing-selection-interactively)
+    - [Create a new selection](#create-a-new-selection)
+    - [Example : Change default terminal](#example--change-default-terminal)
+- [Process](#process)
+  - [get processes info](#get-processes-info)
+  - [Kill etc](#kill-etc)
+  - [Shortcut](#shortcut)
+  - [signals list](#signals-list)
+  - [list every running process](#list-every-running-process)
+    - [Get PID \(process Identifier\) of a running process](#get-pid-process-identifier-of-a-running-process)
+- [Unix File types](#unix-file-types)
+- [LDAP // Activate Directory](#ldap--activate-directory)
+- [SaltStack](#saltstack)
+    - [Targeting](#targeting)
+    - [Various useful module](#various-useful-module)
+- [Iptables](#iptables)
+    - [LOG](#log-2)
+    - [add new rules when NOTRACK is set](#add-new-rules-when-notrack-is-set)
+- [Conntrack](#conntrack)
+- [NTP \(Network Time Protocol\)](#ntp-network-time-protocol)
+    - [Client](#client)
+    - [NTP Pool Project](#ntp-pool-project)
+    - [NTP Management](#ntp-management)
+- [Apache](#apache)
+    - [Validate config before reload/restart](#validate-config-before-reloadrestart)
+- [NGINX \(Engine X\)](#nginx-engine-x)
+    - [Various variables](#various-variables)
+    - [virtual host example](#virtual-host-example)
+- [Zabbix Server](#zabbix-server)
+  - [API usage](#api-usage)
+- [Elastic Search](#elastic-search)
+- [Apt](#apt)
+    - [Show available package\(s\)](#show-available-packages)
+    - [Clean cache space in /var/cache/apt/archives/](#clean-cache-space-in-varcacheaptarchives)
+- [Security](#security-1)
+  - [Fail2Ban](#fail2ban)
+    - [Useful commands](#useful-commands)
+    - [File locations](#file-locations)
+- [Email system](#email-system)
+    - [MTA](#mta)
+  - [MSTMP](#mstmp)
+    - [Installation](#installation)
+- [grep](#grep)
+- [less](#less)
+    - [Start at the end of a file](#start-at-the-end-of-a-file)
+- [sed \(Stream editor\)](#sed-stream-editor)
+- [Find](#find)
+  - [Raid](#raid)
+    - [mdadm](#mdadm)
+- [redis](#redis)
+    - [Get info about __master/slave__ replication](#get-info-about-_masterslave_-replication)
+    - [FLUSH all keys of all databases](#flush-all-keys-of-all-databases)
+    - [Delete all keys of the specified Redis database](#delete-all-keys-of-the-specified-redis-database)
+    - [Redis cluster](#redis-cluster)
+    - [Check all databases](#check-all-databases)
+    - [Delete multiples keys](#delete-multiples-keys)
+    - [Resolve warning](#resolve-warning)
+- [Php-FPM](#php-fpm)
+    - [check config](#check-config)
+- [Docker](#docker)
+    - [Docker Swarm](#docker-swarm)
 - [print address + role](#print-address--role)
-- [memory](#memory)
-- [available to the current process \(may be less than all online\)](#available-to-the-current-process-may-be-less-than-all-online)
-- [all online](#all-online)
-- [old fashion version](#old-fashion-version)
-  - [```bash](#bash-1)
-  - [|-- |-- test0.py](#%7C---%7C---test0py)
-- [!/usr/bin/env python](#usrbinenv-python)
-- [Type of IPC object. Possible values are:](#type-of-ipc-object-possible-values-are)
-- [q -- message queue](#q----message-queue)
-- [m -- shared memory](#m----shared-memory)
-- [s -- semaphore](#s----semaphore)
-- [Specify python interpreter path](#specify-python-interpreter-path)
-- [list available variables](#list-available-variables)
-- [get specific fact](#get-specific-fact)
-  - [```yaml](#yaml)
-- [override playbook-defined variables \(keep your playbook unmodified\)](#override-playbook-defined-variables-keep-your-playbook-unmodified)
+  - [Docker-proxy](#docker-proxy)
+  - [Dockerd](#dockerd)
+- [System performance](#system-performance)
+  - [Get memory physical size](#get-memory-physical-size)
+  - [Get number processing units \(CPU / cores\)](#get-number-processing-units-cpu--cores)
+- [Graphic](#graphic)
+  - [Display Manager](#display-manager)
+    - [SDDM - lightweight](#sddm---lightweight)
+    - [Gnome - Nice display for personal laptop](#gnome---nice-display-for-personal-laptop)
+  - [Windows Manager](#windows-manager)
+    - [i3](#i3)
+- [HAProxy](#haproxy)
+    - [Check config](#check-config-1)
+- [Markdown](#markdown)
+  - [Java](#java)
+    - [JDK](#jdk)
+    - [Memory management](#memory-management)
+    - [Java - certificate authority](#java---certificate-authority)
+  - [Python](#python)
+    - [Build a package](#build-a-package)
+    - [virtualenv venv](#virtualenv-venv)
+    - [check the protocols supported by your Python version](#check-the-protocols-supported-by-your-python-version)
+- [InfluxDB](#influxdb)
+    - [Retention policy](#retention-policy)
+    - [MySQL equivalent](#mysql-equivalent)
+    - [InfluxDB paradygm](#influxdb-paradygm)
+- [Regex](#regex)
+- [User's IPC shared memory, semaphores, and message queues](#users-ipc-shared-memory-semaphores-and-message-queues)
+- [RabbitMQ](#rabbitmq)
+- [Ansible](#ansible)
+    - [service module](#service-module)
 - [Print the effective node_modules FOLDER to standard out.](#print-the-effective-node_modules-folder-to-standard-out)
 - [display a tree of every package found in the user’s folders \(without the -g option it only shows the current directory’s packages\)](#display-a-tree-of-every-package-found-in-the-user%E2%80%99s-folders-without-the--g-option-it-only-shows-the-current-directory%E2%80%99s-packages)
 - [To show the package registry entry for the connect package, you can do this:](#to-show-the-package-registry-entry-for-the-connect-package-you-can-do-this)
@@ -991,26 +1074,46 @@ git remote set-url origin git@git.baptiste-dauphin.com:GROUP/SUB_GROUP/project_n
 ```
 
 ## Git Tag
+create tag at your current commit
 ```bash
-# create tag at your current commit
 git tag temp_tag_2
+```
 
-# By default tags are not __pushed__, nor __pulled__ 
+By default tags are not __pushed__, nor __pulled__ 
+```bash
 git push origin tag_1 tag_2
+```
 
-# list tag
+list tag
+```bash
 git tag -l
+```
 
-# delete tag
+delete tag
+```bash
 git tag -d temp_tag_2
 ```
 
-## Git Checkout (branch)
+Get the current tag
+```bash
+git describe --tags --exact-match HEAD
+```
+
+## Git Checkout (branch / tag / commit)
 ```bash
 git checkout dev
 git checkout master
 git checkout branch
+git checkout v_0.9
+git checkout ac92da0124997377a3ee30f3159cdee838bd5b0b
 ```
+
+## Git branch
+Get the current branch name
+```bash
+git branch | grep \* | cut -d ' ' -f2
+```
+
 ## Git Diff
 Specific file
 ```bash
@@ -1027,29 +1130,7 @@ Global diff between your __stagged changes__ (index) and local repository
 git diff --staged
 ```
 
-## Commit
-```bash
-git checkout ac92da0124997377a3ee30f3159cdee838bd5b0b
-```
 
-## Undo/move your work or avoid conflicts with __Git reset__ and __Git stash__
-```bash
-# (go at the previous commit)
-# will uncommit your last changes
-git reset --soft HEAD^
-git stash
-# verify
-git stash show
-# enventually FF merge without any conflict
-git pull
-
-
-# put back your work
-git stash pop
-# commit again
-history | grep "git commit" | tail
-git commit "copy-paste history commit message :)"
-```
 
 ## Git Stash
 To list the stashed modifications
@@ -1095,34 +1176,48 @@ Unmerged paths:
   both modified:   path/to/file
 ```
 
+### Undo/move your work
+with __Git reset__ and __Git stash__
+go at the previous commit. 
+will uncommit your last changes
+```bash
+git reset --soft HEAD^
+```
+hide temporary your work in a dirty magic directory and verify the content of it
+```bash
+git stash
+git stash show
+```
+Try to FF merge without any conflict
+```bash
+git pull
+```
+
+put back your work by spawning back your modifications
+```bash
+git stash pop
+```
+And then commit again
+```bash
+git commit "copy-paste history commit message :)"
+```
+
+### Override a given side by another
 You can tell him that you want your modifications take precedance 
 So, in that case of __merge conflict__
+cancel your conflict by cancel the current merge,
 ```bash
-# cancel your conflict by cancel the current merge,
 git merge --abort
+```
 
-# Then, pull again telling git to keep YOUR local changes
+Then, pull again telling git to keep YOUR local changes
+```bash
 git pull -X ours origin master
+```
 
-# Or if you want to keep only the REMOTE work
+Or if you want to keep only the REMOTE work
+```bash
 git pull -X theirs origin master
-```
-
-### Tag
-```
-### checkout to a specific tag
-```bash
-git checkout v_0.9
-```
-
-Get the current tag
-```bash
-git describe --tags --exact-match HEAD
-```
-
-Get the current branch name
-```bash
-git branch | grep \* | cut -d ' ' -f2
 ```
 
 ### Log
@@ -1223,12 +1318,12 @@ git submodule update --init --recursive
 
 Depuis le shell, avant de rentrer dans une session tmux
 ```bash
-$ tmux ls
-$ tmux new
-$ tmux new -s session
-$ tmux attach
-$ tmux attach -t session_name
-$ tmux kill-server : kill all sessions
+tmux ls
+tmux new
+tmux new -s session
+tmux attach
+tmux attach -t session_name
+tmux kill-server : kill all sessions
 :setw synchronize-panes on
 :setw synchronize-panes off
 :set-window-option xterm-keys on
@@ -1422,7 +1517,9 @@ for i in `seq 1 6`; do mysql -u clustercheckuser -p -e "show variables like 'ser
 It just plugs into 
 ```bash
 tshark -f "udp port 53" -Y "dns.qry.type == A and dns.flags.response == 0"
-# count total dns query
+```
+count total dns query
+```bash
 tshark -f "udp port 53" -n -T fields -e dns.qry.name | wc -l
 ```
 ## HTTP
@@ -1505,14 +1602,17 @@ sudo update-alternatives --config x-terminal-emulator
 
 # Process
 ## get processes info
+debian style
 ```bash
-# debian style
 ps -ef
 ps -o pid,user,%mem,command ax
+```
 
-# RedHat style
+RedHat style
+```bash
 ps aux
 ```
+
 ## Kill etc
 ```bash
 kill default TERM
@@ -1630,16 +1730,17 @@ ldapmodify \
 -D "cn=b.dauphin,ou=people,c=fr,dc=company,dc=fr" \
 -W \
 -f b.gates.ldif
-# .ldif must contains modification data
 ```
+(.ldif must contains modification data)
+
 #### Locally
 ```bash
 slapcat -f b.gates.ldif
 ```
 #### Generate hash of the password, to update later the password account
+will prompt you the string you wanna hash, and generate it in stout
 ```bash
 slappasswd -h {SSHA}
-# will prompt you the string you wanna hash, and generate it in stout
 ```
 
 #### Content of .ldif
@@ -1664,7 +1765,9 @@ userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
 ```bash
 salt -S 192.168.40.20 test.version
 salt -S 192.168.40.0/24 test.version
-# compound match
+```
+compound match
+```bash
 salt -C 'S@10.0.0.0/24 and G@os:Debian' test.version
 ```
 [full doc](https://docs.saltstack.com/en/latest/topics/targeting/globbing.html)
@@ -1690,22 +1793,24 @@ salt-run survey.diff '*' cmd.run "ls /home"
 
 ##### SaltStack - cache
 Forcibly removes all caches on a minion.
-WARNING: The safest way to clear a minion cache is by first stopping the minion and then deleting the cache files before restarting it.
+WARNING: The safest way to clear a minion cache is by first stopping the minion and then deleting the cache files before restarting it.  
+soft way
 ```bash
-# soft way
 salt '*' saltutil.clear_cache
-
-# sure way
+```
+sure way
+```bash
 systemctl stop salt-minion \
 && rm -rf /var/cache/salt/minion/ \
 && systemctl start salt-minion
 ```
 ##### SaltStack - pillar, custom modules, states, beacons, grains, returners, output modules, renderers, and utils
+Signal the minion to refresh the pillar data.
 ```bash
-# Signal the minion to refresh the pillar data.
 salt '*' saltutil.refresh_pillar
-
-# synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.
+```
+synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.
+```bash
 salt '*' saltutil.sync_all
 ```
 
@@ -1958,9 +2063,10 @@ There are round robin domains for each continent, minus Antarctica, and for many
 On my public NTP stratum 2 server, I run the following command to see its status:
 
 ```bash
-$ ntpq -pn
-     remote           refid      st t when poll reach   delay   offset  jitter
-==============================================================================
+ntpq -pn
+    remote            refid      st t when poll reach   delay   offset  jitter
+
+------------------------------------------------------------------------------
 *198.60.22.240   .GPS.            1 u  912 1024  377    0.488   -0.016   0.098
 +199.104.120.73  .GPS.            1 u   88 1024  377    0.966    0.014   1.379
 -155.98.64.225   .GPS.            1 u   74 1024  377    2.782    0.296   0.158
@@ -2131,24 +2237,31 @@ apt-get clean
 # Security
 ## Fail2Ban
 ### Useful commands
+
+print jails
 ```bash
-# print jails
 fail2ban-client status
+```
 
-# get banned ip and other info about a specific jail
+get banned ip and other info about a specific jail
+```bash
 fail2ban-client status ssh
+```
 
-# set banip triggers email send
+set banip triggers email send
+```bash
 fail2ban-client set ssh banip 10.10.10.10
+```
 
-# unbanip
+unbanip
+```bash
 fail2ban-client set ssh unbanip 10.10.10.10
+```
 
-# check a specific fail2ban chain
+check a specific fail2ban chain
+```bash
 iptables -nvL f2b-sshd
-
 fail2ban-client get dbpurgeage
-
 fail2ban-client get dbfile
 ```
 
@@ -2212,14 +2325,14 @@ apt install msmtp msmtp-mta
 vim /etc/msmtprc
 
 ```
-# Valeurs par défaut pour tous les comptes.
+hashtag Valeurs par défaut pour tous les comptes.
 defaults
 auth           on
 tls            on
 tls_trust_file /etc/ssl/certs/ca-certificates.crt
 logfile        ~/.msmtp.log
 
-# Exemple pour un compte Gmail
+hashtag Exemple pour un compte Gmail
 account        gmail
 host           smtp.gmail.com
 port           587
@@ -2227,7 +2340,7 @@ from           username@gmail.com
 user           username
 password       plain-text-password
 
-# Définir le compte par défaut
+hashtag Définir le compte par défaut
 account default : gmail
 ```
 
@@ -2240,9 +2353,13 @@ You run the command... and, oops: sendmail: Cannot open mailhub:25. The reason f
 
 
 #### Send mail using open (smtp) relay
+Note that it also works with netcat 
+```bash
+nc smtp.free.fr 25
+```
+
 ```bash
 telnet smtp.free.fr 25
-# or nc smtp.free.fr 25
 Trying 212.27.48.4...
 Connected to smtp.free.fr.
 Escape character is '^]'.
@@ -2314,11 +2431,14 @@ find . -maxdepth 1 -type l -ls
 find /opt -type f -mmin -5 -exec ls -ltr {} +
 find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
 ls 2019* | xargs -I % mv % ./working_sheet_of_the_day
-
-#list files with last modified date of LESS than 5 minutes
+```
+list files with last modified date of LESS than 5 minutes
+```bash
 find . -type f -mmin -5 -exec ls -ltr {} +
+```
 
-# xargs
+xargs
+```bash
 find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
 ```
 
@@ -2384,7 +2504,7 @@ CONFIG GET databases
 
 ```bash
 INFO keyspace
-# Keyspace
+
 db0:keys=10,expires=0
 db1:keys=1,expires=0
 db3:keys=1,expires=0
@@ -2423,14 +2543,16 @@ docker service ps <app_name>
 ```
 
 Useful commands
+print cluster nodes
 ```bash
-# print cluster nodes
 docker node ls
+```
 
 # print address + role
+```bash
 for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
-
 ```
+
 ## Docker-proxy
 [Explanations](https://windsock.io/the-docker-proxy/)
 
@@ -2441,7 +2563,9 @@ for node in $(docker node ls -q); do     docker node inspect --format '{{.Status
 ```bash
 htop
 nload
-# memory
+```
+Memory information
+```bash
 free -g
 ```
 
@@ -2463,13 +2587,17 @@ grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1
 ```
 
 ## Get number processing units (CPU / cores)
+available to the current process (may be less than all online)
 ```bash
-# available to the current process (may be less than all online)
 nproc
-# all online
-nproc --all
+```
 
-# old fashion version
+all online
+```bash
+nproc --all
+```
+old fashion version
+```bash
 grep -c ^processor /proc/cpuinfo
 ```
 
@@ -2598,7 +2726,9 @@ Note: With virtualenvs getsitepackages is not available, sys.path from above wil
 ### Build a package
 Create python package (to be downloaded in site-packages local dir)
 #### 1) Make the following directory structure in your local dev machine
+
 ```bash
+
 -----------------------------
 some_root_dir/
 |-- README
@@ -2611,6 +2741,7 @@ some_root_dir/
 |-- |-- __init__.py
 |-- |-- runall.py
 |-- |-- test0.py
+
 ----------------------------
 ```
 
@@ -2717,7 +2848,6 @@ vim /tmp/testPythonProtocols.py
 ```
 
 ```python
-#!/usr/bin/env python
 import ssl;
 for i in dir(ssl): 
   if i.startswith("PROTOCOL"):
@@ -2787,13 +2917,15 @@ https://regex101.com/
 
 # User's IPC shared memory, semaphores, and message queues 
 
+```
+Type of IPC object. Possible values are:
+q -- message queue
+m -- shared memory
+s -- semaphore
+```
 ```bash
 USERNAME=$1
 
-# Type of IPC object. Possible values are:
-#   q -- message queue
-#   m -- shared memory
-#   s -- semaphore
 TYPE=$2
 
 ipcs -$TYPE | grep $USERNAME | awk ' { print $2 } ' | xargs -I {} ipcrm -$TYPE {}
@@ -2827,17 +2959,21 @@ https://www.rabbitmq.com/management.html
 ansible webservers -m service -a "name=httpd state=restarted"
 ansible all -m ping -u user1 --private-key /home/baptiste/.ssh/id_rsa
 
-# Specify python interpreter path
+Specify python interpreter path
+```bash
 ansible 1.2.3.4 -m ping -e 'ansible_python_interpreter=/usr/bin/python3'
-
-# list available variables
+```
+list available variables
+```bash
 ansible 10.10.10.10 -m setup
-# get specific fact
+```
+get specific fact
+```bash
 ansible 10.10.10.10 -m setup -a 'filter=ansible_python_version'
 ```
 
-### enable usage of operations like __<__ __>__ __|__ __&__
-##### the remote system has to got the package __python-apt__
+enable usage of operations like __<__ __>__ __|__ __&__  
+the remote system has to got the package __python-apt__
 ```yaml
 apt install python-apt
 - debug: var=ansible_facts
@@ -2874,6 +3010,7 @@ msg: "{{ lookup('vars', ansible_dns) }}"
 
 ##### Variables usage
 ```yaml
+
 ---
 - hosts: webservers
   vars:
@@ -2887,8 +3024,9 @@ msg: "{{ lookup('vars', ansible_dns) }}"
 ```bash
 ansible-playbook release.yml --extra-vars '{"version":"1.23.45","other_variable":"foo"}'
 ansible-playbook arcade.yml --extra-vars '{"pacman":"mrs","ghosts":["inky","pinky","clyde","sue"]}'
-
-# override playbook-defined variables (keep your playbook unmodified)
+```
+override playbook-defined variables (keep your playbook unmodified)
+```bash
 ansible-playbook lvm.yml --extra-vars "host=es_data_group remote_user=b.dauphin" -i ../inventory/es_data_staging.yml
 
 ```
