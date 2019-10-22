@@ -1,119 +1,115 @@
-<!-- MarkdownTOC levels="1,2" autolink="true" -->
+<!-- MarkdownTOC levels="1,2,3" autolink="true" -->
 
 - [Definitions](#definitions)
 - [System](#system)
   - [User](#user)
+    - [Add](#add)
+    - [Change password](#change-password)
+    - [impersonate](#impersonate)
+    - [sudo](#sudo)
   - [Group](#group)
+    - [Add](#add-1)
   - [shell](#shell)
+    - [Stream](#stream)
+    - [Bash](#bash)
   - [Environment variable](#environment-variable)
   - [Ssh](#ssh)
-- [list physical disk](#list-physical-disk)
-- [or](#or)
-- [and then, mount them of your filesystem](#and-then-mount-them-of-your-filesystem)
-- [or](#or-1)
-- [show all installed unit files](#show-all-installed-unit-files)
-- [loaded](#loaded)
-- [active](#active)
-- [running](#running)
-- [show a specific property \(service var value\)](#show-a-specific-property-service-var-value)
-- [print all content](#print-all-content)
-- [ss version](#ss-version)
-- [with package "ifupdown"](#with-package-ifupdown)
-- [listen all ip on tcp port 443](#listen-all-ip-on-tcp-port-443)
-- [debian 7, openssl style](#debian-7-openssl-style)
-- [generate private key](#generate-private-key)
-- [generate csr](#generate-csr)
-- [create tag at your current commit](#create-tag-at-your-current-commit)
-- [By default tags are not __pushed__, nor __pulled__](#by-default-tags-are-not-_pushed__-nor-__pulled_)
-- [list tag](#list-tag)
-- [delete tag](#delete-tag)
-- [\(go at the previous commit\)](#go-at-the-previous-commit)
-- [will uncommit your last changes](#will-uncommit-your-last-changes)
-- [verify](#verify)
-- [enventually FF merge without any conflict](#enventually-ff-merge-without-any-conflict)
-- [put back your work](#put-back-your-work)
-- [commit again](#commit-again)
-- [cancel your conflict by cancel the current merge,](#cancel-your-conflict-by-cancel-the-current-merge)
-- [Then, pull again telling git to keep YOUR local changes](#then-pull-again-telling-git-to-keep-your-local-changes)
-- [Or if you want to keep only the REMOTE work](#or-if-you-want-to-keep-only-the-remote-work)
-  - [Git Revert](#git-revert)
-  - [Git Reset](#git-reset)
-  - [Submodules](#submodules)
-- [Tmux](#tmux)
-  - [](#.tmux.conf)
-  - [Inside tmux](#inside-tmux)
-- [MySQL](#mysql)
-  - [User, Password](#user-password)
-  - [Worth known command](#worth-known-command)
-  - [Show](#show)
-  - [DUMP data \(mysqldump\)](#dump-data-mysqldump)
-- [Percona XtraDB Cluster \(open source, cost-effective, and robust MySQL clustering\)](#percona-xtradb-cluster-open-source-cost-effective-and-robust-mysql-clustering)
-- [Wireshark](#wireshark)
-  - [DNS Analysis with Tshark](#dns-analysis-with-tshark)
-  - [HTTP](#http)
-- [Files](#files)
-  - [Tar](#tar)
-- [update-alternatives - Default system software \(Debian\)](#update-alternatives---default-system-software-debian)
-- [Process](#process)
-  - [get processes info](#get-processes-info)
-  - [Kill etc](#kill-etc)
-  - [Shortcut](#shortcut)
-  - [signals list](#signals-list)
-  - [list every running process](#list-every-running-process)
-- [Unix File types](#unix-file-types)
-- [LDAP // Activate Directory](#ldap--activate-directory)
-- [SaltStack](#saltstack)
-- [Iptables](#iptables)
-- [Conntrack](#conntrack)
-- [NTP \(Network Time Protocol\)](#ntp-network-time-protocol)
-- [Apache](#apache)
-- [NGINX \(Engine X\)](#nginx-engine-x)
-- [Zabbix Server](#zabbix-server)
-  - [API usage](#api-usage)
-- [Elastic Search](#elastic-search)
-- [Apt](#apt)
+    - [rsync using ssh](#rsync-using-ssh)
+  - [FileSystem](#filesystem)
+    - [Show size](#show-size)
+    - [Mount](#mount)
+    - [List read only filesystem](#list-read-only-filesystem)
+    - [Unmount](#unmount)
+    - [How to 'root a system' after lost root password](#how-to-root-a-system-after-lost-root-password)
+    - [Check filesystem](#check-filesystem)
+    - [symbolic link](#symbolic-link)
+    - [Open Files](#open-files)
+  - [System control](#system-control)
+    - [init.d \(aka SystemV\) \(old way\)](#initd-aka-systemv-old-way)
+    - [Systemd \(new way\)](#systemd-new-way)
+  - [Log Rotate](#log-rotate)
+  - [Journal](#journal)
+    - [Definition](#definition)
+    - [Persist Your LogsPermalink](#persist-your-logspermalink)
+- [Network](#network)
+  - [Common packages](#common-packages)
+  - [Command commands](#command-commands)
+    - [netplan, new ubuntu network manager](#netplan-new-ubuntu-network-manager)
+    - [Show network connections, listening process](#show-network-connections-listening-process)
+  - [systemd-networkd debian 9 network management](#systemd-networkd-debian-9-network-management)
+  - [network - ENI - old management](#network---eni---old-management)
+    - [vlan tagging and route add](#vlan-tagging-and-route-add)
+  - [Activer le NAT](#activer-le-nat)
+  - [OpenVpn](#openvpn)
+  - [nc - TCP/IP swiss army knife](#nc---tcpip-swiss-army-knife)
+    - [Listen](#listen)
+    - [Check port opening](#check-port-opening)
+    - [manually write tcp packet](#manually-write-tcp-packet)
+  - [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
-  - [Fail2Ban](#fail2ban)
-- [Email system](#email-system)
-  - [MSTMP](#mstmp)
-- [grep](#grep)
-- [less](#less)
-- [sed \(Stream editor\)](#sed-stream-editor)
-- [Find](#find)
-  - [Raid](#raid)
-- [redis](#redis)
-- [Php-FPM](#php-fpm)
-- [Docker](#docker)
-  - [Docker-proxy](#docker-proxy)
-  - [Dockerd](#dockerd)
-- [System performance](#system-performance)
-  - [Get memory physical size](#get-memory-physical-size)
-  - [Get number processing units \(CPU / cores\)](#get-number-processing-units-cpu--cores)
-- [Graphic](#graphic)
-  - [Display Manager](#display-manager)
-  - [Windows Manager](#windows-manager)
-- [HAProxy](#haproxy)
-- [Markdown](#markdown)
-  - [Java](#java)
-  - [Python](#python)
-  - [```bash](#bash)
-- [InfluxDB](#influxdb)
-- [Regex](#regex)
-- [User's IPC shared memory, semaphores, and message queues](#users-ipc-shared-memory-semaphores-and-message-queues)
-- [RabbitMQ](#rabbitmq)
-- [Ansible](#ansible)
+  - [Public Key Infrastructure - OpenSSL](#public-key-infrastructure---openssl)
+    - [Definitions](#definitions-1)
+    - [Generate Certificate Signing Request \(csr\) + the associate private key](#generate-certificate-signing-request-csr--the-associate-private-key)
+- [Git](#git)
+  - [Global info](#global-info)
+    - [Edit remote URL](#edit-remote-url)
+  - [Git Tag](#git-tag)
+  - [Git Checkout \(branch\)](#git-checkout-branch)
+  - [Git Diff](#git-diff)
+  - [Commit](#commit)
+  - [Undo/move your work or avoid conflicts with __Git reset__ and __Git stash__](#undomove-your-work-or-avoid-conflicts-with-_git-reset__-and-__git-stash_)
+  - [Git Stash](#git-stash)
+  - [Git Merge conflict](#git-merge-conflict)
+    - [Tag](#tag)
+- [count total dns query](#count-total-dns-query)
+- [debian style](#debian-style)
+- [RedHat style](#redhat-style)
+- [.ldif must contains modification data](#ldif-must-contains-modification-data)
+- [will prompt you the string you wanna hash, and generate it in stout](#will-prompt-you-the-string-you-wanna-hash-and-generate-it-in-stout)
+- [compound match](#compound-match)
+- [soft way](#soft-way)
+- [sure way](#sure-way)
+- [Signal the minion to refresh the pillar data.](#signal-the-minion-to-refresh-the-pillar-data)
+- [synchronizes custom modules, states, beacons, grains, returners, output modules, renderers, and utils.](#synchronizes-custom-modules-states-beacons-grains-returners-output-modules-renderers-and-utils)
+- [remote           refid      st t when poll reach   delay   offset  jitter](#remote-refid-st-t-when-poll-reach-delay-offset-jitter)
+- [print jails](#print-jails)
+- [get banned ip and other info about a specific jail](#get-banned-ip-and-other-info-about-a-specific-jail)
+- [set banip triggers email send](#set-banip-triggers-email-send)
+- [unbanip](#unbanip)
+- [check a specific fail2ban chain](#check-a-specific-fail2ban-chain)
+- [Valeurs par défaut pour tous les comptes.](#valeurs-par-d%C3%A9faut-pour-tous-les-comptes)
+- [Exemple pour un compte Gmail](#exemple-pour-un-compte-gmail)
+- [Définir le compte par défaut](#d%C3%A9finir-le-compte-par-d%C3%A9faut)
+- [or nc smtp.free.fr 25](#or-nc-smtpfreefr-25)
+- [list files with last modified date of LESS than 5 minutes](#list-files-with-last-modified-date-of-less-than-5-minutes)
+- [xargs](#xargs)
+- [Keyspace](#keyspace)
+- [print cluster nodes](#print-cluster-nodes)
+- [print address + role](#print-address--role)
+- [memory](#memory)
+- [available to the current process \(may be less than all online\)](#available-to-the-current-process-may-be-less-than-all-online)
+- [all online](#all-online)
+- [old fashion version](#old-fashion-version)
+  - [```bash](#bash-1)
+  - [|-- |-- test0.py](#%7C---%7C---test0py)
+- [!/usr/bin/env python](#usrbinenv-python)
+- [Type of IPC object. Possible values are:](#type-of-ipc-object-possible-values-are)
+- [q -- message queue](#q----message-queue)
+- [m -- shared memory](#m----shared-memory)
+- [s -- semaphore](#s----semaphore)
+- [Specify python interpreter path](#specify-python-interpreter-path)
+- [list available variables](#list-available-variables)
+- [get specific fact](#get-specific-fact)
   - [```yaml](#yaml)
-- [Node js](#node-js)
-- [Yarn](#yarn)
-- [Varnish](#varnish)
-- [hardware](#hardware)
-  - [Disk, SSD, SD card](#disk-ssd-sd-card)
-  - [list hardware](#list-hardware)
-  - [list you graphic card](#list-you-graphic-card)
-  - [Memory](#memory)
-  - [Monitor, screen](#monitor-screen)
-- [Work efficiency](#work-efficiency)
-  - [Beauty](#beauty)
+- [override playbook-defined variables \(keep your playbook unmodified\)](#override-playbook-defined-variables-keep-your-playbook-unmodified)
+- [Print the effective node_modules FOLDER to standard out.](#print-the-effective-node_modules-folder-to-standard-out)
+- [display a tree of every package found in the user’s folders \(without the -g option it only shows the current directory’s packages\)](#display-a-tree-of-every-package-found-in-the-user%E2%80%99s-folders-without-the--g-option-it-only-shows-the-current-directory%E2%80%99s-packages)
+- [To show the package registry entry for the connect package, you can do this:](#to-show-the-package-registry-entry-for-the-connect-package-you-can-do-this)
+- [For states of backend](#for-states-of-backend)
+- [new version](#new-version)
+- [After a crash of varnish:](#after-a-crash-of-varnish)
+- [Log hash with filter for request number](#log-hash-with-filter-for-request-number)
+- [exemple de commandes  pour  tracker les requêtes ayant pris plus de 10 seconde](#exemple-de-commandes-pour-tracker-les-requ%C3%AAtes-ayant-pris-plus-de-10-seconde)
 
 <!-- /MarkdownTOC -->
 
@@ -140,25 +136,24 @@ useradd -m -s /bin/bash b.dauphin
 ### Change password
 ```bash
 echo 'root:toto' | chpasswd
-# or get prompt for changing your current user
+```
+or get prompt for changing your current user
 passwd
+```bash
 # prompt...
 ```
 ### impersonate
-switch to root
+switch to a user (default root)
 ```bash
 su -
-# switch to b.dauphin
 su - b.dauphin
 ```
 ### sudo
 Switch to root
 You have to be __sudoer__ (i.e. being member of 'sudo' group)
+ensure you're in sudo group, by checking groups you belong to
 ```bash
-# ensure you're in sudo group, by checking groups you belong to
 groups
-
-sudo su
 ```
 
 ## Group
@@ -210,7 +205,7 @@ remove some characters __(__ and __)__ if found
 | sh                          | run a 'sh' shell, very old shell                                                          |
 | bash                        | run a 'bash' shell, classic shell of debian 7,8,9                                         |
 | zsh                         | run a 'zsh' shell, new shell                                                              |
-| 
+| for i in google.com free.fr wikipedia.de ; do dig $i +short ; done | 
 
 #### Operator
 | Operator              | Description                                                          |
@@ -345,7 +340,7 @@ cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/
 `-u` : update mode, not full copy
 ```bash
 rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
-
+```
 
 ## FileSystem
 ### Show size
@@ -356,13 +351,11 @@ du -hsx --exclude=/{proc,sys,dev} /*
 lsblk
 ```
 ### Mount
+list physical disk
+and then, mount them of your filesystem
 ```bash
-# list physical disk
 lsblk
-# or
 fdisk -l
-
-# and then, mount them of your filesystem
 sudo mount /dev/sdb1 /mnt/usb
 ```
 
@@ -1122,12 +1115,17 @@ git pull -X theirs origin master
 git checkout v_0.9
 ```
 
-### Get the current tag version
+Get the current tag
 ```bash
 git describe --tags --exact-match HEAD
 ```
 
-### git log
+Get the current branch name
+```bash
+git branch | grep \* | cut -d ' ' -f2
+```
+
+### Log
 ##### Find commit by author or since a specific date
 ```bash
 git log --author="b.dauphin" \
