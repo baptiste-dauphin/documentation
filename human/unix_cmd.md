@@ -1,69 +1,75 @@
-<!-- MarkdownTOC levels="1,2" -->
+<!-- MarkdownTOC levels="1,2" autolink="true" -->
 
-- Definitions
-- System
-  - User
-  - Group
-  - Apt
-  - check performance
-  - update-alternatives
-  - Graphic
-  - shell
-  - Process
-  - Files
-  - Ssh
-  - FileSystem
-  - System control
-  - Log Rotate
-  - Journal
-  - Iptables
-  - Conntrack
-- Network
-  - Common packages
-  - Command commands
-  - systemd-networkd debian 9 network management
-  - network - ENI - old management
-  - Activer le NAT
-  - OpenVpn
-  - nc - TCP/IP swiss army knife
-  - Internet Exchange Point
-- Security
-  - Public Key Infrastructure - OpenSSL
-  - Fail2Ban
-- Software
-  - NTP
-  - Git
-  - Tmux
-  - Email system
-  - LDAP // Activate Directory
-  - SaltStack
-  - Apache
-  - NGINX
-  - Zabbix Server
-  - Elastic Search
-  - Php-FPM
-  - HAProxy
-  - Java
-  - Python
-  - RabbitMQ
-  - Ansible
-- Miscellaneous
-  - Regex
-  - Markdown
+- [System](#system)
+  - [User](#user)
+  - [Group](#group)
+  - [Apt](#apt)
+  - [Performance](#performance)
+  - [Update-alternatives](#update-alternatives)
+  - [Graphic](#graphic)
+  - [Shell](#shell)
+  - [Process](#process)
+  - [File system](#file-system)
+  - [Init.d](#initd)
+  - [Systemd](#systemd)
+  - [Journal](#journal)
+  - [Iptables](#iptables)
+- [Network](#network)
+  - [netplan](#netplan)
+  - [Netstat](#netstat)
+  - [ss](#ss)
+  - [TCP Dump](#tcp-dump)
+  - [systemd-networkd](#systemd-networkd)
+  - [ENI](#eni)
+  - [vlan](#vlan)
+  - [NAT](#nat)
+  - [VPN](#vpn)
+  - [Netcat](#netcat)
+  - [Internet Exchange Point](#internet-exchange-point)
+- [Security](#security)
+  - [Ssh](#ssh)
+  - [OpenSSL](#openssl)
+  - [Fail2Ban](#fail2ban)
+- [Software](#software)
+  - [NTP](#ntp)
+  - [Git](#git)
+  - [Tmux](#tmux)
+  - [Email system](#email-system)
+  - [OpenLDAP](#openldap)
+  - [Active Directory](#active-directory)
+  - [SaltStack](#saltstack)
+  - [Apache](#apache)
+  - [Nginx](#nginx)
+  - [Zabbix](#zabbix)
+  - [Elastic Search](#elastic-search)
+  - [Php-FPM](#php-fpm)
+  - [HAProxy](#haproxy)
+  - [Java](#java)
+  - [Python](#python)
+  - [RabbitMQ](#rabbitmq)
+  - [Ansible](#ansible)
+  - [Node js](#node-js)
+  - [Yarn](#yarn)
+  - [Varnish](#varnish)
+  - [Log Rotate](#log-rotate)
+- [Databases](#databases)
+  - [MySQL](#mysql)
+  - [Percona XtraDB Cluster](#percona-xtradb-cluster)
+  - [Redis](#redis)
+  - [InfluxDB](#influxdb)
+- [Hardware](#hardware)
+  - [Storage](#storage)
+  - [Listing](#listing)
+  - [Monitor](#monitor)
+- [Virtualization \(OS-level\)](#virtualization-os-level)
+  - [Containers](#containers)
+- [Miscellaneous](#miscellaneous)
+  - [Regex](#regex)
+  - [Markdown](#markdown)
+  - [Pimp my terminal](#pimp-my-terminal)
+- [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
-
-
-# Definitions
-Name | TLDR meaning | further explanations
--|-|-
-TLDR | Too long I didn't read | [:book:](https://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn%27t_read)
-CLI / Promt| Command Line Interpreter / Interface en ligne de commande. Different from Graphical mouse clickable | [:book:]()
-Shell Linux | CLI of Linux (sh,bash,dash,csh,tcsh,zsh) | [:book](https://fr.wikipedia.org/wiki/Shell_Unix#Shells)
-Java Heap | shared among all Java virtual machine threads. The heap is the runtime data area from which memory for all __class__ instances and __arrays__ is allocated. | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
-Java Stack | Each Java virtual machine thread has a private Java virtual machine stack holding __local variables__ and partial results, and plays a part in __method invocation__ and __return__ | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
-
-
 
 # System
 ## User
@@ -122,7 +128,7 @@ apt depends sendmail
 apt-get clean
 ```
 
-## check performance
+## Performance
 ```bash
 htop
 nload
@@ -130,6 +136,10 @@ nload
 Memory information
 ```bash
 free -g
+```
+Empty swap
+```bash
+swapoff -a && swapon -a
 ```
 
 ### Get memory physical size
@@ -164,7 +174,7 @@ old fashion version
 grep -c ^processor /proc/cpuinfo
 ```
 
-## update-alternatives
+## Update-alternatives
 Default system software (Debian)
 ```bash
  update-alternatives - maintain symbolic links determining default commands 
@@ -213,7 +223,7 @@ service sddm restart    : restart sddm (to load new monitor)
 update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
 
-## shell
+## Shell
 ### Stream
 #### Redirection
 The `>` operator redirects the output usually to a file but it can be to a device. You can also use `>>` to append.
@@ -233,6 +243,116 @@ is there a difference between `> /dev/null 2>&1` and `&> /dev/null` ?
 remove some characters __(__ and __)__ if found
 ```bash
 .. | tr -d '()'
+```
+
+### Tar
+```bash
+tar --help
+```
+
+| Command     | meaning                                       |
+|:------------|:----------------------------------------------|
+| -c          | create   (name your file .tar)                |
+| -(c)z       | archive type gzip    (name your file .tar.gz) |
+| -(c)j       | archive type bzip2                            |
+| -x          | extract                                       |
+| -f          | file                                          |
+| -v          | verbose                                       |
+| -C          | Set dir name to extract files                 |
+| --directory | same                                          |
+
+### grep
+
+### less
+Start at the end of a file
++ will run an initial command when the file is opened
+G jumps to the end
+
+```bash
+less +G app.log
+```
+
+
+
+
+### Sed
+__Stream editor__
+
+| Cmd | meaning |
+-|-
+sed -n | silent mode (default behaviour)
+sed -n | silent mode. By default print nothing. Use with /p to print interesting cmd
+sed -i | agit non pas sur l'input stream mais sur le fichier specifié
+sed -f script_file | Take instruction from script
+
+__Example__  
+Replace `patern 1` by `patern 2` 
+```bash
+sed -i 's/patern 1/patern 2/g' /etc/ssh/sshd_config
+```
+replace `Not after` by *nothing* from the input stream
+```bash
+... | sed -n 's/ *Not After : *//p'
+```
+cmd | meaning
+-|-
+sed '342d' -i ~/.ssh/known_hosts | remove 342th line of file
+sed '342,342d' -i ~/.ssh/known_hosts | remove 342th to 342th line, equivalent to precedent cmd
+sed -i '1,42d' -i test.sql | remove first 42 lines of test.sql
+
+
+### Find
+common usage
+```bash
+find . -maxdepth 1 -type l -ls
+find /opt -type f -mmin -5 -exec ls -ltr {} +
+find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
+find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
+```
+
+cmd | meaning
+-|-
+find -mtime n | last __DATA MODIFICATION__ time (day)
+find -atime n | last __ACCESS__ time (day)
+find -ctime n | last __STATUS MODIFICATION__ time (day)
+
+
+"Modify" is the timestamp of the last time the file's content has been mofified. This is often called "mtime".
+
+"Change" is the timestamp of the last time the file's inode has been changed, like by changing permissions, ownership, file name, number of hard links. It's often called "ctime".
+
+
+list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
+list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
+```bash
+find . -type f -mtime +10 -exec ls -ltr {} +
+find . -type f -mtime -10 -exec ls -ltr {} +
+```
+list files with last modified date of LESS than 5 minutes
+```bash
+find . -type f -mmin -5 -exec ls -ltr {} +
+```
+
+### xargs
+xargs reads items from the standard input, delimited by blanks (which can be protected with double or single quotes or a backslash) or newlines, and executes the command (default is /bin/echo) one or more times with any initial-arguments followed by items read from standard input.  Blank  lines  on the standard input are ignored.  
+
+You can defined the name of the received arg (from stdin). In the following example the chosen name is `%`.  
+
+The following example : takes all the .log files and mv them into a directory named 'working_sheet_of_the_day'
+```bash
+ls *.log | xargs -I % mv % ./working_sheet_of_the_day
+```
+### Tar
+compress
+```bash
+tar zfcv myfiles.tar.gz /dir1 /dir2 /dir3
+```
+
+extract in a given directory
+```bash
+tar zxvf somefilename.tar.gz or .tgz
+tar jxvf somefilename.tar.bz2
+tar xf file.tar -C /path/to/directory
 ```
 
 ### Bash
@@ -482,8 +602,8 @@ ipcs -$TYPE | grep $USERNAME | awk ' { print $2 } ' | xargs -I {} ipcrm -$TYPE {
 ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
 ```
 
-## Files
-### Unix File types
+## File system
+Unix File types
 | Description                         | symbol              |
 |:------------------------------------|:--------------------|
 | Regular file                        | -                   |
@@ -495,138 +615,6 @@ ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
 | Symbolic link file                  | l                   |
 | Socket file                         | s                   |
 
-### Tar
-```bash
-tar --help
-```
-
-| Command     | meaning                                       |
-|:------------|:----------------------------------------------|
-| -c          | create   (name your file .tar)                |
-| -(c)z       | archive type gzip    (name your file .tar.gz) |
-| -(c)j       | archive type bzip2                            |
-| -x          | extract                                       |
-| -f          | file                                          |
-| -v          | verbose                                       |
-| -C          | Set dir name to extract files                 |
-| --directory | same                                          |
-
-### grep
-
-### less
-Start at the end of a file
-+ will run an initial command when the file is opened
-G jumps to the end
-
-```bash
-less +G app.log
-```
-
-
-
-
-### sed (Stream editor)
-```bash
-sed '/^#/ d' redis.conf : supprime le dieze en début de ligne (décommente)
-sed -n : silent mode. By default print nothing. Use with /p to print interesting cmd
-sed -e : Script directement dans la ligne de commande
-sed -f script_file  : script dans un fichier
-sed -i : agit non pas sur l input stream mais sur le fichier specifier
-
-sed -i 's/patern 1/patern 2/g' /etc/ssh/sshd_config
-sed -n 's/ *Not After : *//p'`  remplace Not after par rien 
-```
-
-##### remove 342th line of file
-```bash
-sed '342d' -i ~/.ssh/known_hosts
-```
-
-##### remove 342th to 342th line, equivalent to precedent cmd
-```bash
-sed '342,342d' -i ~/.ssh/known_hosts
-```
-
-##### remove first 42 lines of test.sql file and print result
-```bash
-sed -i '1,42d' -i test.sql
-```
-
-### Find
-
-##### Various example, with xargs
-```bash
-find . -maxdepth 1 -type l -ls
-find /opt -type f -mmin -5 -exec ls -ltr {} +
-find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
-ls 2019* | xargs -I % mv % ./working_sheet_of_the_day
-```
-list files with last modified date of LESS than 5 minutes
-```bash
-find . -type f -mmin -5 -exec ls -ltr {} +
-```
-
-xargs
-```bash
-find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
-```
-
-date de modif des DATA du fichier (day)
-```bash
-find -mtime n
-```
-last acces time (day)
-```bash
-find -atime n
-```
-date de modif du STATUT du fichier
-```bash
-find -ctime n
-```
-
-
-list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
-```bash
-find . -type f -mtime +10 -exec ls -ltr {} +
-```
-list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
-```bash
-find . -type f -mtime -10 -exec ls -ltr {} +
-```
-
-#### compress
-```bash
-tar zfcv myfiles.tar.gz /dir1 /dir2 /dir3
-```
-
-#### extract
-```bash
-tar zxvf somefilename.tar.gz or .tgz
-tar jxvf somefilename.tar.bz2
-tar xf file.tar -C /path/to/directory
-```
-
-
-## Ssh
-> Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
-sshd = ssh daemon
-```bash
-sshd -t
-```
-
-quickly copy your ssh public key to a remote server
-```bash
-cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >>  ~/.ssh/authorized_keys"
-```
-
-### rsync using ssh
-`-a` : archive mode
-`-u` : update mode, not full copy
-```bash
-rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
-```
-
-## FileSystem
 ### Show size
 ```bash
 df -h
@@ -766,9 +754,9 @@ It may happens that you remove a file, but another process file descriptor is st
 lsof -nP | grep '(deleted)'
 ```
 
-## System control
-### init.d (aka SystemV) (old way)
-Based on __directly modifiable__ bash script located under `/etc/init.d/`
+## Init.d
+Old System control replaced by Systemd since debian 8
+aka __SystemV__, aka old fashioned way, prefered by some people due to full control provided by a on __directly modifiable__ bash script located under `/etc/init.d/`
 usage
 ```bash
 service rsyslog status
@@ -779,7 +767,8 @@ service rsyslog status
 vim /etc/init.d/rsyslog
 ```
 
-### Systemd (new way)
+## Systemd
+Introduced since debian 8  
 Based on internal and templated management. The only way to interact with systemd is by modifying __instructions__ (but not directly code) on `service file`.  
 The can be located under different directories.  
 
@@ -827,34 +816,6 @@ systemctl show --property=Environment docker
 # print all content
 systemctl show docker --no-pager | grep proxy
 ```
-
-## Log Rotate
-don't do anything just checkconfig
-```bash
-logrotate -d /etc/logrotate/logrotate.conf
-```
-
-#### run logrotate
-```bash
-logrotate /etc/logrotate.conf -v
-```
-
-#### Exemple
-```
-/var/log/dpkg.* {
-  monthly
-  rotate 12
-  size 100M
-  compress
-  delaycompress
-  missingok
-  notifempty
-  create 644 root root
-}
-```
-
-[Other exemple](https://doc.ubuntu-fr.org/logrotate#exemple)
-
 
 ## Journal
 ### Definition
@@ -1080,13 +1041,14 @@ iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
 iptables -A INPUT -j DROP
 ```
 
-## Conntrack
-#### debian old
+### Conntrack
+debian 8 and under, get info about connection tracking. Current and max
 ```bash
 cat /proc/sys/net/netfilter/nf_conntrack_count
+cat /proc/sys/net/netfilter/nf_conntrack_max
 ```
 
-#### debian 9
+debian 9, with a wrapper, easier to use !
 ```bash
 conntrack -L [table] [options] [-z] 
 conntrack -G [table] parameters 
@@ -1099,14 +1061,13 @@ conntrack -C [table]
 conntrack -S
 ```
 
-
 # Network
-## Common packages
-ifconfig, netstat, rarp, route
+#### Common packages
+for those binaries : ifconfig, netstat, rarp, route, ip, dig
 ```bash
-apt install net-tools iproute2
+apt install net-tools iproute2 dnsutils
 ```
-## Command commands
+#### Command commands
 | Command                                                                | meaning                    |
 |:-----------------------------------------------------------------------|:---------------------------|
 | ip a                                                                   | get IP of the system       |
@@ -1115,13 +1076,14 @@ apt install net-tools iproute2
 | ip addr add 88.88.88.88/32 dev ens4                                    | add (failover) IP to a NIC |
 
 
-### netplan, new ubuntu network manager
+## netplan
+new ubuntu network manager
 ```bash
 cat /{lib,etc,run}/netplan/*.yaml
 ```
 ### Show network connections, listening process
-#### Netstat (old way)
-```bash
+## Netstat
+(old way)
 | command         | specification                               |
 |:----------------|:--------------------------------------------|
 | netstat -t      | list tcp connections                        |
@@ -1135,14 +1097,16 @@ cat /{lib,etc,run}/netplan/*.yaml
 | netstat -lapute | classic useful usage                        |
 | netstat -salope | same                                        |
 | netstat -tupac  | same                                        |
-```
-#### ss (new quicker way)
+
+## ss
+(new quicker way)
+
 | command    | specification                        |
 |:-----------|:-------------------------------------|
 | ss -tulipe | more info on listening process       |
 | ss tlpn    | print listen tcp socket with process |
 
-#### Tcp dump
+## TCP Dump
 Real time, just see what’s going on, by looking at all interfaces.
 ```bash
 tcpdump -i any -w capturefile.pcap
@@ -1173,15 +1137,18 @@ ss -l -p -n | grep ",1234,"
 
 
 
-## systemd-networkd debian 9 network management
+## systemd-networkd
+debian 9 new network management style
 ```
 vim /etc/systemd/network/50-default.network
 systemctl status systemd-networkd
 systemctl restart systemd-networkd
 ```
 
-## network - ENI - old management
-### vlan tagging and route add 
+## ENI
+old fashioned network management style
+## vlan
+vlan tagging and route add 
 ```bash
 auto enp61s0f1.3200
 iface enp61s0f1.3200 inet static
@@ -1198,20 +1165,23 @@ auto eth0
 
 
 
-## Activer le NAT
+## NAT
+Activate NAT (Network Address Translation)
 ```
 iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o eth0 -j MASQUERADE
 ```
 
-## OpenVpn
+## VPN
+With OpenVPN  
 Run OpenVpn client in background, immune to hangups, with output to a non-tty
 ```bash
 cd /home/baptiste/.openvpn && \
 nohup sudo openvpn /home/baptiste/.openvpn/b_dauphin@vpn.domain.com.ovpn
 ```
 
-## nc - TCP/IP swiss army knife
+## Netcat
 Netcat (network catch)
+TCP/IP swiss army knife
 ### Listen
 ```bash
 nc -l 127.0.0.1 -p 80
@@ -1236,7 +1206,25 @@ echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 151
 
 
 # Security
-## Public Key Infrastructure - OpenSSL
+## Ssh
+> Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
+sshd = ssh daemon
+```bash
+sshd -t
+```
+
+quickly copy your ssh public key to a remote server
+```bash
+cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/.ssh && cat >>  ~/.ssh/authorized_keys"
+```
+
+### rsync using ssh
+`-a` : archive mode
+`-u` : update mode, not full copy
+```bash
+rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
+```
+## OpenSSL
 ### Definitions
 | Keywork     | meaning |
 |:------------|:--------|
@@ -1928,7 +1916,8 @@ tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.
 tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.request.full_uri
 ```
 
-## LDAP // Activate Directory
+## OpenLDAP
+## Active Directory
 
 Search into LDAP
 ```bash
@@ -2167,7 +2156,7 @@ Validate config before reload/restart
 apachectl configtest
 ```
 
-## NGINX
+## Nginx
 pronouced 'Engine X'
 
 Various variables
@@ -2183,8 +2172,8 @@ server {
 
 
 
-## Zabbix Server
-### API usage
+## Zabbix
+### API usage  
 Verify your url
 ```
 https://zabbix.company/zabbix.php?action=dashboard.view
@@ -2522,6 +2511,7 @@ https://www.rabbitmq.com/management.html
 ```bash
 ansible webservers -m service -a "name=httpd state=restarted"
 ansible all -m ping -u user1 --private-key /home/baptiste/.ssh/id_rsa
+```
 
 Specify python interpreter path
 ```bash
@@ -2699,150 +2689,33 @@ varnishncsa -F '%t "%r" %s %{Varnish:time_firstbyte}x %{VCL_Log:backend}x' -q "T
 CURL -X PURGE  "http://IP/object"
 ```
 
-# hardware
-## Disk, SSD, SD card
-### List where your devices are located
-Your devices are hardwarely recognize by the kernel and then linked on the system with a file (because on linux, everything is a file) by udev (micro device) (systemd-udevd.service) `not file system related`
+## Log Rotate
+don't do anything just checkconfig
 ```bash
-dmesg -T
-
-sudo udevadm monitor
+logrotate -d /etc/logrotate/logrotate.conf
 ```
 
-### Burn a an image to an SD card
+#### run logrotate
 ```bash
-dd \
-if=/home/baptiste/Downloads/2019-09-26-raspbian-buster-lite.img \
-of=/dev/mmcblk0 \
-bs=64K \
-conv=noerror,sync \
-status=progress
-```
-[Full perfect archlinux doc](https://wiki.archlinux.org/index.php/Dd#Remove_bootloader)
-
-### Remove only the MBR of a disk
-How to zeroe the first 512 bytes (MBR size) of a disk
-```bash
-dd \
-if=/dev/zero \
-of=/dev/mmcblk0 \
-bs=512 count=1 \
-conv=noerror,sync \
-status=progress
+logrotate /etc/logrotate.conf -v
 ```
 
-## list hardware
-```bash
-lspci
+#### Exemple
 ```
-## list you graphic card
-```bash
-lspci | grep -E "(VGA|3D)" -C 2
-lsusb
-lscpu : human readable of /proc/cpuinfon
-less /proc/cpuinfo
-cat /proc/meminfo
-nproc
-```
-## Memory
-Empty/clean
-```bash
-swapoff -a && swapon -a
+/var/log/dpkg.* {
+  monthly
+  rotate 12
+  size 100M
+  compress
+  delaycompress
+  missingok
+  notifempty
+  create 644 root root
+}
 ```
 
-## Monitor, screen
-### Xrandr
-```
-xrandr --help
-xrandr --current
+[Other exemple](https://doc.ubuntu-fr.org/logrotate#exemple)
 
-xrandr --output DP-2 --mode 1680x1050 --primary
-xrandr --output DP-1 --mode 1280x1024 --right-of DP-2
-
-xrandr --output DP-1 --auto --right-of eDP-1
-xrandr --output HDMI-1 --auto --right-of DP-1
-
-```
-#### Troubleshooting
-__Monitor plugged in but not displaying anything__
-```
-xrandr --auto
-sudo dpkg-reconfigure libxrandr2
-logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
-```
-
-# Work efficiency
-
-## Beauty
-### Pimp my terminal
-[Source](https://hackernoon.com/how-to-trick-out-terminal-287c0e93fce0)
-#### gnome-terminal
-GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
-
-##### Debian
-1- Ensure that your terminal is `gnome-terminal`
-```bash
-update-alternatives --get-selections | grep -i term
-x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
-```
-
-###### Graphicaly
-Install  `dconf`
-```bash
-sudo apt-get install dconf-tools
-dconf-editor
-```
-Run it and go to path `org` > `gnome` > `desktop` > `interface` > `monospace-font-name`
-
-
-###### CLI
-gsettings offers a simple commandline interface to GSettings. It lets you get, set or monitor an individual key for changes.  
-__To *Know* current settings type following commands in terminal :__
-```bash
-gsettings get org.gnome.desktop.interface document-font-name
-gsettings get org.gnome.desktop.interface font-name 
-gsettings get org.gnome.desktop.interface monospace-font-name
-gsettings get org.gnome.nautilus.desktop font
-```
-__You can *set* fonts by following commands in terminal :__
-For example `Monospace 11` do not support symbol. Which is uggly if you have a custom shell.  
-My choises which differs from default :  
-The last __number argument__ is the size
-> for terminal
-```bash
-gsettings set org.gnome.desktop.interface monospace-font-name 'Hack 12'
-```
-> for soft like Keepass2
-```bash
-gsettings set org.gnome.desktop.interface font-name 'Hack 12'
-```
-__Get list of available fonts__
-```bash
-fc-list | more
-fc-list | grep -i "word"
-fc-list | grep -i UbuntuMono
-```
-To lists font faces that cover Hindi language:
-```bash
-fc-list :lang=hi
-```
-search by family
-```bash
-fc-list  :family="NotoSansMono Nerd Font Mono"
-```
-search with complete name
-```bash
-fc-list  :fullname="Noto Sans Mono ExtraCondensed ExtraBold Nerd Font Complete Mono"
-```
-
-To find all similar keys on schema type following command:
-```bash
-gsettings list-recursively org.gnome.desktop.interface
-```
-To reset all valuses of keys run following command in terminal:
-```bash
-gsettings reset-recursively org.gnome.desktop.interface
-```
 
 # Databases
 ## MySQL
@@ -2990,13 +2863,14 @@ mysqldump -h 10.10.10.10 \
 | gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
 ```
 
-## Percona XtraDB Cluster (open source, cost-effective, and robust MySQL clustering)
+## Percona XtraDB Cluster
+(open source, cost-effective, and robust MySQL clustering)  
 Test replication from reverse proxy
 ```bash
 for i in `seq 1 6`; do mysql -u clustercheckuser -p -e "show variables like 'server_id'; select user()" ; done
 ```
 
-## redis
+## Redis
 Get info about __master/slave__ replication
 ```bash
 redis-cli -h 10.10.10.10 -p 6379 -a $PASSWORD info replication
@@ -3104,10 +2978,98 @@ AND time > now() - 30s
 * [Good tuto](http://www.oznetnerd.com/getting-know-influxdb/)
 * [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
 
+# Hardware
+## Storage
+can be
+- Disk
+- SSD
+- SD card (mmc)
+### List where your devices are located
+Your devices are hardwarely recognize by the kernel and then linked on the system with a file (because on linux, everything is a file) by udev (micro device) (systemd-udevd.service) `not file system related`
+```bash
+dmesg -T
 
-# virtualization (OS-level)
-## containers
-### Docker swarm
+sudo udevadm monitor
+```
+
+### Burn a an image to an SD card
+```bash
+dd \
+if=/home/baptiste/Downloads/2019-09-26-raspbian-buster-lite.img \
+of=/dev/mmcblk0 \
+bs=64K \
+conv=noerror,sync \
+status=progress
+```
+[Full perfect archlinux doc](https://wiki.archlinux.org/index.php/Dd#Remove_bootloader)
+
+### Remove only the MBR of a disk
+How to zeroe the first 512 bytes (MBR size) of a disk
+```bash
+dd \
+if=/dev/zero \
+of=/dev/mmcblk0 \
+bs=512 count=1 \
+conv=noerror,sync \
+status=progress
+```
+
+## Listing
+```bash
+lspci
+```
+list you graphic card
+```bash
+lspci | grep -E "(VGA|3D)" -C 2
+lsusb
+lscpu : human readable of /proc/cpuinfon
+less /proc/cpuinfo
+cat /proc/meminfo
+nproc
+```
+
+## Monitor
+Xrandr common cmd
+```bash
+xrandr --help
+xrandr --current
+
+xrandr --output DP-2 --mode 1680x1050 --primary
+xrandr --output DP-1 --mode 1280x1024 --right-of DP-2
+
+xrandr --output DP-1 --auto --right-of eDP-1
+xrandr --output HDMI-1 --auto --right-of DP-1
+
+```
+#### Troubleshooting
+Monitor plugged in but not displaying anything
+```bash
+xrandr --auto
+sudo dpkg-reconfigure libxrandr2
+```
+logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
+
+
+# Virtualization (OS-level)
+OS-level virtualization refers to an operating system __paradigm__ in which the kernel allows the existence of multiple isolated user-space instances. Such instances, called
+- __containers__ (Solaris, Docker)
+- __Zones__ (Solaris)
+- __virtual private servers__ (OpenVZ)
+- __partitions__
+- __virtual environments__ (VEs)
+- __virtual kernel__ (DragonFly BSD)
+- __jails__ (FreeBSD jail or chroot jail)
+
+Those instance may __look like__ real computers from the point of view of programs running in them.  
+
+- A computer program running on an ordinary operating system can see all resources (connected devices, files and folders, network shares, CPU power, quantifiable hardware capabilities) of that computer.
+- However, programs running inside of a container can only see the container's contents and devices assigned to the container.  
+
+#### __Overhead__
+Operating-system-level virtualization usually imposes less overhead than full virtualization because programs in virtual partitions __use the operating system's normal system call interface__ and do not need to be subjected to emulation or be run in an intermediate virtual machine, __as is the case with full virtualization__ (such as VMware ESXi, QEMU or Hyper-V) and paravirtualization (such as Xen or User-mode Linux). This form of virtualization also does not require hardware support for efficient performance.   
+[Wikipedia of Virtualization OS-level](https://en.wikipedia.org/wiki/OS-level_virtualization)
+## Containers
+### Docker
 (On swarm __manager__) find where an app is running
 ```bash
 docker service ps <app_name>
@@ -3119,7 +3081,7 @@ print cluster nodes
 docker node ls
 ```
 
-print address + role
+get address + role
 ```bash
 for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
 ```
@@ -3135,3 +3097,82 @@ https://regex101.com/
 ## Markdown
 [Support highlight syntax](https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown)
 [GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
+
+## Pimp my terminal
+[Source](https://hackernoon.com/how-to-trick-out-terminal-287c0e93fce0)
+gnome-terminal
+GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
+
+Debian
+1- Ensure that your terminal is `gnome-terminal`
+```bash
+update-alternatives --get-selections | grep -i term
+x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
+```
+
+Graphicaly
+Install  `dconf`
+```bash
+sudo apt-get install dconf-tools
+dconf-editor
+```
+Run it and go to path `org` > `gnome` > `desktop` > `interface` > `monospace-font-name`
+
+CLI
+gsettings offers a simple commandline interface to GSettings. It lets you get, set or monitor an individual key for changes.  
+__To *Know* current settings type following commands in terminal :__
+```bash
+gsettings get org.gnome.desktop.interface document-font-name
+gsettings get org.gnome.desktop.interface font-name 
+gsettings get org.gnome.desktop.interface monospace-font-name
+gsettings get org.gnome.nautilus.desktop font
+```
+__You can *set* fonts by following commands in terminal :__
+For example `Monospace 11` do not support symbol. Which is uggly if you have a custom shell.  
+My choises which differs from default :  
+The last __number argument__ is the size
+> for terminal
+```bash
+gsettings set org.gnome.desktop.interface monospace-font-name 'Hack 12'
+```
+> for soft like Keepass2
+```bash
+gsettings set org.gnome.desktop.interface font-name 'Hack 12'
+```
+__Get list of available fonts__
+```bash
+fc-list | more
+fc-list | grep -i "word"
+fc-list | grep -i UbuntuMono
+```
+To lists font faces that cover Hindi language:
+```bash
+fc-list :lang=hi
+```
+search by family
+```bash
+fc-list  :family="NotoSansMono Nerd Font Mono"
+```
+search with complete name
+```bash
+fc-list  :fullname="Noto Sans Mono ExtraCondensed ExtraBold Nerd Font Complete Mono"
+```
+
+To find all similar keys on schema type following command:
+```bash
+gsettings list-recursively org.gnome.desktop.interface
+```
+To reset all valuses of keys run following command in terminal:
+```bash
+gsettings reset-recursively org.gnome.desktop.interface
+```
+
+
+# Definitions
+Name | TLDR meaning | further explanations
+-|-|-
+TLDR | Too long I didn't read | [:book:](https://en.wikipedia.org/wiki/Wikipedia:Too_long;_didn%27t_read)
+CLI / Promt| Command Line Interpreter / Interface en ligne de commande. Different from Graphical mouse clickable | [:book:]()
+Shell Linux | CLI of Linux (sh,bash,dash,csh,tcsh,zsh) | [:book:](https://fr.wikipedia.org/wiki/Shell_Unix#Shells)
+Java Heap | shared among all Java virtual machine threads. The heap is the runtime data area from which memory for all __class__ instances and __arrays__ is allocated. | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
+Java Stack | Each Java virtual machine thread has a private Java virtual machine stack holding __local variables__ and partial results, and plays a part in __method invocation__ and __return__ | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
