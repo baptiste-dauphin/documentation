@@ -1,198 +1,55 @@
-<!-- autolink="true" -->
-<!-- MarkdownTOC levels="1,2,3" autolink="true" -->
+<!-- MarkdownTOC levels="1,2" -->
 
-- [Definitions](#definitions)
-- [System](#system)
-  - [User](#user)
-    - [Add](#add)
-    - [Change password](#change-password)
-    - [impersonate](#impersonate)
-    - [sudo](#sudo)
-  - [Group](#group)
-    - [Add](#add-1)
-  - [shell](#shell)
-    - [Stream](#stream)
-    - [Bash](#bash)
-  - [Environment variable](#environment-variable)
-  - [Ssh](#ssh)
-    - [rsync using ssh](#rsync-using-ssh)
-  - [FileSystem](#filesystem)
-    - [Show size](#show-size)
-    - [Mount](#mount)
-    - [List read only filesystem](#list-read-only-filesystem)
-    - [Unmount](#unmount)
-    - [How to 'root a system' after lost root password](#how-to-root-a-system-after-lost-root-password)
-    - [Check filesystem](#check-filesystem)
-    - [symbolic link](#symbolic-link)
-    - [Open Files](#open-files)
-  - [System control](#system-control)
-    - [init.d \(aka SystemV\) \(old way\)](#initd-aka-systemv-old-way)
-    - [Systemd \(new way\)](#systemd-new-way)
-  - [Log Rotate](#log-rotate)
-  - [Journal](#journal)
-    - [Definition](#definition)
-    - [Persist Your LogsPermalink](#persist-your-logspermalink)
-- [Network](#network)
-  - [Common packages](#common-packages)
-  - [Command commands](#command-commands)
-    - [netplan, new ubuntu network manager](#netplan-new-ubuntu-network-manager)
-    - [Show network connections, listening process](#show-network-connections-listening-process)
-  - [systemd-networkd debian 9 network management](#systemd-networkd-debian-9-network-management)
-  - [network - ENI - old management](#network---eni---old-management)
-    - [vlan tagging and route add](#vlan-tagging-and-route-add)
-  - [Activer le NAT](#activer-le-nat)
-  - [OpenVpn](#openvpn)
-  - [nc - TCP/IP swiss army knife](#nc---tcpip-swiss-army-knife)
-    - [Listen](#listen)
-    - [Check port opening](#check-port-opening)
-    - [manually write tcp packet](#manually-write-tcp-packet)
-  - [Internet Exchange Point](#internet-exchange-point)
-- [Security](#security)
-  - [Public Key Infrastructure - OpenSSL](#public-key-infrastructure---openssl)
-    - [Definitions](#definitions-1)
-    - [Generate Certificate Signing Request \(csr\) + the associate private key](#generate-certificate-signing-request-csr--the-associate-private-key)
-- [Git](#git)
-  - [Global info](#global-info)
-    - [Edit remote URL](#edit-remote-url)
-  - [Git Tag](#git-tag)
-  - [Git Checkout \(branch / tag / commit\)](#git-checkout-branch--tag--commit)
-  - [Git branch](#git-branch)
-  - [Git Diff](#git-diff)
-  - [Git Stash](#git-stash)
-  - [Git Merge conflict](#git-merge-conflict)
-    - [Undo/move your work](#undomove-your-work)
-    - [Override a given side by another](#override-a-given-side-by-another)
-    - [Log](#log)
-  - [Git Revert](#git-revert)
-  - [Git Reset](#git-reset)
-    - [Undo a commit and redo](#undo-a-commit-and-redo)
-  - [Submodules](#submodules)
-    - [Remove a submodule you need to:](#remove-a-submodule-you-need-to)
-- [Tmux](#tmux)
-  - [](#.tmux.conf)
-  - [Inside tmux](#inside-tmux)
-- [MySQL](#mysql)
-  - [User, Password](#user-password)
-  - [Worth known command](#worth-known-command)
-    - [Log](#log-1)
-    - [Analyze binary logs](#analyze-binary-logs)
-  - [Show](#show)
-  - [DUMP data \(mysqldump\)](#dump-data-mysqldump)
-    - [Feed database](#feed-database)
-    - [All in one usage <3](#all-in-one-usage-3)
-- [Percona XtraDB Cluster \(open source, cost-effective, and robust MySQL clustering\)](#percona-xtradb-cluster-open-source-cost-effective-and-robust-mysql-clustering)
-- [Wireshark](#wireshark)
-  - [DNS Analysis with Tshark](#dns-analysis-with-tshark)
-  - [HTTP](#http)
-    - [HTTP Analysis with Tshark](#http-analysis-with-tshark)
-    - [Parse User Agents and Frequency with Standard Shell Commands](#parse-user-agents-and-frequency-with-standard-shell-commands)
-    - [Using additional HTTP filters in Analysis](#using-additional-http-filters-in-analysis)
-    - [Using additional HTTP filters in Analysis](#using-additional-http-filters-in-analysis-1)
-- [Files](#files)
-  - [Tar](#tar)
-- [update-alternatives - Default system software \(Debian\)](#update-alternatives---default-system-software-debian)
-    - [List existing selections](#list-existing-selections)
-    - [Modify existing selection interactively](#modify-existing-selection-interactively)
-    - [Create a new selection](#create-a-new-selection)
-    - [Example : Change default terminal](#example--change-default-terminal)
-- [Process](#process)
-  - [get processes info](#get-processes-info)
-  - [Kill etc](#kill-etc)
-  - [Shortcut](#shortcut)
-  - [signals list](#signals-list)
-  - [list every running process](#list-every-running-process)
-    - [Get PID \(process Identifier\) of a running process](#get-pid-process-identifier-of-a-running-process)
-- [Unix File types](#unix-file-types)
-- [LDAP // Activate Directory](#ldap--activate-directory)
-- [SaltStack](#saltstack)
-    - [Targeting](#targeting)
-    - [Various useful module](#various-useful-module)
-- [Iptables](#iptables)
-    - [LOG](#log-2)
-    - [add new rules when NOTRACK is set](#add-new-rules-when-notrack-is-set)
-- [Conntrack](#conntrack)
-- [NTP \(Network Time Protocol\)](#ntp-network-time-protocol)
-    - [Client](#client)
-    - [NTP Pool Project](#ntp-pool-project)
-    - [NTP Management](#ntp-management)
-- [Apache](#apache)
-    - [Validate config before reload/restart](#validate-config-before-reloadrestart)
-- [NGINX \(Engine X\)](#nginx-engine-x)
-    - [Various variables](#various-variables)
-    - [virtual host example](#virtual-host-example)
-- [Zabbix Server](#zabbix-server)
-  - [API usage](#api-usage)
-- [Elastic Search](#elastic-search)
-- [Apt](#apt)
-    - [Show available package\(s\)](#show-available-packages)
-    - [Clean cache space in /var/cache/apt/archives/](#clean-cache-space-in-varcacheaptarchives)
-- [Security](#security-1)
-  - [Fail2Ban](#fail2ban)
-    - [Useful commands](#useful-commands)
-    - [File locations](#file-locations)
-- [Email system](#email-system)
-    - [MTA](#mta)
-  - [MSTMP](#mstmp)
-    - [Installation](#installation)
-- [grep](#grep)
-- [less](#less)
-    - [Start at the end of a file](#start-at-the-end-of-a-file)
-- [sed \(Stream editor\)](#sed-stream-editor)
-- [Find](#find)
-  - [Raid](#raid)
-    - [mdadm](#mdadm)
-- [redis](#redis)
-    - [Get info about __master/slave__ replication](#get-info-about-_masterslave_-replication)
-    - [FLUSH all keys of all databases](#flush-all-keys-of-all-databases)
-    - [Delete all keys of the specified Redis database](#delete-all-keys-of-the-specified-redis-database)
-    - [Redis cluster](#redis-cluster)
-    - [Check all databases](#check-all-databases)
-    - [Delete multiples keys](#delete-multiples-keys)
-    - [Resolve warning](#resolve-warning)
-- [Php-FPM](#php-fpm)
-    - [check config](#check-config)
-- [Docker](#docker)
-    - [Docker Swarm](#docker-swarm)
-- [print address + role](#print-address--role)
-  - [Docker-proxy](#docker-proxy)
-  - [Dockerd](#dockerd)
-- [System performance](#system-performance)
-  - [Get memory physical size](#get-memory-physical-size)
-  - [Get number processing units \(CPU / cores\)](#get-number-processing-units-cpu--cores)
-- [Graphic](#graphic)
-  - [Display Manager](#display-manager)
-    - [SDDM - lightweight](#sddm---lightweight)
-    - [Gnome - Nice display for personal laptop](#gnome---nice-display-for-personal-laptop)
-  - [Windows Manager](#windows-manager)
-    - [i3](#i3)
-- [HAProxy](#haproxy)
-    - [Check config](#check-config-1)
-- [Markdown](#markdown)
-  - [Java](#java)
-    - [JDK](#jdk)
-    - [Memory management](#memory-management)
-    - [Java - certificate authority](#java---certificate-authority)
-  - [Python](#python)
-    - [Build a package](#build-a-package)
-    - [virtualenv venv](#virtualenv-venv)
-    - [check the protocols supported by your Python version](#check-the-protocols-supported-by-your-python-version)
-- [InfluxDB](#influxdb)
-    - [Retention policy](#retention-policy)
-    - [MySQL equivalent](#mysql-equivalent)
-    - [InfluxDB paradygm](#influxdb-paradygm)
-- [Regex](#regex)
-- [User's IPC shared memory, semaphores, and message queues](#users-ipc-shared-memory-semaphores-and-message-queues)
-- [RabbitMQ](#rabbitmq)
-- [Ansible](#ansible)
-    - [service module](#service-module)
-- [Print the effective node_modules FOLDER to standard out.](#print-the-effective-node_modules-folder-to-standard-out)
-- [display a tree of every package found in the user’s folders \(without the -g option it only shows the current directory’s packages\)](#display-a-tree-of-every-package-found-in-the-user%E2%80%99s-folders-without-the--g-option-it-only-shows-the-current-directory%E2%80%99s-packages)
-- [To show the package registry entry for the connect package, you can do this:](#to-show-the-package-registry-entry-for-the-connect-package-you-can-do-this)
-- [For states of backend](#for-states-of-backend)
-- [new version](#new-version)
-- [After a crash of varnish:](#after-a-crash-of-varnish)
-- [Log hash with filter for request number](#log-hash-with-filter-for-request-number)
-- [exemple de commandes  pour  tracker les requêtes ayant pris plus de 10 seconde](#exemple-de-commandes-pour-tracker-les-requ%C3%AAtes-ayant-pris-plus-de-10-seconde)
+- Definitions
+- System
+  - User
+  - Group
+  - Apt
+  - check performance
+  - update-alternatives
+  - Graphic
+  - shell
+  - Process
+  - Files
+  - Ssh
+  - FileSystem
+  - System control
+  - Log Rotate
+  - Journal
+  - Iptables
+  - Conntrack
+- Network
+  - Common packages
+  - Command commands
+  - systemd-networkd debian 9 network management
+  - network - ENI - old management
+  - Activer le NAT
+  - OpenVpn
+  - nc - TCP/IP swiss army knife
+  - Internet Exchange Point
+- Security
+  - Public Key Infrastructure - OpenSSL
+  - Fail2Ban
+- Software
+  - NTP
+  - Git
+  - Tmux
+  - Email system
+  - LDAP // Activate Directory
+  - SaltStack
+  - Apache
+  - NGINX
+  - Zabbix Server
+  - Elastic Search
+  - Php-FPM
+  - HAProxy
+  - Java
+  - Python
+  - RabbitMQ
+  - Ansible
+- Miscellaneous
+  - Regex
+  - Markdown
 
 <!-- /MarkdownTOC -->
 
@@ -245,6 +102,115 @@ Add user baptiste to sudoer
 ```bash
 usermod -aG sudo baptiste
 usermod -aG wireshark b.dauphin
+```
+
+## Apt
+### Show available package(s)
+```bash
+apt update
+apt-cache search sendmail
+apt-cache search --names-only 'icedtea?'
+```
+
+#### Show dependencies for a given package(s)
+```bash
+apt depends sendmail
+```
+
+### Clean cache space in /var/cache/apt/archives/
+```bash
+apt-get clean
+```
+
+## check performance
+```bash
+htop
+nload
+```
+Memory information
+```bash
+free -g
+```
+
+### Get memory physical size
+
+##### Kilobyte
+```bash
+grep MemTotal /proc/meminfo | awk '{print $2}'
+```
+
+##### MegaByte
+```bash
+grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^1" | bc
+```
+
+##### GigaByte
+```bash
+grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^2" | bc
+```
+
+### Get number processing units (CPU / cores)
+available to the current process (may be less than all online)
+```bash
+nproc
+```
+
+all online
+```bash
+nproc --all
+```
+old fashion version
+```bash
+grep -c ^processor /proc/cpuinfo
+```
+
+## update-alternatives
+Default system software (Debian)
+```bash
+ update-alternatives - maintain symbolic links determining default commands 
+ ```
+
+List existing selections
+```bash
+update-alternatives --get-selections
+```
+
+Modify existing selection interactively
+```bash
+sudo update-alternatives --config x-terminal-emulator
+```
+
+Create a new selection
+```bash
+update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
+```
+
+Example : Change default terminal
+will prompt you an interactive console to chose among recognized software
+```bash
+sudo update-alternatives --config x-terminal-emulator
+```
+
+## Graphic
+* Graphic server (often X11, Xorg, or just X, it's the same software)
+* Display Manager (SDDM, lightDM, gnome)
+* Windows Manager (i3-wm, gnome)
+
+### Display Manager
+
+#### SDDM - lightweight
+Traduit de l'anglais-Simple Desktop Display Manager est un gestionnaire d’affichage pour les systèmes de fenêtrage X11 et Wayland. SDDM a été écrit à partir de zéro en C ++ 11 et supporte la thématisation via QML
+```bash
+service sddm status
+service sddm restart    : restart sddm (to load new monitor)
+```
+
+#### Gnome - Nice display for personal laptop
+
+### Windows Manager
+#### i3
+```bash
+update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
 
 ## shell
@@ -372,22 +338,23 @@ x=$(grep "$(dirname "$path")" file)
 x=`grep "\`dirname \"$path\"\`" file`
 ```
 
-## Environment variable
+### Environment variable
 Be very careful to the context of their definition
 
 > set variable to __current shell__
 ```bash
 export http_proxy=http://10.10.10.10:9999
 echo $http_proxy
-# should print the value
 ```
+should print the value
 
 > set variables only for the __current line execution__
 ```bash
 http_proxy=http://10.10.10.10:9999 wget -O - https://repo.saltstack.com/apt/debian/9/amd64/latest/SALTSTACK-GPG-KEY.pub
 echo $http_proxy
-# will return nothing because it doesn't exist anymore
 ```
+will return nothing because it doesn't exist anymore  
+
 > Export multiple env var
 ```bash
 export {http,https,ftp}_proxy="http://10.10.10.10:9999"
@@ -405,6 +372,240 @@ export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
 unset http_proxy
 unset http_proxy unset https_proxy unset HTTP_PROXY unset HTTPS_PROXY unset
 ```
+
+## Process
+### get processes info
+debian style
+```bash
+ps -ef
+ps -o pid,user,%mem,command ax
+```
+
+RedHat style
+```bash
+ps aux
+```
+
+### Kill etc
+```bash
+kill default TERM
+kill -l list all signals
+kill -l 15 get name of signal
+kill -s TERM PID 
+kill -TERM PID 
+kill -15 PID
+```
+
+### Shortcut
+| shortcut | meaning |
+|:---------|:--------|
+| ctrl + \ | SIGQUIT |
+| ctrl + C | SIGINT  |
+
+
+### signals list
+
+|Number | Name (short name) | Description Used for|
+|-|-|-|
+|0 SIGNULL (NULL)  | Null  | Check access to pid |
+|1 SIGHUP (HUP)  | Hangup  Terminate |  can be trapped |
+|2 SIGINT (INT)  | Interrupt Terminate |  can be trapped |
+|3 SIGQUIT (QUIT)  | Quit  Terminate with core dump |  can be trapped |
+|9 SIGKILL (KILL)  | Kill  Forced termination |  cannot be trapped |
+|15  SIGTERM (TERM)  | Terminate Terminate |  can be trapped |
+|24  SIGSTOP (STOP)  | Stop  Pause the process |  cannot be trapped. This is default if signal not provided to kill command. |
+|25  SIGTSTP (STP)  | Stop/pause the process |  can be trapped |
+|26  SIGCONT (CONT)  | Continue  | Run a stopped process |
+
+
+```bash
+xeyes &
+jobs -l
+kill -s STOP 3405
+jobs -l
+kill -s CONT 3405
+jobs -l
+kill -s TERM 3405
+```
+
+
+list every running process
+```bash
+ps -ef | grep ssh-agent | awk '{print $2}'
+ps -ef | grep ssh-agent | awk '$0=$2'
+```
+
+Print only the process IDs of syslogd:
+```bash
+ps -C syslogd -o pid=
+```
+
+Print only the name of PID 42:
+```bash
+ps -q 42 -o comm=
+```
+
+To see every process running as root (real & effective ID) in user format:
+```bash
+ps -U root -u root u
+```
+
+Get PID (process Identifier) of a running process
+```bash
+pidof iceweasel
+pgrep ssh-agent
+```
+
+### process substitution
+```bash
+diff <(cat /etc/passwd) <(cut -f2 /etc/passwd)
+```
+<(...) is called process substitution.
+It converts the output of a command into a file-like object that diff can read from.
+While process substitution is not POSIX, it is supported by bash, ksh, and zsh.
+
+### Inter-process communication
+User's IPC shared memory, semaphores, and message queues 
+
+```
+Type of IPC object. Possible values are:
+q -- message queue
+m -- shared memory
+s -- semaphore
+```
+```bash
+USERNAME=$1
+
+TYPE=$2
+
+ipcs -$TYPE | grep $USERNAME | awk ' { print $2 } ' | xargs -I {} ipcrm -$TYPE {}
+ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
+```
+
+## Files
+### Unix File types
+| Description                         | symbol              |
+|:------------------------------------|:--------------------|
+| Regular file                        | -                   |
+| Directory                           | d                   |
+| Special files                       | (5 sub types in it) |
+| block file                          | b                   |
+| Character device file               | c                   |
+| Named pipe file or just a pipe file | p                   |
+| Symbolic link file                  | l                   |
+| Socket file                         | s                   |
+
+### Tar
+```bash
+tar --help
+```
+
+| Command     | meaning                                       |
+|:------------|:----------------------------------------------|
+| -c          | create   (name your file .tar)                |
+| -(c)z       | archive type gzip    (name your file .tar.gz) |
+| -(c)j       | archive type bzip2                            |
+| -x          | extract                                       |
+| -f          | file                                          |
+| -v          | verbose                                       |
+| -C          | Set dir name to extract files                 |
+| --directory | same                                          |
+
+### grep
+
+### less
+Start at the end of a file
++ will run an initial command when the file is opened
+G jumps to the end
+
+```bash
+less +G app.log
+```
+
+
+
+
+### sed (Stream editor)
+```bash
+sed '/^#/ d' redis.conf : supprime le dieze en début de ligne (décommente)
+sed -n : silent mode. By default print nothing. Use with /p to print interesting cmd
+sed -e : Script directement dans la ligne de commande
+sed -f script_file  : script dans un fichier
+sed -i : agit non pas sur l input stream mais sur le fichier specifier
+
+sed -i 's/patern 1/patern 2/g' /etc/ssh/sshd_config
+sed -n 's/ *Not After : *//p'`  remplace Not after par rien 
+```
+
+##### remove 342th line of file
+```bash
+sed '342d' -i ~/.ssh/known_hosts
+```
+
+##### remove 342th to 342th line, equivalent to precedent cmd
+```bash
+sed '342,342d' -i ~/.ssh/known_hosts
+```
+
+##### remove first 42 lines of test.sql file and print result
+```bash
+sed -i '1,42d' -i test.sql
+```
+
+### Find
+
+##### Various example, with xargs
+```bash
+find . -maxdepth 1 -type l -ls
+find /opt -type f -mmin -5 -exec ls -ltr {} +
+find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
+ls 2019* | xargs -I % mv % ./working_sheet_of_the_day
+```
+list files with last modified date of LESS than 5 minutes
+```bash
+find . -type f -mmin -5 -exec ls -ltr {} +
+```
+
+xargs
+```bash
+find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
+```
+
+date de modif des DATA du fichier (day)
+```bash
+find -mtime n
+```
+last acces time (day)
+```bash
+find -atime n
+```
+date de modif du STATUT du fichier
+```bash
+find -ctime n
+```
+
+
+list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
+```bash
+find . -type f -mtime +10 -exec ls -ltr {} +
+```
+list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
+```bash
+find . -type f -mtime -10 -exec ls -ltr {} +
+```
+
+#### compress
+```bash
+tar zfcv myfiles.tar.gz /dir1 /dir2 /dir3
+```
+
+#### extract
+```bash
+tar zxvf somefilename.tar.gz or .tgz
+tar jxvf somefilename.tar.bz2
+tar xf file.tar -C /path/to/directory
+```
+
 
 ## Ssh
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
@@ -797,6 +998,107 @@ Run journalctl with the --vacuum-time option to remove archived journal files wi
 journalctl --vacuum-time=1years
 ```
 
+## Iptables
+[Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
+[ArchLinux iptables good explanations](https://wiki.archlinux.org/index.php/iptables)
+
+#### Show saved rules
+```bash
+iptables-save
+```
+
+#### Save rules
+```bash
+iptables-save > /etc/iptables/rules.v4 
+```
+#### Print rules
+```bash
+iptables -L
+iptables -nvL
+iptables -nvL INPUT
+iptables -nvL OUTPUT
+iptables -nvL PREROUTING
+```
+
+#### once a rule is apply, it''s immediatly applied !!!
+##### The Default linux iptables chain policy is ACCEPT for all INPUT, FORWARD and OUTPUT policies. You can easily change this default policy to DROP with below listed commands.
+```bash
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+iptables --policy INPUT DROP
+iptables -P chain target [options]     --policy  -P chain target
+--append  -A chain   Append to chain
+--check   -C chain   Check for the existence of a rule
+--delete  -D chain   Delete matching rule from chain
+iptables --list     Print rules in human    readable format
+iptables --list-rules          Print rules in iptables readable format
+iptables -v -L -n
+```
+
+#### Range multiport
+```bash
+iptables -A OUTPUT -d 10.10.10.10/32 -p tcp -m state --state NEW -m tcp --match multiport --dports 4506:10000 -j ACCEPT
+```
+
+#### NOTRACK
+```bash
+iptables -t raw -I PREROUTING -j NOTRACK
+iptables -t raw -I OUTPUT -j NOTRACK
+```
+
+### LOG
+#### on log les paquets drop
+```bash
+iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
+iptables -A INPUT -j DROP
+iptables -P INPUT DROP
+
+iptables -A OUTPUT -j LOG --log-prefix "OUTPUT:DROP:" --log-level 6
+iptables -A OUTPUT -j DROP
+iptables -P OUTPUT DROP
+```
+
+### add new rules when NOTRACK is set
+#### INPUT new rule
+you have to temporarily REMOVE log and drop last lines, otherwise, your new line
+#### will never be taken !
+```bash
+iptables -D INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
+iptables -D INPUT -j DROP
+```
+
+#### add your new rule
+```bash
+iptables -A INPUT -p udp -m udp --sport 123 -j ACCEPT
+```
+
+#### put back logging and dropping
+```bash
+iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
+iptables -A INPUT -j DROP
+```
+
+## Conntrack
+#### debian old
+```bash
+cat /proc/sys/net/netfilter/nf_conntrack_count
+```
+
+#### debian 9
+```bash
+conntrack -L [table] [options] [-z] 
+conntrack -G [table] parameters 
+conntrack -D [table] parameters 
+conntrack -I [table] parameters 
+conntrack -U [table] parameters 
+conntrack -E [table] [options] 
+conntrack -F [table] 
+conntrack -C [table] 
+conntrack -S
+```
+
 
 # Network
 ## Common packages
@@ -1057,23 +1359,157 @@ openssl req -new -sha256 -key $(SUB.MYDOMAIN.TLD).key -nodes -out $(SUB.MYDOMAIN
 You can verify the content of your csr token here :
 [DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
 
+## Fail2Ban
+### Useful commands
+
+print jails
+```bash
+fail2ban-client status
+```
+
+get banned ip and other info about a specific jail
+```bash
+fail2ban-client status ssh
+```
+
+set banip triggers email send
+```bash
+fail2ban-client set ssh banip 10.10.10.10
+```
+
+unbanip
+```bash
+fail2ban-client set ssh unbanip 10.10.10.10
+```
+
+check a specific fail2ban chain
+```bash
+iptables -nvL f2b-sshd
+fail2ban-client get dbpurgeage
+fail2ban-client get dbfile
+```
+
+__fail2ban will send mail using the MTA (mail transfer agent)__
+
+```bash
+grep "mta =" /etc/fail2ban/jail.conf
+mta = sendmail
+```
+
+### File locations
+global __default__ config
+* /etc/fail2ban/jail.conf
+
+will be override with this parameters
+__Centralized Control__ file
+This is here we enable jails
+
+* /etc/fail2ban/jail.local
 
 
-# Git
+
+# Software
+
+## NTP
+stands for Network Time Protocol
+![GitHub Logo](../src/ntp_stratum.png)
+
+### Client
+Debian, Ubuntu, Fedora, CentOS, and most operating system vendors, __don't package NTP into client and server packages separately__. When you install NTP, you've made your computer __both a server, and a client simultaneously.__
+
+### NTP Pool Project
+As a client, rather than pointing your servers to static IP addresses, you may want to consider using the NTP pool project. Various people all over the world have donated their stratum 1 and stratum 2 servers to the pool, Microsoft, XMission, and even myself have offered their servers to the project. As such, clients can point their NTP configuration to the pool, which will round robin and load balance which server you will be connecting to.
+
+There are a number of different domains that you can use for the round robin. For example, if you live in the United States, you could use:
+
+* 0.us.pool.ntp.org
+* 1.us.pool.ntp.org
+* 2.us.pool.ntp.org
+* 3.us.pool.ntp.org
+
+There are round robin domains for each continent, minus Antarctica, and for many countries in each of those continents. There are also round robin servers for projects, such as Ubuntu and Debian:
+
+* 0.debian.pool.ntp.org
+* 1.debian.pool.ntp.org
+* 2.debian.pool.ntp.org
+* 3.debian.pool.ntp.org
+
+
+On my public NTP stratum 2 server, I run the following command to see its status:
+
+```bash
+ntpq -pn
+    remote            refid      st t when poll reach   delay   offset  jitter
+
+------------------------------------------------------------------------------
+*198.60.22.240   .GPS.            1 u  912 1024  377    0.488   -0.016   0.098
++199.104.120.73  .GPS.            1 u   88 1024  377    0.966    0.014   1.379
+-155.98.64.225   .GPS.            1 u   74 1024  377    2.782    0.296   0.158
+-137.190.2.4     .GPS.            1 u 1020 1024  377    5.248    0.194   0.371
+-131.188.3.221   .DCFp.           1 u  952 1024  377  147.806   -3.160   0.198
+-217.34.142.19   .LFa.            1 u  885 1024  377  161.499   -8.044   5.839
+-184.22.153.11   .WWVB.           1 u  167 1024  377   65.175   -8.151   0.131
++216.218.192.202 .CDMA.           1 u   66 1024  377   39.293    0.003   0.121
+-64.147.116.229  .ACTS.           1 u   62 1024  377   16.606    4.206   0.216
+```
+
+We need to understand each of the columns, so we understand what this is saying:
+
+| Column | Meaning                                                                                                                                                                                                                                 |
+|:-------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| remote | The remote server you wish to synchronize your clock with                                                                                                                                                                               |
+| refid  | The upstream stratum to the remote server. For stratum 1 servers, this will be the stratum 0 source.                                                                                                                                    |
+| st     | The stratum level, 0 through 16.                                                                                                                                                                                                        |
+| t      | The type of connection. Can be "u" for unicast or manycast, "b" for broadcast or multicast, "l" for local reference clock, "s" for symmetric peer, "A" for a manycast server, "B" for a broadcast server, or "M" for a multicast server |
+| when   | The last time when the server was queried for the time. Default is seconds, or "m" will be displayed for minutes, "h" for hours and "d" for days.                                                                                       |
+| poll   | How often the server is queried for the time, with a minimum of 16 seconds to a maximum of 36 hours. It's also displayed as a value from a power of two. Typically, it's between 64 seconds and 1024 seconds.                           |
+| reach  | This is an 8-bit left shift octal value that shows the success and failure rate of communicating with the remote server. Success means the bit is set, failure means the bit is not set. 377 is the highest value.                      |
+| delay  | This value is displayed in milliseconds, and shows the round trip time (RTT) of your computer communicating with the remote server.                                                                                                     |
+| offset | This value is displayed in milliseconds, using root mean squares, and shows how far off your clock is from the reported time the server gave you. It can be positive or negative.                                                       |
+| jitter | This number is an absolute value in milliseconds, showing the root mean squared deviation of your offsets.                                                                                                                              |
+
+
+Next to the remote server, you'll notice a single character. This character is referred to as the "tally code", and indicates whether or not NTP is or will be using that remote server in order to synchronize your clock. Here are the possible values:
+
+| __remote single character__ | Meaning                                                                                                                                                                                                                                             |
+|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| __whitespace__              | Discarded as not valid. Could be that you cannot communicate with the remote machine (it's not online), this time source is a ".LOCL." refid time source, it's a high stratum server, or the remote server is using this computer as an NTP server. |
+| __x__                       | Discarded by the intersection algorithm.                                                                                                                                                                                                            |
+| __.__                       | Discarded by table overflow (not used).                                                                                                                                                                                                             |
+| __-__                       | Discarded by the cluster algorithm.                                                                                                                                                                                                                 |
+| __+__                       | Included in the combine algorithm. This is a good candidate if the current server we are synchronizing with is discarded for any reason.                                                                                                            |
+| __#__                       | Good remote server to be used as an alternative backup. This is only shown if you have more than 10 remote servers.                                                                                                                                 |
+| __*__                       | The current system peer. The computer is using this remote server as its time source to synchronize the clock                                                                                                                                       |
+| __o__                       | Pulse per second (PPS) peer. This is generally used with GPS time sources, although any time source delivering a PPS will do. This tally code and the previous tally code "*" will not be displayed simultaneously.                                 |
+
+
+[Sources](https://pthree.org/2013/11/05/real-life-ntp/)
+
+#### NTP Management
+
+```bash
+apt-get install ntp
+ntpq -p
+vim /etc/ntp.conf
+sudo service ntp restart
+ntpq -p
+```
+
+## Git
 ![GitHub Logo](../src/git_cheat.png)
 
-## Global info
+### Global info
 ```bash
 git remote -v
 git branch -v
 ```
 
-### Edit remote URL
+#### Edit remote URL
 ```bash
 git remote set-url origin git@git.baptiste-dauphin.com:GROUP/SUB_GROUP/project_name
 ```
 
-## Git Tag
+### Git Tag
 create tag at your current commit
 ```bash
 git tag temp_tag_2
@@ -1099,7 +1535,7 @@ Get the current tag
 git describe --tags --exact-match HEAD
 ```
 
-## Git Checkout (branch / tag / commit)
+### Git Checkout (branch / tag / commit)
 ```bash
 git checkout dev
 git checkout master
@@ -1108,13 +1544,13 @@ git checkout v_0.9
 git checkout ac92da0124997377a3ee30f3159cdee838bd5b0b
 ```
 
-## Git branch
+### Git branch
 Get the current branch name
 ```bash
 git branch | grep \* | cut -d ' ' -f2
 ```
 
-## Git Diff
+### Git Diff
 Specific file
 ```bash
 git diff -- human/lvm.md
@@ -1132,7 +1568,7 @@ git diff --staged
 
 
 
-## Git Stash
+### Git Stash
 To list the stashed modifications
 
 ```bash
@@ -1158,7 +1594,7 @@ git stash show -p stash@{1}
 ```
 
 
-## Git Merge conflict
+### Git Merge conflict
 In case of conflict when pulling, by default git will conserve both version of file(s)
 ```bash
 git pull origin master
@@ -1176,7 +1612,7 @@ Unmerged paths:
   both modified:   path/to/file
 ```
 
-### Undo/move your work
+#### Undo/move your work
 with __Git reset__ and __Git stash__
 go at the previous commit. 
 will uncommit your last changes
@@ -1202,7 +1638,7 @@ And then commit again
 git commit "copy-paste history commit message :)"
 ```
 
-### Override a given side by another
+#### Override a given side by another
 You can tell him that you want your modifications take precedance 
 So, in that case of __merge conflict__
 cancel your conflict by cancel the current merge,
@@ -1220,7 +1656,7 @@ Or if you want to keep only the REMOTE work
 git pull -X theirs origin master
 ```
 
-### Log
+#### Log
 ##### Find commit by author or since a specific date
 ```bash
 git log --author="b.dauphin" \
@@ -1232,31 +1668,31 @@ git log --author="b.dauphin" \
 git log --author="b.dauphin" \
     -3
 ```
-#### only print specific info from commits
-##### author
+##### only print specific info from commits
+###### author
 ```bash
 git log --since="2 week ago" \
     --pretty=format:"%an"
 ```
-#### hash, author name, date, message
+##### hash, author name, date, message
 ```bash
 git log --author="b.dauphin"  \
     --since="2 week ago" \
     --pretty=format:"%h - %an, %ar : %s"
 ```
 
-#### Show modification of specific commits
+##### Show modification of specific commits
 ```bash
 git show 01624bc338d4a89c09ba2915ff25ce08174b8e93 3d9228fa99eab6c208590df91eb2af05daad8b40
 ```
 
-#### See changes to a specific file using git
+##### See changes to a specific file using git
 ```bash
 git log --follow -p -- file
 git --no-pager log --follow -p -- file
 ```
 
-## Git Revert
+### Git Revert
 The git revert command can be considered an 'undo' type command, however, it is not a traditional undo operation. __INSTEAD OF REMOVING the commit from the project history__, it figures out how to __invert the changes introduced by the commit and appends a new commit with the resulting INVERSE CONTENT__. This prevents Git from losing history, which is important for the integrity of your revision history and for reliable collaboration.
 
 Reverting should be used when you want to apply the inverse of a commit from your project history. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
@@ -1274,7 +1710,7 @@ git log --pretty=format:"%h - %an, %ar : %s"
 
 
 
-## Git Reset
+### Git Reset
 The __git reset__ command is a complex and versatile tool for undoing changes. It has three primary forms of invocation. These forms correspond to command line arguments __--soft__, __--mixed__, __--hard__. The three arguments each correspond to Git's three internal state management mechanism's, The Commit Tree (HEAD), The Staging Index, and The Working Directory.
 
 Git reset & three trees of Git
@@ -1283,7 +1719,7 @@ To properly understand git reset usage, we must first understand Git's internal 
 
 ![GitHub Logo](../src/git_reset.svg)
 
-### Undo a commit and redo
+#### Undo a commit and redo
 ```bash
 git commit ...
 git reset --soft HEAD^
@@ -1291,7 +1727,7 @@ edit
 git commit -a -c ORIG_HEAD
 ```
 
-## Submodules
+### Submodules
 __First time__, clone a repo including its submodules
 ```bash
 git clone --recurse-submodules -j8 git@github.com:FataPlex/documentation.git
@@ -1303,7 +1739,7 @@ git pull --recurse-submodules
 git submodule update --init --recursive
 ```
 
-### Remove a submodule you need to:
+#### Remove a submodule you need to:
 * Delete the relevant section from the __.gitmodules__ file
 * Stage the .gitmodules changes __git add .gitmodules__
 * Delete the relevant section from __.git/config__
@@ -1314,7 +1750,7 @@ git submodule update --init --recursive
 
 
 
-# Tmux
+## Tmux
 
 Depuis le shell, avant de rentrer dans une session tmux
 ```bash
@@ -1329,13 +1765,13 @@ tmux kill-server : kill all sessions
 :set-window-option xterm-keys on
 ```
 
-## [.tmux.conf]
+### [.tmux.conf]
 ```bash
 set-window-option -g xterm-keys on
 ```
 
 
-## Inside tmux
+### Inside tmux
 
 __Ctrl + B__ : (to press __each time before another command__)
 
@@ -1361,159 +1797,108 @@ __Ctrl + B__ : (to press __each time before another command__)
 | z                             | toggle pane zoom                                                                                      |
 | ":set synchronise-panes on" : | synchronise_all_panes in the current session (to execute parallel tasks like multiple iperfs client)" |
 
+## Email system
 
-# MySQL
-## User, Password
-```sql
-CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
-CREATE USER 'api_153'@'10.10.%.%' IDENTIFIED BY 'password';
-SELECT user, host FROM mysql.user;
-SHOW CREATE USER api
-```
-##### GRANT (rights)
-```sql
-GRANT SELECT, INSERT, UPDATE, DELETE ON `github`.* TO 'api_153'@'10.10.%.%';
-GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
+There are three main functions that make up an e-mail system.
+* First there is the Mail User Agent (MUA) which is the program a user actually uses to compose and read mails.
+* Then there is the Mail Transfer Agent (MTA) that takes care of transferring messages from one computer to another.
+* And last there is the Mail Delivery Agent (MDA) that takes care of delivering incoming mail to the user's inbox. 
 
--- Apply GRANT
-FLUSH PRIVILEGES;
-```
-##### Revoke (revert GRANT)
-```sql
-REVOKE INSERT ON *.* FROM 'jeffrey'@'localhost';
-REVOKE ALL PRIVILEGES ON `github`.* FROM 'jeffrey'@'localhost';
-```
+Function | Name | Tool which do this
+-|-|-
+Compose and read | MUA (User Agent) | mutt, thunderbird
+Transferring | MTA (Transfer Agent) | msmtp,  __exim4__, thunderbird
+Delivering incoming mail to user's inbox | MDA (Devliery agent) | __exim4__, thunderbird
 
-##### Table information
+### MTA
+It exists two types of MTA (Mail Transfert Agent)
+
+- __Mail server__ : like postfix, or sendmail-server 
+- __SMTP client__, which only forward to a __SMTP relay__ : like ssmtp (deprecated since 2013), use __mstmp__ instead, 
+
+#### Check what is your email sender, by looking at the sym link of `sendmail`
 ```bash
-show table status like 'mytablename'\G
-```
-```sql
-*************************** 1. row ***************************
-           Name: mytablename
-         Engine: MyISAM
-        Version: 10
-     Row_format: Dynamic
-           Rows: 2444
- Avg_row_length: 7536
-    Data_length: 564614700
-Max_data_length: 281474976710655
-   Index_length: 7218176
-      Data_free: 546194608
- Auto_increment: 1187455
-    Create_time: 2008-03-19 10:33:13
-    Update_time: 2008-09-02 22:18:15
-     Check_time: 2008-08-27 23:07:48
-      Collation: latin1_swedish_ci
-       Checksum: NULL
- Create_options: pack_keys=0
-        Comment:
+which sendmail
+/usr/sbin/sendmail
+
+ls -l /usr/sbin/sendmail
+lrwxrwxrwx 1 root root 5 Jul 15  2014 /usr/sbin/sendmail -> ssmtp
 ```
 
-## Worth known command
-##### From shell (outside of a MySQL prompt)
+In this case, ssmtp in my mail sender
+
+#### MSTMP
+msmtp est un client SMTP très simple et facile à configurer pour l'envoi de courriels.
+Son mode de fonctionnement par défaut consiste à transférer les courriels au serveur SMTP que vous aurez indiqué dans sa configuration. Ce dernier se chargera de distribuer les courriels à leurs destinataires.
+Il est entièrement compatible avec sendmail, prend en charge le transport sécurisé TLS, les comptes multiples, diverses méthodes d’authentification et les notifications de distribution.
+
+Installation
 ```bash
-mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
+apt install msmtp msmtp-mta
+vim /etc/msmtprc
 ```
-##### Show users and remote client IP or subnet etc
-```sql
-SELECT user, host FROM mysql.user;
-```
-
-##### Show current queries
-```sql
-SHOW FULL PROCESSLIST;
-```
-
-##### Variables, status
-`%` is a wildcard char like `*`
-```sql
-SHOW VARIABLES WHERE Variable_Name LIKE "%log%";
-
-SHOW VARIABLES WHERE Variable_Name LIKE "wsrep%";
-
-SHOW STATUS like 'Bytes_received';
-SHOW STATUS like 'Bytes_sent';
-```
-
-### Log
-The file mysql-bin.[index] keeps a list of all binary logs mysqld has generated and auto-rotated. The mechanisms for cleaning out the binlogs in conjunction with mysql-bin.[index] are:
-```sql
-PURGE BINARY LOGS TO 'binlogname';
-PURGE BINARY LOGS BEFORE 'datetimestamp';
-```
-### Analyze binary logs
 ```bash
-mysqlbinlog -d github \
---base64-output=DECODE-ROWS \
---start-datetime="2005-12-25 11:25:56" \
-pa6.k8s.node.01-bin.000483 
+hashtag Valeurs par défaut pour tous les comptes.
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ~/.msmtp.log
+
+hashtag Exemple pour un compte Gmail
+account        gmail
+host           smtp.gmail.com
+port           587
+from           username@gmail.com
+user           username
+password       plain-text-password
+
+hashtag Définir le compte par défaut
+account default : gmail
 ```
 
-## Show
-```sql
-SHOW CREATE TABLE user;
-SHOW GRANTS FOR user@git.baptiste-dauphin.com;
+Test email sending
 ```
+echo -n "Subject: hello\n\nDo see my mail" | sendmail baptistedauphin76@gmail.com
 
-## DUMP data (mysqldump)
+```
+You run the command... and, oops: sendmail: Cannot open mailhub:25. The reason for this is that we didn't provide mailhub settings at all. In order to forward messages, you need an SMTP server configured. That's where SSMTP performs really well: you just need to edit its configuration file once, and you are good to go.
+
+
+#### Send mail using open (smtp) relay
+Note that it also works with netcat 
 ```bash
-mysqldump -u root -p \
---all-databases \       # Dump all tables in all databases, WITHOUT 'INFORMATION_SCHEMA' and 'performace_schema'
---add-drop-database \   # Add DROP DATABASE statement before each CREATE DATABASE statement
---ignore-table=DB.table_name \
---skip-add-locks \      # Do not add locks
---skip-lock-tables \
---single-transaction \
-> /home/b.dauphin/mysqldump/dump_mysql_.sql
-
-mysqldump -h 10.10.10.10 \
--u baptiste \
--p*********** db1 table1 table2 table3 \
---skip-add-locks \
---skip-lock-tables \
---single-transaction \
-| gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
+nc smtp.free.fr 25
 ```
 
-#### Table size
-```sql
-SELECT table_name AS `Table`, round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` FROM information_schema.TABLES WHERE table_schema = "github_db1" AND table_name = "table1";
-```
-
-#### All tables of all databases with size
-```sql
-SELECT 
-     table_schema as `Database`, 
-     table_name AS `Table`, 
-     round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB`,
-     round(((data_length + index_length) / 1024 / 1024 / 1024), 2) `Size in GB` 
-FROM information_schema.TABLES 
-ORDER BY table_schema, data_length + index_length DESC;
-```
-
-#### All Databases size
-```sql
-SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
-```
-### Feed database
 ```bash
-gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]
-```
-### All in one usage <3
-```bash
-mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
+telnet smtp.free.fr 25
+Trying 212.27.48.4...
+Connected to smtp.free.fr.
+Escape character is '^]'.
+220 smtp4-g21.free.fr ESMTP Postfix
+HELO test.domain.com
+250 smtp4-g21.free.fr
+MAIL FROM:<test@domain.com>
+250 2.1.0 Ok
+RCPT TO:<toto@domain.fr>
+250 2.1.5 Ok
+DATA
+354 End data with <CR><LF>.<CR><LF>
+Subject: test message
+This is the body of the message!
+.
+250 2.0.0 Ok: queued as 2D8FD4C80FF
+quit
+221 2.0.0 Bye
+Connection closed by foreign host.
 ```
 
-# Percona XtraDB Cluster (open source, cost-effective, and robust MySQL clustering)
-Test replication from reverse proxy
-```bash
-for i in `seq 1 6`; do mysql -u clustercheckuser -p -e "show variables like 'server_id'; select user()" ; done
-```
 
 
-# Wireshark
-## DNS Analysis with Tshark
+
+### Wireshark
+#### DNS Analysis with Tshark
 It just plugs into 
 ```bash
 tshark -f "udp port 53" -Y "dns.qry.type == A and dns.flags.response == 0"
@@ -1522,189 +1907,30 @@ count total dns query
 ```bash
 tshark -f "udp port 53" -n -T fields -e dns.qry.name | wc -l
 ```
-## HTTP
-### HTTP Analysis with Tshark
+#### HTTP
+##### HTTP Analysis with Tshark
 ```bash
 tshark -i wlan0 -Y http.request -T fields -e http.host -e http.user_agent
 ```
 
-### Parse User Agents and Frequency with Standard Shell Commands
+##### Parse User Agents and Frequency with Standard Shell Commands
 ```bash
 tshark -r example.pcap -Y http.request -T fields -e http.host -e http.user_agent | sort | uniq -c | sort -n
 ```
 
-### Using additional HTTP filters in Analysis
+##### Using additional HTTP filters in Analysis
 ```bash
 tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.request.full_uri
 ```
 
-### Using additional HTTP filters in Analysis
+##### Using additional HTTP filters in Analysis
 ```bash
 tshark -r example.pcap -Y http.request -T fields -e http.host -e ip.dst -e http.request.full_uri
 ```
 
-# Files
-## Tar
-```bash
-tar --help
-```
+## LDAP // Activate Directory
 
-| Command     | meaning                                       |
-|:------------|:----------------------------------------------|
-| -c          | create   (name your file .tar)                |
-| -(c)z       | archive type gzip    (name your file .tar.gz) |
-| -(c)j       | archive type bzip2                            |
-| -x          | extract                                       |
-| -f          | file                                          |
-| -v          | verbose                                       |
-| -C          | Set dir name to extract files                 |
-| --directory | same                                          |
-
-
-#### compress
-```bash
-tar zfcv myfiles.tar.gz /dir1 /dir2 /dir3
-```
-
-#### extract
-```bash
-tar zxvf somefilename.tar.gz or .tgz
-tar jxvf somefilename.tar.bz2
-tar xf file.tar -C /path/to/directory
-```
-
-# update-alternatives - Default system software (Debian)
-```bash
- update-alternatives - maintain symbolic links determining default commands 
- ```
-
-### List existing selections
-```bash
-update-alternatives --get-selections
-```
-
-### Modify existing selection interactively
-```bash
-sudo update-alternatives --config x-terminal-emulator
-```
-
-### Create a new selection
-```bash
-update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
-```
-
-### Example : Change default terminal
-will prompt you an interactive console to chose among recognized software
-```bash
-sudo update-alternatives --config x-terminal-emulator
-```
-
-
-# Process
-## get processes info
-debian style
-```bash
-ps -ef
-ps -o pid,user,%mem,command ax
-```
-
-RedHat style
-```bash
-ps aux
-```
-
-## Kill etc
-```bash
-kill default TERM
-kill -l list all signals
-kill -l 15 get name of signal
-kill -s TERM PID 
-kill -TERM PID 
-kill -15 PID
-```
-
-## Shortcut
-| shortcut | meaning |
-|:---------|:--------|
-| ctrl + \ | SIGQUIT |
-| ctrl + C | SIGINT  |
-
-
-## signals list
-
-|Number | Name (short name) | Description Used for|
-|-|-|-|
-|0 SIGNULL (NULL)  | Null  | Check access to pid |
-|1 SIGHUP (HUP)  | Hangup  Terminate |  can be trapped |
-|2 SIGINT (INT)  | Interrupt Terminate |  can be trapped |
-|3 SIGQUIT (QUIT)  | Quit  Terminate with core dump |  can be trapped |
-|9 SIGKILL (KILL)  | Kill  Forced termination |  cannot be trapped |
-|15  SIGTERM (TERM)  | Terminate Terminate |  can be trapped |
-|24  SIGSTOP (STOP)  | Stop  Pause the process |  cannot be trapped. This is default if signal not provided to kill command. |
-|25  SIGTSTP (STP)  | Stop/pause the process |  can be trapped |
-|26  SIGCONT (CONT)  | Continue  | Run a stopped process |
-
-
-```bash
-xeyes &
-jobs -l
-kill -s STOP 3405
-jobs -l
-kill -s CONT 3405
-jobs -l
-kill -s TERM 3405
-```
-
-
-## list every running process
-```bash
-ps -ef | grep ssh-agent | awk '{print $2}'
-ps -ef | grep ssh-agent | awk '$0=$2'
-```
-
-#### Print only the process IDs of syslogd:
-```bash
-ps -C syslogd -o pid=
-```
-#### Print only the name of PID 42:
-```bash
-ps -q 42 -o comm=
-```
-
-#### To see every process running as root (real & effective ID) in user format:
-```bash
-ps -U root -u root u
-```
-
-#### Use process substitution:
-```bash
-diff <(cat /etc/passwd) <(cut -f2 /etc/passwd)
-```
-<(...) is called process substitution.
-It converts the output of a command into a file-like object that diff can read from.
-While process substitution is not POSIX, it is supported by bash, ksh, and zsh.
-
-### Get PID (process Identifier) of a running process
-```bash
-pidof iceweasel
-pgrep ssh-agent
-```
-
-# Unix File types
-| Description                         | symbol              |
-|:------------------------------------|:--------------------|
-| Regular file                        | -                   |
-| Directory                           | d                   |
-| Special files                       | (5 sub types in it) |
-| block file                          | b                   |
-| Character device file               | c                   |
-| Named pipe file or just a pipe file | p                   |
-| Symbolic link file                  | l                   |
-| Socket file                         | s                   |
-
-# LDAP // Activate Directory
-
-#### Search into LDAP
+Search into LDAP
 ```bash
 ldapsearch --help
 -H URI     LDAP Uniform Resource Identifier(s)
@@ -1721,7 +1947,7 @@ ldapsearch -H ldap://10.10.10.10 \
 -b "ou=ou,dc=sub,dc=under,dc=com" "(sAMAccountName=b.dauphin)"
 ```
 
-#### modify an acount (remotly)
+modify an acount (remotly)
 ```bash
 apt install ldap-utils
 
@@ -1751,7 +1977,7 @@ replace: userPassword
 userPassword: {SSHA}0mBz0/OyaZqOqXvzXW8TwE8O/Ve+YmSl
 ```
 
-# SaltStack
+## SaltStack
 ##### Saltstack master key management
 | --list=$ARG                   | definition                     |
 |:------------------------------|:-------------------------------|
@@ -1935,202 +2161,19 @@ Upgrade Salt-Minion:
 {% if (key | regex_match('.*dyn.company.tld.*', ignorecase=True)) != None %}
 ```
 
-# Iptables
-[Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
-[ArchLinux iptables good explanations](https://wiki.archlinux.org/index.php/iptables)
-
-#### Show saved rules
-```bash
-iptables-save
-```
-
-#### Save rules
-```bash
-iptables-save > /etc/iptables/rules.v4 
-```
-#### Print rules
-```bash
-iptables -L
-iptables -nvL
-iptables -nvL INPUT
-iptables -nvL OUTPUT
-iptables -nvL PREROUTING
-```
-
-#### once a rule is apply, it''s immediatly applied !!!
-##### The Default linux iptables chain policy is ACCEPT for all INPUT, FORWARD and OUTPUT policies. You can easily change this default policy to DROP with below listed commands.
-```bash
-iptables -P INPUT DROP
-iptables -P FORWARD DROP
-iptables -P OUTPUT DROP
-
-iptables --policy INPUT DROP
-iptables -P chain target [options]     --policy  -P chain target
---append  -A chain   Append to chain
---check   -C chain   Check for the existence of a rule
---delete  -D chain   Delete matching rule from chain
-iptables --list     Print rules in human    readable format
-iptables --list-rules          Print rules in iptables readable format
-iptables -v -L -n
-```
-
-#### Range multiport
-```bash
-iptables -A OUTPUT -d 10.10.10.10/32 -p tcp -m state --state NEW -m tcp --match multiport --dports 4506:10000 -j ACCEPT
-```
-
-#### NOTRACK
-```bash
-iptables -t raw -I PREROUTING -j NOTRACK
-iptables -t raw -I OUTPUT -j NOTRACK
-```
-
-### LOG
-#### on log les paquets drop
-```bash
-iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
-iptables -A INPUT -j DROP
-iptables -P INPUT DROP
-
-iptables -A OUTPUT -j LOG --log-prefix "OUTPUT:DROP:" --log-level 6
-iptables -A OUTPUT -j DROP
-iptables -P OUTPUT DROP
-```
-
-### add new rules when NOTRACK is set
-#### INPUT new rule
-you have to temporarily REMOVE log and drop last lines, otherwise, your new line
-#### will never be taken !
-```bash
-iptables -D INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
-iptables -D INPUT -j DROP
-```
-
-#### add your new rule
-```bash
-iptables -A INPUT -p udp -m udp --sport 123 -j ACCEPT
-```
-
-#### put back logging and dropping
-```bash
-iptables -A INPUT -j LOG --log-prefix "INPUT:DROP:" --log-level 6
-iptables -A INPUT -j DROP
-```
-
-# Conntrack
-#### debian old
-```bash
-cat /proc/sys/net/netfilter/nf_conntrack_count
-```
-
-#### debian 9
-```bash
-conntrack -L [table] [options] [-z] 
-conntrack -G [table] parameters 
-conntrack -D [table] parameters 
-conntrack -I [table] parameters 
-conntrack -U [table] parameters 
-conntrack -E [table] [options] 
-conntrack -F [table] 
-conntrack -C [table] 
-conntrack -S
-```
-
-# NTP (Network Time Protocol)
-![GitHub Logo](../src/ntp_stratum.png)
-
-### Client
-Debian, Ubuntu, Fedora, CentOS, and most operating system vendors, __don't package NTP into client and server packages separately__. When you install NTP, you've made your computer __both a server, and a client simultaneously.__
-
-### NTP Pool Project
-As a client, rather than pointing your servers to static IP addresses, you may want to consider using the NTP pool project. Various people all over the world have donated their stratum 1 and stratum 2 servers to the pool, Microsoft, XMission, and even myself have offered their servers to the project. As such, clients can point their NTP configuration to the pool, which will round robin and load balance which server you will be connecting to.
-
-There are a number of different domains that you can use for the round robin. For example, if you live in the United States, you could use:
-
-* 0.us.pool.ntp.org
-* 1.us.pool.ntp.org
-* 2.us.pool.ntp.org
-* 3.us.pool.ntp.org
-
-There are round robin domains for each continent, minus Antarctica, and for many countries in each of those continents. There are also round robin servers for projects, such as Ubuntu and Debian:
-
-* 0.debian.pool.ntp.org
-* 1.debian.pool.ntp.org
-* 2.debian.pool.ntp.org
-* 3.debian.pool.ntp.org
-
-
-On my public NTP stratum 2 server, I run the following command to see its status:
-
-```bash
-ntpq -pn
-    remote            refid      st t when poll reach   delay   offset  jitter
-
-------------------------------------------------------------------------------
-*198.60.22.240   .GPS.            1 u  912 1024  377    0.488   -0.016   0.098
-+199.104.120.73  .GPS.            1 u   88 1024  377    0.966    0.014   1.379
--155.98.64.225   .GPS.            1 u   74 1024  377    2.782    0.296   0.158
--137.190.2.4     .GPS.            1 u 1020 1024  377    5.248    0.194   0.371
--131.188.3.221   .DCFp.           1 u  952 1024  377  147.806   -3.160   0.198
--217.34.142.19   .LFa.            1 u  885 1024  377  161.499   -8.044   5.839
--184.22.153.11   .WWVB.           1 u  167 1024  377   65.175   -8.151   0.131
-+216.218.192.202 .CDMA.           1 u   66 1024  377   39.293    0.003   0.121
--64.147.116.229  .ACTS.           1 u   62 1024  377   16.606    4.206   0.216
-```
-
-We need to understand each of the columns, so we understand what this is saying:
-
-| Column | Meaning                                                                                                                                                                                                                                 |
-|:-------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| remote | The remote server you wish to synchronize your clock with                                                                                                                                                                               |
-| refid  | The upstream stratum to the remote server. For stratum 1 servers, this will be the stratum 0 source.                                                                                                                                    |
-| st     | The stratum level, 0 through 16.                                                                                                                                                                                                        |
-| t      | The type of connection. Can be "u" for unicast or manycast, "b" for broadcast or multicast, "l" for local reference clock, "s" for symmetric peer, "A" for a manycast server, "B" for a broadcast server, or "M" for a multicast server |
-| when   | The last time when the server was queried for the time. Default is seconds, or "m" will be displayed for minutes, "h" for hours and "d" for days.                                                                                       |
-| poll   | How often the server is queried for the time, with a minimum of 16 seconds to a maximum of 36 hours. It's also displayed as a value from a power of two. Typically, it's between 64 seconds and 1024 seconds.                           |
-| reach  | This is an 8-bit left shift octal value that shows the success and failure rate of communicating with the remote server. Success means the bit is set, failure means the bit is not set. 377 is the highest value.                      |
-| delay  | This value is displayed in milliseconds, and shows the round trip time (RTT) of your computer communicating with the remote server.                                                                                                     |
-| offset | This value is displayed in milliseconds, using root mean squares, and shows how far off your clock is from the reported time the server gave you. It can be positive or negative.                                                       |
-| jitter | This number is an absolute value in milliseconds, showing the root mean squared deviation of your offsets.                                                                                                                              |
-
-
-Next to the remote server, you'll notice a single character. This character is referred to as the "tally code", and indicates whether or not NTP is or will be using that remote server in order to synchronize your clock. Here are the possible values:
-
-| __remote single character__ | Meaning                                                                                                                                                                                                                                             |
-|:----------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| __whitespace__              | Discarded as not valid. Could be that you cannot communicate with the remote machine (it's not online), this time source is a ".LOCL." refid time source, it's a high stratum server, or the remote server is using this computer as an NTP server. |
-| __x__                       | Discarded by the intersection algorithm.                                                                                                                                                                                                            |
-| __.__                       | Discarded by table overflow (not used).                                                                                                                                                                                                             |
-| __-__                       | Discarded by the cluster algorithm.                                                                                                                                                                                                                 |
-| __+__                       | Included in the combine algorithm. This is a good candidate if the current server we are synchronizing with is discarded for any reason.                                                                                                            |
-| __#__                       | Good remote server to be used as an alternative backup. This is only shown if you have more than 10 remote servers.                                                                                                                                 |
-| __*__                       | The current system peer. The computer is using this remote server as its time source to synchronize the clock                                                                                                                                       |
-| __o__                       | Pulse per second (PPS) peer. This is generally used with GPS time sources, although any time source delivering a PPS will do. This tally code and the previous tally code "*" will not be displayed simultaneously.                                 |
-
-
-[Sources](https://pthree.org/2013/11/05/real-life-ntp/)
-
-### NTP Management
-
-```bash
-apt-get install ntp
-ntpq -p
-vim /etc/ntp.conf
-sudo service ntp restart
-ntpq -p
-```
-
-# Apache
-### Validate config before reload/restart
+## Apache
+Validate config before reload/restart
 ```bash
 apachectl configtest
 ```
 
-# NGINX (Engine X)
-### Various variables
+## NGINX
+pronouced 'Engine X'
+
+Various variables
 [HTTP variables](http://nginx.org/en/docs/http/ngx_http_core_module.html)
-### virtual host example
-#### Redirect HTTP to HTTPS
+### virtual host
+example redirect HTTP to HTTPS
 ```
 server {
     listen 80;
@@ -2140,8 +2183,8 @@ server {
 
 
 
-# Zabbix Server
-## API usage
+## Zabbix Server
+### API usage
 Verify your url
 ```
 https://zabbix.company/zabbix.php?action=dashboard.view
@@ -2203,7 +2246,7 @@ curl \
 ```
 
 
-# Elastic Search
+## Elastic Search
 
 By default, each index in Elasticsearch is allocated __5 primary shards__ and __1 replica__ which means that if you have at least two nodes in your cluster, your index will have 5 primary shards and another 5 replica shards (1 complete replica) for a __total of 10 shards per index.__
 
@@ -2216,423 +2259,19 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
-# Apt
-### Show available package(s)
-```bash
-apt update
-apt-cache search sendmail
-apt-cache search --names-only 'icedtea?'
-```
 
-#### Show dependencies for a given package(s)
-```bash
-apt depends sendmail
-```
 
-### Clean cache space in /var/cache/apt/archives/
-```bash
-apt-get clean
-```
-
-# Security
-## Fail2Ban
-### Useful commands
-
-print jails
-```bash
-fail2ban-client status
-```
-
-get banned ip and other info about a specific jail
-```bash
-fail2ban-client status ssh
-```
-
-set banip triggers email send
-```bash
-fail2ban-client set ssh banip 10.10.10.10
-```
-
-unbanip
-```bash
-fail2ban-client set ssh unbanip 10.10.10.10
-```
-
-check a specific fail2ban chain
-```bash
-iptables -nvL f2b-sshd
-fail2ban-client get dbpurgeage
-fail2ban-client get dbfile
-```
-
-__fail2ban will send mail using the MTA (mail transfer agent)__
-
-```bash
-grep "mta =" /etc/fail2ban/jail.conf
-mta = sendmail
-```
-
-### File locations
-global __default__ config
-* /etc/fail2ban/jail.conf
-
-will be override with this parameters
-__Centralized Control__ file
-This is here we enable jails
-
-* /etc/fail2ban/jail.local
-
-
-# Email system
-
-There are three main functions that make up an e-mail system.
-* First there is the Mail User Agent (MUA) which is the program a user actually uses to compose and read mails.
-* Then there is the Mail Transfer Agent (MTA) that takes care of transferring messages from one computer to another.
-* And last there is the Mail Delivery Agent (MDA) that takes care of delivering incoming mail to the user's inbox. 
-
-Function | Name | Tool which do this
--|-|-
-Compose and read | MUA (User Agent) | mutt, thunderbird
-Transferring | MTA (Transfer Agent) | msmtp,  __exim4__, thunderbird
-Delivering incoming mail to user's inbox | MDA (Devliery agent) | __exim4__, thunderbird
-
-### MTA
-It exists two types of MTA (Mail Transfert Agent)
-
-- __Mail server__ : like postfix, or sendmail-server 
-- __SMTP client__, which only forward to a __SMTP relay__ : like ssmtp (deprecated since 2013), use __mstmp__ instead, 
-
-#### Check what is your email sender, by looking at the sym link of `sendmail`
-```bash
-which sendmail
-/usr/sbin/sendmail
-
-ls -l /usr/sbin/sendmail
-lrwxrwxrwx 1 root root 5 Jul 15  2014 /usr/sbin/sendmail -> ssmtp
-```
-
-In this case, ssmtp in my mail sender
-
-## MSTMP
-msmtp est un client SMTP très simple et facile à configurer pour l'envoi de courriels.
-Son mode de fonctionnement par défaut consiste à transférer les courriels au serveur SMTP que vous aurez indiqué dans sa configuration. Ce dernier se chargera de distribuer les courriels à leurs destinataires.
-Il est entièrement compatible avec sendmail, prend en charge le transport sécurisé TLS, les comptes multiples, diverses méthodes d’authentification et les notifications de distribution.
-
-### Installation
-
-apt install msmtp msmtp-mta
-
-vim /etc/msmtprc
-
-```
-hashtag Valeurs par défaut pour tous les comptes.
-defaults
-auth           on
-tls            on
-tls_trust_file /etc/ssl/certs/ca-certificates.crt
-logfile        ~/.msmtp.log
-
-hashtag Exemple pour un compte Gmail
-account        gmail
-host           smtp.gmail.com
-port           587
-from           username@gmail.com
-user           username
-password       plain-text-password
-
-hashtag Définir le compte par défaut
-account default : gmail
-```
-
-#### Test email sending
-```
-echo -n "Subject: hello\n\nDo see my mail" | sendmail baptistedauphin76@gmail.com
-
-```
-You run the command... and, oops: sendmail: Cannot open mailhub:25. The reason for this is that we didn't provide mailhub settings at all. In order to forward messages, you need an SMTP server configured. That's where SSMTP performs really well: you just need to edit its configuration file once, and you are good to go.
-
-
-#### Send mail using open (smtp) relay
-Note that it also works with netcat 
-```bash
-nc smtp.free.fr 25
-```
-
-```bash
-telnet smtp.free.fr 25
-Trying 212.27.48.4...
-Connected to smtp.free.fr.
-Escape character is '^]'.
-220 smtp4-g21.free.fr ESMTP Postfix
-HELO test.domain.com
-250 smtp4-g21.free.fr
-MAIL FROM:<test@domain.com>
-250 2.1.0 Ok
-RCPT TO:<toto@domain.fr>
-250 2.1.5 Ok
-DATA
-354 End data with <CR><LF>.<CR><LF>
-Subject: test message
-This is the body of the message!
-.
-250 2.0.0 Ok: queued as 2D8FD4C80FF
-quit
-221 2.0.0 Bye
-Connection closed by foreign host.
-```
-
-# grep
-
-# less
-### Start at the end of a file
-
-+ will run an initial command when the file is opened
-G jumps to the end
-
-```bash
-less +G app.log
-```
-
-
-
-
-# sed (Stream editor)
-```bash
-sed '/^#/ d' redis.conf : supprime le dieze en début de ligne (décommente)
-sed -n : silent mode. By default print nothing. Use with /p to print interesting cmd
-sed -e : Script directement dans la ligne de commande
-sed -f script_file  : script dans un fichier
-sed -i : agit non pas sur l input stream mais sur le fichier specifier
-
-sed -i 's/patern 1/patern 2/g' /etc/ssh/sshd_config
-sed -n 's/ *Not After : *//p'`  remplace Not after par rien 
-```
-
-##### remove 342th line of file
-```bash
-sed '342d' -i ~/.ssh/known_hosts
-```
-
-##### remove 342th to 342th line, equivalent to precedent cmd
-```bash
-sed '342,342d' -i ~/.ssh/known_hosts
-```
-
-##### remove first 42 lines of test.sql file and print result
-```bash
-sed -i '1,42d' -i test.sql
-```
-
-# Find
-
-##### Various example, with xargs
-```bash
-find . -maxdepth 1 -type l -ls
-find /opt -type f -mmin -5 -exec ls -ltr {} +
-find /var/log/nginx -type f -name "*access*" -mmin +5 -exec ls -ltr {} +
-ls 2019* | xargs -I % mv % ./working_sheet_of_the_day
-```
-list files with last modified date of LESS than 5 minutes
-```bash
-find . -type f -mmin -5 -exec ls -ltr {} +
-```
-
-xargs
-```bash
-find . -type f -mmin -5 -print0 | xargs -0 /bin/ls -ltr
-```
-
-date de modif des DATA du fichier (day)
-```bash
-find -mtime n
-```
-last acces time (day)
-```bash
-find -atime n
-```
-date de modif du STATUT du fichier
-```bash
-find -ctime n
-```
-
-
-list in the current directory, all files last modifed __more__ (+10) than 10 days ago, historical order
-```bash
-find . -type f -mtime +10 -exec ls -ltr {} +
-```
-list in the current directory, all files last modifed __less__ (-10) than 10 days ago, historical order
-```bash
-find . -type f -mtime -10 -exec ls -ltr {} +
-```
-
-## Raid
-
-### mdadm
-To be updated
-
-
-# redis
-### Get info about __master/slave__ replication
-```bash
-redis-cli -h 10.10.10.10 -p 6379 -a $PASSWORD info replication
-```
-
-### FLUSH all keys of all databases
-```bash
-redis-cli FLUSHALL
-```
-
-### Delete all keys of the specified Redis database
-```bash
-redis-cli -n <database_number> FLUSHDB
-```
-
-### Redis cluster
-remove keys from file as input
-```bash
-redis --help
--c                 Enable cluster mode (follow -ASK and -MOVED redirections).
-for line in $(cat lines.txt); do redis-cli -a xxxxxxxxx -p 7000 -c del $line; done
-```
-
-### Check all databases
-```bash
-CONFIG GET databases
-1) "databases"
-2) "16"
-```
-
-```bash
-INFO keyspace
-
-db0:keys=10,expires=0
-db1:keys=1,expires=0
-db3:keys=1,expires=0
-```
-
-### Delete multiples keys
-```bash
-redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
-```
-
-### Resolve warning
-```bash
-cat /etc/systemd/system/disable-transparent-huge-pages.service 
-[Unit]
-Description=Disable Transparent Huge Pages
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c "/bin/echo "never" | tee /sys/kernel/mm/transparent_hugepage/enabled"
-
-[Install]
-WantedBy=multi-user.target
-```
-
-# Php-FPM
-### check config
+## Php-FPM
+check config
 ```bash
 php-fpm7.2 -t
 ```
 
-# Docker
-### Docker Swarm
-(On swarm __manager__) find where an app is running
-```bash
-docker service ps <app_name>
-```
-
-Useful commands
-print cluster nodes
-```bash
-docker node ls
-```
-
-# print address + role
-```bash
-for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
-```
-
-## Docker-proxy
-[Explanations](https://windsock.io/the-docker-proxy/)
-
-## Dockerd
-
-
-# System performance
-```bash
-htop
-nload
-```
-Memory information
-```bash
-free -g
-```
-
-## Get memory physical size
-
-##### Kilobyte
-```bash
-grep MemTotal /proc/meminfo | awk '{print $2}'
-```
-
-##### MegaByte
-```bash
-grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^1" | bc
-```
-
-##### GigaByte
-```bash
-grep MemTotal /proc/meminfo | awk '{print $2}' | xargs -I {} echo "scale=4; {}/1024^2" | bc
-```
-
-## Get number processing units (CPU / cores)
-available to the current process (may be less than all online)
-```bash
-nproc
-```
-
-all online
-```bash
-nproc --all
-```
-old fashion version
-```bash
-grep -c ^processor /proc/cpuinfo
-```
-
-# Graphic
-* Graphic server (often X11, Xorg, or just X, it's the same software)
-* Display Manager (SDDM, lightDM, gnome)
-* Windows Manager (i3-wm, gnome)
-
-## Display Manager
-
-### SDDM - lightweight
-Traduit de l'anglais-Simple Desktop Display Manager est un gestionnaire d’affichage pour les systèmes de fenêtrage X11 et Wayland. SDDM a été écrit à partir de zéro en C ++ 11 et supporte la thématisation via QML
-```bash
-service sddm status
-service sddm restart    : restart sddm (to load new monitor)
-```
-
-### Gnome - Nice display for personal laptop
-
-## Windows Manager
-### i3
-```bash
-update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
-```
-
-# HAProxy
+## HAProxy
 ### Check config
 ```bash
 haproxy -f /etc/haproxy/haproxy.cfg -c -V
 ```
-
-# Markdown
-[Support highlight syntax](https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown)
-[GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
-
 
 ## Java
 ### JDK
@@ -2858,87 +2497,12 @@ for i in dir(ssl):
 /tmp/testPythonProtocols.py
 ```
 
-# InfluxDB
-##### get prompt
-```bash
-influx
-```
-### Retention policy
-```sql
-SHOW databases;
-USE lands
-
-SHOW RETENTION POLICIES ON "lands"
-```
-### MySQL equivalent
-| MySQL       | Influx       |
-|:------------|:-------------|
-| DATABASE    | DATABASE     |
-| MEASUREMENT | TABLE        |
-| COLUMN      | FIELD && TAG |
-
-```sql
-SHOW series ON database FROM virtualmachine WHERE cluster = 'PROD'
-```
-
-### InfluxDB paradygm
-
-Each record stored inside of a __measurement__ is known as a __point__ . Points are made up of the following:
-
-* pretime : Timestamp that represents the time in which the data was recorded.
-* field : Contain the actual measurement data, e.g 5% CPU utilisation. Each point  must contain one or more fields .
-* tags : Metadata about the data being recorded, e.g the hostname of the device whose CPU is being monitored. Each point  can contain zero or more tags .
-
-(Note that both the fields and tags can be thought of as columns in the database table. We’ll see why in a moment.)
-
-```sql
--- default on all measurement
-SHOW field keys
-
--- default on all measurement
-SHOW tag keys
-
-SELECT usage_user,cpu,host
-FROM cpu 
-WHERE cpu='cpu-total' 
-AND host='ubuntu'
-AND time > now() - 30s
-```
-
-* [Good tuto](http://www.oznetnerd.com/getting-know-influxdb/)
-* [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
-
-
-
-
-# Regex
-Online tester
-https://regex101.com/
-
-# User's IPC shared memory, semaphores, and message queues 
-
-```
-Type of IPC object. Possible values are:
-q -- message queue
-m -- shared memory
-s -- semaphore
-```
-```bash
-USERNAME=$1
-
-TYPE=$2
-
-ipcs -$TYPE | grep $USERNAME | awk ' { print $2 } ' | xargs -I {} ipcrm -$TYPE {}
-ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
-```
-
-
-# RabbitMQ
+## RabbitMQ
 https://www.rabbitmq.com/management.html
 
 
 
-# Ansible
+## Ansible
 | Command                           | Meaning                                                    | default                   | SaltStack equivalent
 -|-|-|-
 | --check                           | Dry run                                                    | __no__ dry run            | test=True
@@ -3060,21 +2624,21 @@ Here is the order of precedence __from least to greatest__ (the last listed vari
 
 
 
-# Node js
+## Node js
 ### NPM (Node Package Manager)
 npm est le gestionnaire de paquets officiel de Node.js. Depuis la version 0.6.3 de Node.js, npm fait partie de l'environnement et est donc automatiquement installé par défaut. npm fonctionne avec un terminal et gère les dépendances pour une application.
 ```bash
 npm config set proxy http://ip:port
 npm config set https-proxy http://ip:port
 
-# Print the effective node_modules FOLDER to standard out.
+hashtag Print the effective node_modules FOLDER to standard out.
 npm root
 npm root -g
 
-# display a tree of every package found in the user’s folders (without the -g option it only shows the current directory’s packages)
+hashtag display a tree of every package found in the user’s folders (without the -g option it only shows the current directory’s packages)
 npm list -g --depth 0
 
-# To show the package registry entry for the connect package, you can do this:
+hashtag To show the package registry entry for the connect package, you can do this:
 npm view ghost-cli
 npm info ghost-cli
 ```
@@ -3090,7 +2654,7 @@ nvm install 8.9.4
 ```
 
 
-# Yarn
+## Yarn
 ### Usage
 > will read yarn.lock (like PipFile.lock)
 ```bash
@@ -3103,29 +2667,30 @@ grep grunt.registerTask Gruntfile.js
 [knex-migrator]
 ```
 
-# Varnish
+## Varnish
 ### Varnishadm
 ```bash
 varnishadm -S /etc/varnish/secret
 
-# For states of backend
+hashtag For states of backend
 varnishadm -S /etc/varnish/secret debug.health
-# new version
+
+hashtag new version
 varnishadm -S /etc/varnish/secret backend.list
 
-# After a crash of varnish:
+hashtag After a crash of varnish:
 varnishadm -S /etc/varnish/secret panic.show
 ```
 ### VarnishLog
+Log hash with filter for request number 
 ```bash
-# Log hash with filter for request number 
 varnishlog -c -i Hash
 ```
 
 ### varnishncsa
 Not enabled by default
+exemple de commandes  pour  tracker les requêtes ayant pris plus de 10 seconde
 ```bash
-# exemple de commandes  pour  tracker les requêtes ayant pris plus de 10 seconde
 varnishncsa -F '%t "%r" %s %{Varnish:time_firstbyte}x %{VCL_Log:backend}x' -q "Timestamp:Process[2] > 10.0"
 ```
 
@@ -3206,8 +2771,8 @@ sudo dpkg-reconfigure libxrandr2
 logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
 ```
 
-
 # Work efficiency
+
 ## Beauty
 ### Pimp my terminal
 [Source](https://hackernoon.com/how-to-trick-out-terminal-287c0e93fce0)
@@ -3279,9 +2844,294 @@ To reset all valuses of keys run following command in terminal:
 gsettings reset-recursively org.gnome.desktop.interface
 ```
 
+# Databases
+## MySQL
+### User, Password
+```sql
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+CREATE USER 'api_153'@'10.10.%.%' IDENTIFIED BY 'password';
+SELECT user, host FROM mysql.user;
+SHOW CREATE USER api
+```
+#### GRANT (rights)
+```sql
+GRANT SELECT, INSERT, UPDATE, DELETE ON `github`.* TO 'api_153'@'10.10.%.%';
+GRANT ALL PRIVILEGES ON `github`.`user` TO 'api_153'@'10.10.%.%';
+
+-- Apply GRANT
+FLUSH PRIVILEGES;
+```
+#### Revoke (revert GRANT)
+```sql
+REVOKE INSERT ON *.* FROM 'jeffrey'@'localhost';
+REVOKE ALL PRIVILEGES ON `github`.* FROM 'jeffrey'@'localhost';
+```
+
+#### Table information
+```bash
+show table status like 'mytablename'\G
+```
+```sql
+*************************** 1. row ***************************
+           Name: mytablename
+         Engine: MyISAM
+        Version: 10
+     Row_format: Dynamic
+           Rows: 2444
+ Avg_row_length: 7536
+    Data_length: 564614700
+Max_data_length: 281474976710655
+   Index_length: 7218176
+      Data_free: 546194608
+ Auto_increment: 1187455
+    Create_time: 2008-03-19 10:33:13
+    Update_time: 2008-09-02 22:18:15
+     Check_time: 2008-08-27 23:07:48
+      Collation: latin1_swedish_ci
+       Checksum: NULL
+ Create_options: pack_keys=0
+        Comment:
+```
+
+### Worth known command
+From shell (outside of a MySQL prompt)
+```bash
+mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
+```
+Show users and remote client IP or subnet etc
+```sql
+SELECT user, host FROM mysql.user;
+```
+
+Show current queries
+```sql
+SHOW FULL PROCESSLIST;
+```
+
+### Variables, status
+`%` is a wildcard char like `*`
+```sql
+SHOW VARIABLES WHERE Variable_Name LIKE "%log%";
+
+SHOW VARIABLES WHERE Variable_Name LIKE "wsrep%";
+
+SHOW STATUS like 'Bytes_received';
+SHOW STATUS like 'Bytes_sent';
+```
+
+### Log
+The file mysql-bin.[index] keeps a list of all binary logs mysqld has generated and auto-rotated. The mechanisms for cleaning out the binlogs in conjunction with mysql-bin.[index] are:
+```sql
+PURGE BINARY LOGS TO 'binlogname';
+PURGE BINARY LOGS BEFORE 'datetimestamp';
+```
+#### Analyze binary logs
+```bash
+mysqlbinlog -d github \
+--base64-output=DECODE-ROWS \
+--start-datetime="2005-12-25 11:25:56" \
+pa6.k8s.node.01-bin.000483 
+```
+
+#### Show
+```sql
+SHOW CREATE TABLE user;
+SHOW GRANTS FOR user@git.baptiste-dauphin.com;
+```
 
 
 
-##### ArchLinux
-To be updated...
+#### Table size
+```sql
+SELECT table_name AS `Table`, round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` FROM information_schema.TABLES WHERE table_schema = "github_db1" AND table_name = "table1";
+```
 
+###### All tables of all databases with size
+```sql
+SELECT 
+     table_schema as `Database`, 
+     table_name AS `Table`, 
+     round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB`,
+     round(((data_length + index_length) / 1024 / 1024 / 1024), 2) `Size in GB` 
+FROM information_schema.TABLES 
+ORDER BY table_schema, data_length + index_length DESC;
+```
+
+###### All Databases size
+```sql
+SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
+```
+##### Feed database
+```bash
+gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]
+```
+##### All in one usage <3
+```bash
+mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
+```
+### Dump
+with __mysqldump__
+```bash
+mysqldump -u root -p \
+--all-databases \       # Dump all tables in all databases, WITHOUT 'INFORMATION_SCHEMA' and 'performace_schema'
+--add-drop-database \   # Add DROP DATABASE statement before each CREATE DATABASE statement
+--ignore-table=DB.table_name \
+--skip-add-locks \      # Do not add locks
+--skip-lock-tables \
+--single-transaction \
+> /home/b.dauphin/mysqldump/dump_mysql_.sql
+
+mysqldump -h 10.10.10.10 \
+-u baptiste \
+-p*********** db1 table1 table2 table3 \
+--skip-add-locks \
+--skip-lock-tables \
+--single-transaction \
+| gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
+```
+
+## Percona XtraDB Cluster (open source, cost-effective, and robust MySQL clustering)
+Test replication from reverse proxy
+```bash
+for i in `seq 1 6`; do mysql -u clustercheckuser -p -e "show variables like 'server_id'; select user()" ; done
+```
+
+## redis
+Get info about __master/slave__ replication
+```bash
+redis-cli -h 10.10.10.10 -p 6379 -a $PASSWORD info replication
+```
+
+FLUSH all keys of all databases
+```bash
+redis-cli FLUSHALL
+```
+
+Delete all keys of the specified Redis database
+```bash
+redis-cli -n <database_number> FLUSHDB
+```
+
+### Redis cluster
+remove keys from file as input
+```bash
+redis --help
+-c                 Enable cluster mode (follow -ASK and -MOVED redirections).
+for line in $(cat lines.txt); do redis-cli -a xxxxxxxxx -p 7000 -c del $line; done
+```
+
+Check all databases
+```bash
+CONFIG GET databases
+1) "databases"
+2) "16"
+```
+
+```bash
+INFO keyspace
+
+db0:keys=10,expires=0
+db1:keys=1,expires=0
+db3:keys=1,expires=0
+```
+
+Delete multiples keys
+```bash
+redis-cli -a XXXXXXXXX --raw keys "my_word*" | xargs redis-cli -a XXXXXXXXX  del
+```
+
+Resolve warning
+```bash
+cat /etc/systemd/system/disable-transparent-huge-pages.service 
+[Unit]
+Description=Disable Transparent Huge Pages
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "/bin/echo "never" | tee /sys/kernel/mm/transparent_hugepage/enabled"
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## InfluxDB
+get prompt
+```bash
+influx
+```
+### Retention policy
+```sql
+SHOW databases;
+USE lands
+
+SHOW RETENTION POLICIES ON "lands"
+```
+### MySQL equivalent
+| MySQL       | Influx       |
+|:------------|:-------------|
+| DATABASE    | DATABASE     |
+| MEASUREMENT | TABLE        |
+| COLUMN      | FIELD && TAG |
+
+```sql
+SHOW series ON database FROM virtualmachine WHERE cluster = 'PROD'
+```
+
+### InfluxDB paradygm
+
+Each record stored inside of a __measurement__ is known as a __point__ . Points are made up of the following:
+
+* pretime : Timestamp that represents the time in which the data was recorded.
+* field : Contain the actual measurement data, e.g 5% CPU utilisation. Each point  must contain one or more fields .
+* tags : Metadata about the data being recorded, e.g the hostname of the device whose CPU is being monitored. Each point  can contain zero or more tags .
+
+(Note that both the fields and tags can be thought of as columns in the database table. We’ll see why in a moment.)
+
+```sql
+-- default on all measurement
+SHOW field keys
+
+-- default on all measurement
+SHOW tag keys
+
+SELECT usage_user,cpu,host
+FROM cpu 
+WHERE cpu='cpu-total' 
+AND host='ubuntu'
+AND time > now() - 30s
+```
+
+* [Good tuto](http://www.oznetnerd.com/getting-know-influxdb/)
+* [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
+
+
+# virtualization (OS-level)
+## containers
+### Docker swarm
+(On swarm __manager__) find where an app is running
+```bash
+docker service ps <app_name>
+```
+
+Useful commands
+print cluster nodes
+```bash
+docker node ls
+```
+
+print address + role
+```bash
+for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
+```
+
+### Docker-proxy
+[Explanations](https://windsock.io/the-docker-proxy/)
+
+# Miscellaneous
+## Regex
+Online tester
+https://regex101.com/
+
+## Markdown
+[Support highlight syntax](https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown)
+[GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
