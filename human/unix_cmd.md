@@ -3068,14 +3068,42 @@ Those instance may __look like__ real computers from the point of view of progra
 #### __Overhead__
 Operating-system-level virtualization usually imposes less overhead than full virtualization because programs in virtual partitions __use the operating system's normal system call interface__ and do not need to be subjected to emulation or be run in an intermediate virtual machine, __as is the case with full virtualization__ (such as VMware ESXi, QEMU or Hyper-V) and paravirtualization (such as Xen or User-mode Linux). This form of virtualization also does not require hardware support for efficient performance.   
 [Wikipedia of Virtualization OS-level](https://en.wikipedia.org/wiki/OS-level_virtualization)
-## Containers
-### Docker
+
+## Docker
+### Run
+```bash
+docker run -d \
+--name elasticsearch \
+--net somenetwork \
+--volume my_app:/usr/share/elasticsearch/data \
+-p 9200:9200 -p 9300:9300 \
+-e "discovery.type=single-node" \
+elasticsearch:7.4.1
+```
+#### Volumes
+```bash
+docker volume create my_app
+```
+
+#### Cheat sheet
+avoid false positives  
+^ : begin with  
+$ : end with  
+```bash
+docker ps -aqf "name=^containername$"
+```
+
+Info of filesystem
+```bash
+docker inspect -f '{{ json .Mounts }}' $(docker ps -aqf "name=elasticsearch") | jq
+```
+
+### Swarm
 (On swarm __manager__) find where an app is running
 ```bash
 docker service ps <app_name>
 ```
 
-Useful commands
 print cluster nodes
 ```bash
 docker node ls
@@ -3086,10 +3114,179 @@ get address + role
 for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
 ```
 
-### Docker-proxy
-[Explanations](https://windsock.io/the-docker-proxy/)
 
-# Miscellaneous
+
+### Kubernetes
+#### Context
+Create you a context to work easier  
+__context__ = `given_user` + `given_cluster` + `given_namespace`
+
+```bash
+kubectl config set-context bdauphin-training \
+--user b.dauphin-k8s-home-cluster \
+--cluster k8s-home-cluster \
+--namespace dev-scrapper
+```
+
+Print your current context and cluster info
+```bash
+kubectl config get-contexts
+kubectl cluster-info
+```
+
+
+
+#### Deployment
+A Deployment provides declarative updates for Pods and ReplicaSets.
+
+You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all their resources with new Deployments.  
+```bash
+kubectl create deployment nginx-test-deploy --image nginx -n bdauphin-test
+```
+##### Pod
+I do not recommend to declare a pod directly. Prefer using deploy
+
+> Restart a pod
+The quickest way is to set the number of replica to zero and then, put back your desired number of rep
+```bash
+kubectl scale deployment nginx --replicas=0
+kubectl scale deployment nginx --replicas=5
+```
+[good tuto](https://medium.com/faun/how-to-restart-kubernetes-pod-7c702ca984c1)
+
+#### Service
+```bash
+kubectl create service nodeport bdauphin-nginx-test --tcp=8080:80
+```
+
+#### RBAC
+Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise.  
+[complete doc](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+* Role : defines rules 
+* Role Binding
+
+##### Role
+Defines  
+- __Rules__
+  - __API Groups__  
+  default : core API group
+  - __resources__  
+  ex : pod
+  - __verbs__  
+  allowed methods
+
+A Role can only be used to grant access to resources within a single namespace. Here’s an example Role in the “default” namespace that can be used to grant read access to pods:  
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]  #### "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+```
+
+
+##### RoleBinding
+Defines  
+- __Subjects__
+  - __Kind__  
+  ex : user
+  - __name__  
+  ex : jane
+  - __apiGroup__  
+- __Role References__
+  - __Kind__  
+  ex : Role
+  - __name__  
+  ex : pod-reader
+  - __apiGroup__  
+
+A role binding grants the permissions defined in a role to a user or set of users. It holds a list of subjects (users, groups, or service accounts), and a reference to the role being granted. Permissions can be granted within a namespace with a RoleBinding, or cluster-wide with a ClusterRoleBinding.
+
+
+Example  
+This role binding allows "jane" to read pods in the "default" namespace.
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: User
+  name: jane #### Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #### this must be Role or ClusterRole
+  name: pod-reader #### this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+```
+
+#### Ingress
+An API object that manages external access to the services in a cluster, typically HTTP.  
+Ingress can provide load balancing, SSL termination and name-based virtual hosting.
+
+__What is ingress ?__  
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+```
+  internet
+      |
+ [ Ingress ]
+ --|-----|--
+ [ Services ]
+```
+
+An Ingress can be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
+
+An Ingress does not expose arbitrary ports or protocols. Exposing services __other than HTTP and HTTPS__ to the internet typically uses a service of type __Service.Type=NodePort__ or __Service.Type=LoadBalancer__.
+
+
+
+
+#### Config extractor
+__Why use config file instead of CLI ?__
+* Cli is good for begin, help to understand. But heavy to use everyday
+* Often complexe definition, easier to use a config file
+* Can version (git)
+
+```bash
+kubectl get deploy nginx                              -o yaml | tee nginx-deploy.yaml
+kubectl get serviceaccounts/default -n bdauphin-test  -o yaml | tee serviceaccounts.yaml
+kubectl get pods/nginx-65d61548fd-mfhpr               -o yaml | tee pod.yaml
+```
+
+#### Useful common cmd
+first, get all into your current namespace. Or specify another one
+```bash
+watch -n 1 kubectl get all -o wide
+watch -n 1 kubectl get all -o wide -n default
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Miscellaneous
 ## Regex
 Online tester
 https://regex101.com/
