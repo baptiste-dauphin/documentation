@@ -62,12 +62,18 @@
 	- [LVM](#lvm)
 	- [Listing](#listing)
 	- [Monitor](#monitor)
-- [Virtualization \(OS-level\)](#virtualization-os-level)
+- [Virtualization](#virtualization)
 	- [Docker](#docker)
-- [Miscellaneous](#miscellaneous)
-	- [Regex](#regex)
-	- [Markdown](#markdown)
-	- [Pimp my terminal](#pimp-my-terminal)
+	- [Docker Swarm](#docker-swarm)
+- [Kubernetes](#kubernetes)
+	- [Context](#context)
+	- [Deployment](#deployment)
+	- [Pod](#pod)
+	- [Service](#service)
+	- [RBAC](#rbac)
+	- [Ingress](#ingress)
+	- [Config extraction](#config-extraction)
+	- [Common cmd](#common-cmd)
 - [CentOS](#centos)
 	- [Iptables](#iptables-1)
 	- [OS Version](#os-version)
@@ -77,6 +83,12 @@
 	- [Grub](#grub)
 	- [package manager](#package-manager)
 	- [Wi-Fi](#wi-fi)
+- [Miscellaneous](#miscellaneous)
+	- [Raspberry](#raspberry)
+	- [Sublime-text](#sublime-text)
+	- [Regex](#regex)
+	- [Markdown](#markdown)
+	- [Pimp my terminal](#pimp-my-terminal)
 - [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
@@ -3232,7 +3244,8 @@ sudo dpkg-reconfigure libxrandr2
 logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
 
 
-# Virtualization (OS-level)
+# Virtualization
+Virtualization (OS-level)  
 OS-level virtualization refers to an operating system __paradigm__ in which the kernel allows the existence of multiple isolated user-space instances. Such instances, called
 - __containers__ (Solaris, Docker)
 - __Zones__ (Solaris)
@@ -3280,7 +3293,7 @@ Info of filesystem
 docker inspect -f '{{ json .Mounts }}' $(docker ps -aqf "name=elasticsearch") | jq
 ```
 
-### Swarm
+## Docker Swarm
 (On swarm __manager__) find where an app is running
 ```bash
 docker service ps <app_name>
@@ -3298,8 +3311,8 @@ for node in $(docker node ls -q); do     docker node inspect --format '{{.Status
 
 
 
-### Kubernetes
-#### Context
+# Kubernetes
+## Context
 Create you a context to work easier  
 __context__ = `given_user` + `given_cluster` + `given_namespace`
 
@@ -3318,14 +3331,15 @@ kubectl cluster-info
 
 
 
-#### Deployment
+## Deployment
 A Deployment provides declarative updates for Pods and ReplicaSets.
 
 You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all their resources with new Deployments.  
 ```bash
 kubectl create deployment nginx-test-deploy --image nginx -n bdauphin-test
 ```
-##### Pod
+
+## Pod
 I do not recommend to declare a pod directly. Prefer using deploy
 
 > Restart a pod
@@ -3336,19 +3350,19 @@ kubectl scale deployment nginx --replicas=5
 ```
 [good tuto](https://medium.com/faun/how-to-restart-kubernetes-pod-7c702ca984c1)
 
-#### Service
+## Service
 ```bash
 kubectl create service nodeport bdauphin-nginx-test --tcp=8080:80
 ```
 
-#### RBAC
+## RBAC
 Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise.  
 [complete doc](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
 * Role : defines rules 
 * Role Binding
 
-##### Role
+### Role
 Defines  
 - __Rules__
   - __API Groups__  
@@ -3373,7 +3387,7 @@ rules:
 ```
 
 
-##### RoleBinding
+### RoleBinding
 Defines  
 - __Subjects__
   - __Kind__  
@@ -3409,7 +3423,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 ```
 
-#### Ingress
+## Ingress
 An API object that manages external access to the services in a cluster, typically HTTP.  
 Ingress can provide load balancing, SSL termination and name-based virtual hosting.
 
@@ -3431,7 +3445,7 @@ An Ingress does not expose arbitrary ports or protocols. Exposing services __oth
 
 
 
-#### Config extractor
+## Config extraction
 __Why use config file instead of CLI ?__
 * Cli is good for begin, help to understand. But heavy to use everyday
 * Often complexe definition, easier to use a config file
@@ -3443,108 +3457,13 @@ kubectl get serviceaccounts/default -n bdauphin-test  -o yaml | tee serviceaccou
 kubectl get pods/nginx-65d61548fd-mfhpr               -o yaml | tee pod.yaml
 ```
 
-#### Useful common cmd
+## Common cmd
 first, get all into your current namespace. Or specify another one
 ```bash
 watch -n 1 kubectl get all -o wide
 watch -n 1 kubectl get all -o wide -n default
 ```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Miscellaneous
-## Regex
-Online tester
-https://regex101.com/
-
-## Markdown
-[Support highlight syntax](https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown)
-[GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
-
-## Pimp my terminal
-[Source](https://hackernoon.com/how-to-trick-out-terminal-287c0e93fce0)
-gnome-terminal
-GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
-
-Debian
-1- Ensure that your terminal is `gnome-terminal`
-```bash
-update-alternatives --get-selections | grep -i term
-x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
-```
-
-Graphicaly
-Install  `dconf`
-```bash
-sudo apt-get install dconf-tools
-dconf-editor
-```
-Run it and go to path `org` > `gnome` > `desktop` > `interface` > `monospace-font-name`
-
-CLI
-gsettings offers a simple commandline interface to GSettings. It lets you get, set or monitor an individual key for changes.  
-__To *Know* current settings type following commands in terminal :__
-```bash
-gsettings get org.gnome.desktop.interface document-font-name
-gsettings get org.gnome.desktop.interface font-name 
-gsettings get org.gnome.desktop.interface monospace-font-name
-gsettings get org.gnome.nautilus.desktop font
-```
-__You can *set* fonts by following commands in terminal :__
-For example `Monospace 11` do not support symbol. Which is uggly if you have a custom shell.  
-My choises which differs from default :  
-The last __number argument__ is the size
-> for terminal
-```bash
-gsettings set org.gnome.desktop.interface monospace-font-name 'Hack 12'
-```
-> for soft like Keepass2
-```bash
-gsettings set org.gnome.desktop.interface font-name 'Hack 12'
-```
-__Get list of available fonts__
-```bash
-fc-list | more
-fc-list | grep -i "word"
-fc-list | grep -i UbuntuMono
-```
-To lists font faces that cover Hindi language:
-```bash
-fc-list :lang=hi
-```
-search by family
-```bash
-fc-list  :family="NotoSansMono Nerd Font Mono"
-```
-search with complete name
-```bash
-fc-list  :fullname="Noto Sans Mono ExtraCondensed ExtraBold Nerd Font Complete Mono"
-```
-
-To find all similar keys on schema type following command:
-```bash
-gsettings list-recursively org.gnome.desktop.interface
-```
-To reset all valuses of keys run following command in terminal:
-```bash
-gsettings reset-recursively org.gnome.desktop.interface
-```
 
 # CentOS
 CentOS specific commands which differs from debian
@@ -3639,6 +3558,149 @@ systemctl start NetworkManager
 systemctl enable NetworkManager
 ```
 Then, fill in your infos in your graphical wifi settings
+
+# Miscellaneous
+## Raspberry
+### Raspbian Release
+#### Latest
+https://www.raspberrypi.org/downloads/raspbian/
+
+## Sublime-text
+### Preparing package installation
+Before, you can download and install awesome packages, you first have to install the __Package Control package__. It's dumb, but it's not included in sublime-text installation...
+
+The simplest method of installation is through the Sublime Text console. The console is accessed via the __ctrl+\`__ shortcut or the __View > Show Console__ menu. Once open, paste the appropriate Python code for your version of Sublime Text into the console. 
+
+```python
+import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) 
+```
+[official source](https://packagecontrol.io/installation)
+This code creates the Installed Packages folder for you (if necessary), and then downloads the Package Control.sublime-package into it. The download will be done over HTTP instead of HTTPS due to Python standard library limitations, however the file will be validated using SHA-256.
+
+
+### Install a package (__insp__)
+Open __commande palette__
+```
+ctrl + shift + p
+```
+Then, open __sublime-text package manager__, select __Package Control: Install package__ by shortname __insp__
+```
+insp
+```
+Then, enter
+
+### My packages
+
+Name | Usage | __insp__ name| URL
+----|----|-----|------
+Markdown Preview | To see a preview of your README.md files before commit them | `MarkdownPreview` | https://facelessuser.github.io/MarkdownPreview/install/
+Compare Side-By-Side | Compares two tabs | `Compare Side-By-Side` | https://packagecontrol.io/packages/Compare%20Side-By-Side
+Generic Config | Syntax generic config colorization |
+PowerCursors | multiple cursors placements |
+Materialize | Several beautiful __color scheme__
+MarkdownPreview | Preview your .md file 
+Markdown​TOC | Generate your Table of content of MarkDown files
+
+### Shortcut
+
+Name | shortcut
+-----|---------
+Do anything (command palet) | `Ctrl + Shirt + P`
+Switch previous / next tab | `ctrl + shift + page_up` \ `ctrl + shift + page_down`
+Switch to a specific tab | `ctrl + p`, and write name of your tab (file)
+Move a line or a block of line | `ctrl + shift + arrow up` \ `ctrl + shift + arrow down`
+Switch upper case | `Ctrl + k` and then `Ctrl + u`
+Switch lower case | `Ctrl + k` and then `Ctrl + l`
+Sort Lines | `F9` (Edit > Sort Lines)
+Goto anywhere | `Ctrl + R`
+Open any file | `Ctrl + P`
+Goto line number | `ctrl + G`
+Spell check | `F6`
+New cursor above/below | `alt+shift+arrow`
+
+
+#### older
+Lite images: https://downloads.raspberrypi.org/raspbian_lite/images/  
+With desktop: https://downloads.raspberrypi.org/raspbian/images/  
+With desktop & recommended software: https://downloads.raspberrypi.org/raspbian_full/images/
+
+## Regex
+Online tester
+https://regex101.com/
+
+## Markdown
+[Support highlight syntax](https://support.codebasehq.com/articles/tips-tricks/syntax-highlighting-in-markdown)
+[GitHub guide - Master Markdown tutorial](https://guides.github.com/features/mastering-markdown/)
+
+## Pimp my terminal
+[Source](https://hackernoon.com/how-to-trick-out-terminal-287c0e93fce0)
+gnome-terminal
+GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
+
+Debian
+1- Ensure that your terminal is `gnome-terminal`
+```bash
+update-alternatives --get-selections | grep -i term
+x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
+```
+
+Graphicaly
+Install  `dconf`
+```bash
+sudo apt-get install dconf-tools
+dconf-editor
+```
+Run it and go to path `org` > `gnome` > `desktop` > `interface` > `monospace-font-name`
+
+CLI
+gsettings offers a simple commandline interface to GSettings. It lets you get, set or monitor an individual key for changes.  
+__To *Know* current settings type following commands in terminal :__
+```bash
+gsettings get org.gnome.desktop.interface document-font-name
+gsettings get org.gnome.desktop.interface font-name 
+gsettings get org.gnome.desktop.interface monospace-font-name
+gsettings get org.gnome.nautilus.desktop font
+```
+__You can *set* fonts by following commands in terminal :__
+For example `Monospace 11` do not support symbol. Which is uggly if you have a custom shell.  
+My choises which differs from default :  
+The last __number argument__ is the size
+> for terminal
+```bash
+gsettings set org.gnome.desktop.interface monospace-font-name 'Hack 12'
+```
+> for soft like Keepass2
+```bash
+gsettings set org.gnome.desktop.interface font-name 'Hack 12'
+```
+__Get list of available fonts__
+```bash
+fc-list | more
+fc-list | grep -i "word"
+fc-list | grep -i UbuntuMono
+```
+To lists font faces that cover Hindi language:
+```bash
+fc-list :lang=hi
+```
+search by family
+```bash
+fc-list  :family="NotoSansMono Nerd Font Mono"
+```
+search with complete name
+```bash
+fc-list  :fullname="Noto Sans Mono ExtraCondensed ExtraBold Nerd Font Complete Mono"
+```
+
+To find all similar keys on schema type following command:
+```bash
+gsettings list-recursively org.gnome.desktop.interface
+```
+To reset all valuses of keys run following command in terminal:
+```bash
+gsettings reset-recursively org.gnome.desktop.interface
+```
+
 
 # Definitions
 Name | TLDR meaning | further explanations
