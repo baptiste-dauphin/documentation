@@ -68,6 +68,15 @@
 	- [Regex](#regex)
 	- [Markdown](#markdown)
 	- [Pimp my terminal](#pimp-my-terminal)
+- [CentOS](#centos)
+	- [Iptables](#iptables-1)
+	- [OS Version](#os-version)
+	- [Yum](#yum)
+- [ArchLinux](#archlinux)
+	- [File system](#file-system-1)
+	- [Grub](#grub)
+	- [package manager](#package-manager)
+	- [Wi-Fi](#wi-fi)
 - [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
@@ -3537,6 +3546,99 @@ To reset all valuses of keys run following command in terminal:
 gsettings reset-recursively org.gnome.desktop.interface
 ```
 
+# CentOS
+CentOS specific commands which differs from debian
+## Iptables
+```bash
+iptables-save > /etc/sysconfig/iptables
+```
+## OS Version
+```bash
+cat /etc/system-release
+CentOS Linux release 7.6.1810 (Core)
+```
+## Yum
+```bash
+yum install httpd
+yum remove  postgresql.x86_64
+yum update postgresql.x86_64
+yum search firefox
+yum info samba-common.i686
+
+yum groupinstall 'DNS Name Server'
+
+yum repolist
+
+yum check-update
+
+yum list | less
+yum list installed | less
+yum provides /etc/sysconfig/nf
+yum grouplist
+
+yum list installed | grep unzip
+```
+`to be updated...`
+
+# ArchLinux
+Installation
+## File system
+### EFI
+#### fs creation
+```
+mkfs.fat -F32 /dev/sdb5
+```
+
+#### fstab
+```
+/dev/sdb5 /efi vfat rw,relatime 0 2
+```
+
+
+## Grub
+
+### install grub executable
+```
+pacman -S grub
+```
+
+### install grub directory
+##### your grub name will be "GRUB_ARCH"
+```
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB_ARCH
+```
+
+### generate grub config (update-grub equivalent)
+```
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+## package manager
+#### full system upgrade
+```
+pacman -Syu
+```
+
+#### Query installed/local packages by regex
+sudo pacman -Qsq pulseaudio
+
+### Pacman apt equivalent
+https://wiki.archlinux.org/index.php/Pacman/Rosetta
+### My packages
+```
+sudo pacman -S pulseaudio tree xf86-video-intel mesa-dri opencl-nvidia sudo polkit lxsession kernel headers git gdm terminator keepass firefox
+```
+
+## Wi-Fi
+#### With gdm (gnome desktop manager)
+You have just have to use the service NetworkManager, which it way much more simple than other wireless connection manager (like wicd, netctl).
+NetworkManager will allow you to graphically setup once your wifi settings and autodiscover SSID.
+```
+systemctl start NetworkManager
+# and enable it at boot, by default no wifi connection manager is enable on archlinux
+systemctl enable NetworkManager
+```
+Then, fill in your infos in your graphical wifi settings
 
 # Definitions
 Name | TLDR meaning | further explanations
