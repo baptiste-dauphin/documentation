@@ -1,72 +1,73 @@
 <!-- MarkdownTOC levels="1,2" autolink="true" -->
 
 - [System](#system)
-  - [User](#user)
-  - [Group](#group)
-  - [Apt](#apt)
-  - [Performance](#performance)
-  - [Update-alternatives](#update-alternatives)
-  - [Graphic](#graphic)
-  - [Shell](#shell)
-  - [Process](#process)
-  - [File system](#file-system)
-  - [Init.d](#initd)
-  - [Systemd](#systemd)
-  - [Journal](#journal)
-  - [Iptables](#iptables)
+	- [User](#user)
+	- [Group](#group)
+	- [Apt](#apt)
+	- [Performance](#performance)
+	- [Update-alternatives](#update-alternatives)
+	- [Graphic](#graphic)
+	- [Shell](#shell)
+	- [Process](#process)
+	- [File system](#file-system)
+	- [Init.d](#initd)
+	- [Systemd](#systemd)
+	- [Journal](#journal)
+	- [Iptables](#iptables)
 - [Network](#network)
-  - [netplan](#netplan)
-  - [Netstat](#netstat)
-  - [ss](#ss)
-  - [TCP Dump](#tcp-dump)
-  - [systemd-networkd](#systemd-networkd)
-  - [ENI](#eni)
-  - [vlan](#vlan)
-  - [NAT](#nat)
-  - [VPN](#vpn)
-  - [Netcat](#netcat)
-  - [Internet Exchange Point](#internet-exchange-point)
+	- [netplan](#netplan)
+	- [Netstat](#netstat)
+	- [ss](#ss)
+	- [TCP Dump](#tcp-dump)
+	- [systemd-networkd](#systemd-networkd)
+	- [ENI](#eni)
+	- [vlan](#vlan)
+	- [NAT](#nat)
+	- [VPN](#vpn)
+	- [Netcat](#netcat)
+	- [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
-  - [Ssh](#ssh)
-  - [OpenSSL](#openssl)
-  - [Fail2Ban](#fail2ban)
+	- [Ssh](#ssh)
+	- [OpenSSL](#openssl)
+	- [Fail2Ban](#fail2ban)
 - [Software](#software)
-  - [NTP](#ntp)
-  - [Git](#git)
-  - [Tmux](#tmux)
-  - [Email system](#email-system)
-  - [OpenLDAP](#openldap)
-  - [Active Directory](#active-directory)
-  - [SaltStack](#saltstack)
-  - [Apache](#apache)
-  - [Nginx](#nginx)
-  - [Zabbix](#zabbix)
-  - [Elastic Search](#elastic-search)
-  - [Php-FPM](#php-fpm)
-  - [HAProxy](#haproxy)
-  - [Java](#java)
-  - [Python](#python)
-  - [RabbitMQ](#rabbitmq)
-  - [Ansible](#ansible)
-  - [Node js](#node-js)
-  - [Yarn](#yarn)
-  - [Varnish](#varnish)
-  - [Log Rotate](#log-rotate)
+	- [NTP](#ntp)
+	- [Git](#git)
+	- [Tmux](#tmux)
+	- [Email system](#email-system)
+	- [OpenLDAP](#openldap)
+	- [Active Directory](#active-directory)
+	- [SaltStack](#saltstack)
+	- [Apache](#apache)
+	- [Nginx](#nginx)
+	- [Zabbix](#zabbix)
+	- [Elastic Search](#elastic-search)
+	- [Php-FPM](#php-fpm)
+	- [HAProxy](#haproxy)
+	- [Java](#java)
+	- [Python](#python)
+	- [RabbitMQ](#rabbitmq)
+	- [Ansible](#ansible)
+	- [Node js](#node-js)
+	- [Yarn](#yarn)
+	- [Varnish](#varnish)
+	- [Log Rotate](#log-rotate)
 - [Databases](#databases)
-  - [MySQL](#mysql)
-  - [Percona XtraDB Cluster](#percona-xtradb-cluster)
-  - [Redis](#redis)
-  - [InfluxDB](#influxdb)
+	- [MySQL](#mysql)
+	- [Percona XtraDB Cluster](#percona-xtradb-cluster)
+	- [Redis](#redis)
+	- [InfluxDB](#influxdb)
 - [Hardware](#hardware)
-  - [Storage](#storage)
-  - [Listing](#listing)
-  - [Monitor](#monitor)
+	- [Storage](#storage)
+	- [LVM](#lvm)
+	- [Listing](#listing)
+	- [Monitor](#monitor)
 - [Virtualization \(OS-level\)](#virtualization-os-level)
-  - [Containers](#containers)
+	- [Docker](#docker)
 - [Miscellaneous](#miscellaneous)
-  - [Regex](#regex)
-  - [Markdown](#markdown)
-  - [Pimp my terminal](#pimp-my-terminal)
+	- [Regex](#regex)
+	- [Markdown](#markdown)
+	- [Pimp my terminal](#pimp-my-terminal)
 - [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
@@ -3013,6 +3014,178 @@ bs=512 count=1 \
 conv=noerror,sync \
 status=progress
 ```
+
+## LVM
+LVM stands for Logical Volume Management  
+Basically, you have 3 nested levels in lvm
+- __Physical volume__ (`pv`)
+- __Volume Group__ (`vg`)
+- __Logical volume__ (`lv`) which is the only one you can mount on a system
+### Enlarge LVM parition with additional disk
+list disks
+```bash
+lsblk
+```
+
+Run fdisk to manage disks 
+```bash
+fdisk /dev/sdx
+m n p
+t #### new partition
+8e #### for partition type "Linux LVM"
+w #### write changes on disk
+```
+
+Initialize a disk or PARTITION for use by LVM  
+/dev/sdx : file system path of a __physical__ disk  
+/dev/sdxX : file system path of a __partition__ of a physical disk  
+```bash
+pvcreate /dev/sdxX
+```
+
+Add physical volumes to a volume group (/dev/sdb1)
+```bash
+vgdisplay /dev/sdaX
+```
+```bash
+vgextend system-vg /dev/sdbx
+```
+
+Extend the size of a logical volume
+```bash
+lvextend -l +100%FREE /dev/vg_data/lv_data
+```
+`/dev/vg_data/lv_data` is still a mountable device with a __greater physical size__ but with the __same file system size__ as previous. So you need to extend the fs to the new extended physical size.  
+
+```bash
+resize2fs /dev/VG_Name/LV_Name
+```
+
+Optional : notice that lvm create a directory with vg name and subfile with lv name  
+```bash
+resize2fs /dev/HOSTNAME-vg/root
+resize2fs /dev/system-vg/root
+```
+
+Ensure the __extend procedure__ has succeed don't use `lsblk` Bbut `df` instead
+```bash
+df -h 
+```
+
+
+
+### Add a disk on system and mount it on new root directory (/data)
+Create the new directory 
+```bash
+mkdir /data
+```
+
+1 - create the __physical volume__
+```bash
+pvcreate /dev/sdb
+pvdisplay
+```
+
+2 - create the __volume group__
+```bash
+vgcreate vg_NAME /dev/sdb
+vgdisplay
+```
+
+3 - create the logical volume
+```bash
+lvcreate -l +100%FREE -n lv_NAME vg_NAME
+lvdisplay
+```
+
+4 - Create the file system
+```bash
+mkfs.ext4 /dev/mapper/vg_NAME-lv_NAME
+```
+
+5 - mount the Logicial Volume in /data
+```bash
+mount /dev/mapper/vg_NAME-lv_NAME /data
+```
+
+6 - Optional but recommended. Make persistent the mount of the lv even after reboot.  
+copy the first line, and replace with LV path
+```bash
+vim /etc/fstab
+```
+
+
+### Delete partition in a disk
+Follow the instruction
+```bash
+cfdisk /dev/sdb
+```
+
+
+### Reduce a LV size
+If you want to remove a physical disk contained in a LV
+[Tutorial](https://www.rootusers.com/lvm-resize-how-to-decrease-an-lvm-partition/)
+
+
+
+### Various LVM commands
+```bash
+pvs
+pvdisplay
+vgdisplay
+lvdisplay
+fdisk -l
+```
+### How to remove bad disk from LVM2 with the less data loss on other PVs
+```bash
+# pvdisplay
+Couldnt find device with uuid EvbqlT-AUsZ-MfKi-ZSOz-Lh6L-Y3xC-KiLcYx.
+  --- Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name               vg_srvlinux
+  PV Size               931.51 GiB / not usable 4.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              238466
+  Free PE               0
+  Allocated PE          238466
+  PV UUID               xhwmxE-27ue-dHYC-xAk8-Xh37-ov3t-frl20d
+
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               vg_srvlinux
+  PV Size               465.76 GiB / not usable 3.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              119234
+  Free PE               0
+  Allocated PE          119234
+  PV UUID               EvbqlT-AUsZ-MfKi-ZSOz-Lh6L-Y3xC-KiLcYx
+
+
+
+#### vgreduce --removemissing --force vg_srvlinux
+
+
+  Couldnt find device with uuid EvbqlT-AUsZ-MfKi-ZSOz-Lh6L-Y3xC-KiLcYx.
+  Removing partial LV LogVol00.
+  Logical volume "LogVol00" successfully removed
+  Wrote out consistent volume group vg_srvlinux
+
+#### pvdisplay
+
+ --- Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name               vg_srvlinux
+  PV Size               931.51 GiB / not usable 4.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              238466
+  Free PE               238466
+  Allocated PE          0
+  PV UUID               xhwmxE-27ue-dHYC-xAk8-Xh37-ov3t-frl20d
+```
+
 
 ## Listing
 ```bash
