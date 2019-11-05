@@ -2202,6 +2202,15 @@ Verify your url
 https://zabbix.company/zabbix.php?action=dashboard.view
 https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
 ```
+### Test zabbix agent key
+```bash
+### Test a given item
+zabbix_agentd -t system.hostname
+zabbix_agentd -t system.swap.size[all,free]
+zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+### print all known items 
+zabbix_agentd -p
+```
 
 #### zabbix server info request (to perform a first test)
 ```bash
