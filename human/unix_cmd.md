@@ -1106,6 +1106,7 @@ cat /{lib,etc,run}/netplan/*.yaml
 ### Show network connections, listening process
 ## Netstat
 (old way)
+
 | command         | specification                               |
 |:----------------|:--------------------------------------------|
 | netstat -t      | list tcp connections                        |
