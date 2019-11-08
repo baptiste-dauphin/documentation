@@ -1,94 +1,97 @@
 <!-- MarkdownTOC levels="1,2" autolink="true" -->
 
 - [System](#system)
-	- [User](#user)
-	- [Group](#group)
-	- [Apt](#apt)
-	- [Performance](#performance)
-	- [Update-alternatives](#update-alternatives)
-	- [Graphic](#graphic)
-	- [Shell](#shell)
-	- [Process](#process)
-	- [File system](#file-system)
-	- [Init.d](#initd)
-	- [Systemd](#systemd)
-	- [Journal](#journal)
-	- [Iptables](#iptables)
+  - [User](#user)
+  - [Group](#group)
+  - [Apt](#apt)
+  - [Performance](#performance)
+  - [Update-alternatives](#update-alternatives)
+  - [Graphic](#graphic)
+  - [Shell](#shell)
+  - [Process](#process)
+  - [File system](#file-system)
+  - [Init.d](#initd)
+  - [Systemd](#systemd)
+  - [Journal](#journal)
+  - [Iptables](#iptables)
 - [Network](#network)
-	- [netplan](#netplan)
-	- [Netstat](#netstat)
-	- [ss](#ss)
-	- [TCP Dump](#tcp-dump)
-	- [systemd-networkd](#systemd-networkd)
-	- [ENI](#eni)
-	- [vlan](#vlan)
-	- [NAT](#nat)
-	- [VPN](#vpn)
-	- [Netcat](#netcat)
-	- [Internet Exchange Point](#internet-exchange-point)
+  - [netplan](#netplan)
+  - [Netstat](#netstat)
+  - [ss](#ss)
+  - [TCP Dump](#tcp-dump)
+  - [systemd-networkd](#systemd-networkd)
+  - [ENI](#eni)
+  - [vlan](#vlan)
+  - [NAT](#nat)
+  - [VPN](#vpn)
+  - [Netcat](#netcat)
+  - [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
-	- [Ssh](#ssh)
-	- [OpenSSL](#openssl)
-	- [Fail2Ban](#fail2ban)
+  - [Ssh](#ssh)
+  - [OpenSSL](#openssl)
+  - [Fail2Ban](#fail2ban)
 - [Software](#software)
-	- [NTP](#ntp)
-	- [Git](#git)
-	- [Tmux](#tmux)
-	- [Email system](#email-system)
-	- [OpenLDAP](#openldap)
-	- [Active Directory](#active-directory)
-	- [SaltStack](#saltstack)
-	- [Apache](#apache)
-	- [Nginx](#nginx)
-	- [Zabbix](#zabbix)
-	- [Elastic Search](#elastic-search)
-	- [Php-FPM](#php-fpm)
-	- [HAProxy](#haproxy)
-	- [Java](#java)
-	- [Python](#python)
-	- [RabbitMQ](#rabbitmq)
-	- [Ansible](#ansible)
-	- [Node js](#node-js)
-	- [Yarn](#yarn)
-	- [Varnish](#varnish)
-	- [Log Rotate](#log-rotate)
+  - [NTP](#ntp)
+  - [Git](#git)
+  - [Tmux](#tmux)
+  - [Email system](#email-system)
+  - [OpenLDAP](#openldap)
+  - [Active Directory](#active-directory)
+  - [SaltStack](#saltstack)
+  - [Apache](#apache)
+  - [Nginx](#nginx)
+  - [Zabbix](#zabbix)
+  - [Elastic Search](#elastic-search)
+  - [Php-FPM](#php-fpm)
+  - [HAProxy](#haproxy)
+  - [Java](#java)
+  - [Python](#python)
+  - [RabbitMQ](#rabbitmq)
+  - [Ansible](#ansible)
+  - [Node js](#node-js)
+  - [Yarn](#yarn)
+  - [Varnish](#varnish)
+  - [Log Rotate](#log-rotate)
 - [Databases](#databases)
-	- [MySQL](#mysql)
-	- [Percona XtraDB Cluster](#percona-xtradb-cluster)
-	- [Redis](#redis)
-	- [InfluxDB](#influxdb)
+  - [MySQL](#mysql)
+  - [Percona XtraDB Cluster](#percona-xtradb-cluster)
+  - [Redis](#redis)
+  - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
-	- [Storage](#storage)
-	- [LVM](#lvm)
-	- [Listing](#listing)
-	- [Monitor](#monitor)
+  - [Storage](#storage)
+  - [LVM](#lvm)
+  - [Listing](#listing)
+  - [Monitor](#monitor)
 - [Virtualization](#virtualization)
-	- [Docker](#docker)
-	- [Docker Swarm](#docker-swarm)
+  - [Docker](#docker)
+  - [Docker Swarm](#docker-swarm)
 - [Kubernetes](#kubernetes)
-	- [Context](#context)
-	- [Deployment](#deployment)
-	- [Pod](#pod)
-	- [Service](#service)
-	- [RBAC](#rbac)
-	- [Ingress](#ingress)
-	- [Config extraction](#config-extraction)
-	- [Common cmd](#common-cmd)
+  - [Context](#context)
+  - [Deployment](#deployment)
+  - [Pod](#pod)
+  - [Service](#service)
+  - [ConfigMap](#configmap)
+  - [Secrets](#secrets)
+  - [RBAC](#rbac)
+  - [Ingress](#ingress)
+  - [Config extraction](#config-extraction)
+  - [Common cmd](#common-cmd)
+  - [Helm](#helm)
 - [CentOS](#centos)
-	- [Iptables](#iptables-1)
-	- [OS Version](#os-version)
-	- [Yum](#yum)
+  - [Iptables](#iptables-1)
+  - [OS Version](#os-version)
+  - [Yum](#yum)
 - [ArchLinux](#archlinux)
-	- [File system](#file-system-1)
-	- [Grub](#grub)
-	- [package manager](#package-manager)
-	- [Wi-Fi](#wi-fi)
+  - [File system](#file-system-1)
+  - [Grub](#grub)
+  - [package manager](#package-manager)
+  - [Wi-Fi](#wi-fi)
 - [Miscellaneous](#miscellaneous)
-	- [Raspberry](#raspberry)
-	- [Sublime-text](#sublime-text)
-	- [Regex](#regex)
-	- [Markdown](#markdown)
-	- [Pimp my terminal](#pimp-my-terminal)
+  - [Raspberry](#raspberry)
+  - [Sublime-text](#sublime-text)
+  - [Regex](#regex)
+  - [Markdown](#markdown)
+  - [Pimp my terminal](#pimp-my-terminal)
 - [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
@@ -2208,6 +2211,7 @@ https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
 zabbix_agentd -t system.hostname
 zabbix_agentd -t system.swap.size[all,free]
 zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+
 ### print all known items 
 zabbix_agentd -p
 ```
@@ -2281,6 +2285,8 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
 
+__Elasticsearch Cluster Topology__
+![GitHub Logo](../src/elasticsearch_cluster_topology.png)
 
 ## Php-FPM
 check config
@@ -2320,6 +2326,16 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 ## Python
+#### Knowledge
+
+Symbol | Meaning
+-|-
+() | tuple
+[] | list
+{} | dictionary
+
+[Python tutorial](https://docs.python.org/3/tutorial/datastructures.html)
+
 #### Common commands
 > list all versions of python (system wide)
 ```bash
@@ -3365,6 +3381,18 @@ kubectl scale deployment nginx --replicas=5
 kubectl create service nodeport bdauphin-nginx-test --tcp=8080:80
 ```
 
+## ConfigMap
+ConfigMaps allow you to decouple configuration artifacts from image content to keep containerized applications portable. This page provides a series of usage examples demonstrating how to create ConfigMaps and configure Pods using data stored in ConfigMaps.
+
+Most of the time it's a list of key-value pairs  
+
+It can be defined as environment variables  
+and/or
+Be mounted into the pod at a specified path
+
+## Secrets
+Kubernetes secret objects let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys. Putting this information in a secret is safer and more flexible than putting it verbatim in a Pod definition or in a container image . See Secrets design document for more information.
+
 ## RBAC
 Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise.  
 [complete doc](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
@@ -3474,6 +3502,68 @@ watch -n 1 kubectl get all -o wide
 watch -n 1 kubectl get all -o wide -n default
 ```
 
+## Helm
+Client : helm  
+Server : tiller
+
+Helm uses go template render engine 
+
+### Generate your first chart
+```bash
+helm create $mychart
+helm create elasticsearch
+```
+
+Helm will create a new directory in your project called mychart with
+```bash
+elasticsearch
+├── charts
+├── Chart.yaml
+├── templates
+│   ├── deployment.yaml
+│   ├── _helpers.tpl
+│   ├── ingress.yaml
+│   ├── NOTES.txt
+│   ├── service.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
+```
+
+### Templates
+The most important piece of the puzzle is the `templates/` directory.  
+
+It’s worth noting however, that the directory is named templates, and Helm runs each file in this directory through a [Go template](https://golang.org/pkg/text/template/) rendering engine.
+
+```bash
+helm install --dry-run --debug ./elasticsearch
+helm install ./elasticsearch
+```
+
+### Values
+The template in service.yaml makes use of the Helm-specific objects `.Chart` and `.Values`.
+
+Values | Default | override | meaning
+-|-|-|-
+`.Chart` |  |  | provides metadata about the chart to your definitions such as the name, or version
+`.Values` | `values.yaml` | `--set key=value`, `--values $file` | key element of Helm charts, used to expose configuration that can be set at the time of deployment
+
+For more advanced configuration, a user can specify a YAML file containing overrides with the `--values` option.
+
+```bash
+helm install --dry-run --debug ./mychart --set service.internalPort=8080
+helm install --dry-run --debug ./mychart --values myCustomeValues.yaml
+```
+
+### Worth knowing cmd
+As you develop your chart, it’s a good idea to run it through the linter to ensure you’re following best practices and that your templates are well-formed. Run the helm lint command to see the linter in action:
+```bash
+helm lint ./mychart
+==> Linting ./mychart
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, no failures
+```
 
 # CentOS
 CentOS specific commands which differs from debian
