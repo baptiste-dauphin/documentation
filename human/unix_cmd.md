@@ -1,31 +1,7 @@
 <!-- MarkdownTOC levels="1,2" autolink="true" -->
 
 - [System](#system)
-	- [User](#user)
-	- [Group](#group)
-	- [Apt](#apt)
-	- [Performance](#performance)
-	- [Update-alternatives](#update-alternatives)
-	- [Graphic](#graphic)
-	- [Shell](#shell)
-	- [Process](#process)
-	- [File system](#file-system)
-	- [Init.d](#initd)
-	- [Systemd](#systemd)
-	- [Journal](#journal)
-	- [Iptables](#iptables)
 - [Network](#network)
-	- [netplan](#netplan)
-	- [Netstat](#netstat)
-	- [ss](#ss)
-	- [TCP Dump](#tcp-dump)
-	- [systemd-networkd](#systemd-networkd)
-	- [ENI](#eni)
-	- [vlan](#vlan)
-	- [NAT](#nat)
-	- [VPN](#vpn)
-	- [Netcat](#netcat)
-	- [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
 	- [Ssh](#ssh)
 	- [OpenSSL](#openssl)
@@ -521,6 +497,12 @@ debian style
 ```bash
 ps -ef
 ps -o pid,user,%mem,command ax
+```
+
+Get parent pid of a given pid
+```bash
+ps -o ppid= -p 750
+ps -o ppid= -p $(pidof systemd)
 ```
 
 RedHat style
