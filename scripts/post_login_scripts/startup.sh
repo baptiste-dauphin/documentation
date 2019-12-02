@@ -1,6 +1,7 @@
 #!/bin/bash
 DIR="$(dirname "$0")"
 
+sudo $DIR/system_upgrade.bash
 $DIR/keyboard-fr.sh
 $DIR/pulseaudio-start.sh
 $DIR/monitors-placement.sh
