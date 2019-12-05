@@ -62,6 +62,7 @@
 	- [LVM](#lvm)
 	- [Listing](#listing)
 	- [Monitor](#monitor)
+	- [Bluetooth](#bluetooth)
 - [Virtualization](#virtualization)
 	- [Docker](#docker)
 	- [Docker Swarm](#docker-swarm)
@@ -3249,6 +3250,19 @@ sudo dpkg-reconfigure libxrandr2
 ```
 logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
 
+## Bluetooth
+### How to pair AirPods pro on gnome
+[Blueman](https://wiki.archlinux.org/index.php/Blueman) is a full featured Bluetooth manager written in GTK. 
+Be sure to enable the Bluetooth daemon and start Blueman with `blueman-applet`. A graphical settings panel can be launched with `blueman-manager` or your favourite bluetooth manager. 
+```bash
+yaourt -S gtk
+yaourt -S blueman
+```
+
+Then run blueman
+```bash
+blueman-applet
+```
 
 # Virtualization
 Virtualization (OS-level)  
