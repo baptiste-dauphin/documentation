@@ -2911,6 +2911,21 @@ mysqldump -h 10.10.10.10 \
 | gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
 ```
 
+To export to file (data only)
+```bash
+mysqldump -u [user] -p[pass] --no-create-info mydb > mydb.sql
+```
+
+To export to file (structure only)
+```bash
+mysqldump -u [user] -p[pass] --no-data mydb > mydb.sql
+```
+
+To import to database
+```bash
+mysql -u [user] -p[pass] mydb < mydb.sql
+```
+
 ## Percona XtraDB Cluster
 (open source, cost-effective, and robust MySQL clustering)  
 Test replication from reverse proxy
