@@ -54,6 +54,7 @@
   - [Log Rotate](#log-rotate)
 - [Databases](#databases)
   - [MySQL](#mysql)
+  - [MySQL - tool](#mysql---tool)
   - [Percona XtraDB Cluster](#percona-xtradb-cluster)
   - [Redis](#redis)
   - [InfluxDB](#influxdb)
@@ -1131,6 +1132,13 @@ cat /{lib,etc,run}/netplan/*.yaml
 |:-----------|:-------------------------------------|
 | ss -tulipe | more info on listening process       |
 | ss tlpn    | print listen tcp socket with process |
+
+```bash
+ss -ltpn sport eq 2377
+ss -t '( sport = :ssh )'
+ss -ltn sport gt 500
+ss -ltn sport le 500
+```
 
 ## TCP Dump
 Real time, just see what’s going on, by looking at all interfaces.
@@ -2890,6 +2898,22 @@ gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasen
 ```bash
 mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
 ```
+
+## MySQL - tool
+Run after an mysql upgrade. Update system tables like `performance_schema`
+```bash
+mysql_upgrade -u root -p
+```
+
+Test configuration before restart. Will output if some error exist
+```bash
+mysqld --help
+```
+
+Simulate the running config If you would have been started mysql
+```bash
+mysqld --print-defaults
+```
 ### Dump
 with __mysqldump__
 ```bash
@@ -3350,6 +3374,27 @@ get address + role
 for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
 ```
 
+Print labels of nodes
+```bash
+docker node ls -q | xargs docker node inspect \
+  -f '[{{ .Description.Hostname }}]: {{ range $k, $v := .Spec.Labels }}{{ $k }}={{ $v }} {{end}}'
+```
+
+### Join new node
+swarm manager shell
+```bash
+docker swarm join-token worker
+```
+We output a copy pastable bash line, like the following ! (Be carefull it doesn't include listen ip of the worker)
+
+new worker shell
+
+```bash
+docker swarm join \
+  --token <TOKEN_WORKER> \
+  --listen-addr WORKER-LISTEN-IP:2377 \
+   <MANGER-LISTEN-IP>:2377
+```
 
 
 # Kubernetes
