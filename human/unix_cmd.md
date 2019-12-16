@@ -27,6 +27,7 @@
   - [Netcat](#netcat)
   - [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
+  - [Vault](#vault)
   - [Ssh](#ssh)
   - [OpenSSL](#openssl)
   - [Fail2Ban](#fail2ban)
@@ -126,6 +127,20 @@ You have to be __sudoer__ (i.e. being member of 'sudo' group)
 ensure you're in sudo group, by checking groups you belong to
 ```bash
 groups
+```
+
+In ordre to edit sudoer file, use the proper tool `visudo`
+#### Edit
+```bash
+visudo -f /var/tmp/sudoers.new   
+visudo -f /etc/sudoers
+```
+
+#### Checkconfig
+```bash
+visudo -c  
+/etc/sudoers: parsed OK
+/etc/sudoers.d/dev: parsed OK
 ```
 
 ## Group
@@ -248,6 +263,11 @@ service sddm restart    : restart sddm (to load new monitor)
 ```bash
 update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
+
+##### Automatically starting applications on i3 startup
+
+https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup
+
 
 ## Shell
 ### Stream
@@ -1240,6 +1260,13 @@ echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 151
 
 
 # Security
+## Vault
+```bash
+vault login -method=ldap username=$USER
+```
+
+Will set up a token under `~/.vault-token`
+
 ## Ssh
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
@@ -2292,9 +2319,52 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
+### Dump / Backup
+Very good tutorial
+https://blog.ruanbekker.com/blog/2017/11/22/using-elasticdump-to-backup-elasticsearch-indexes-to-json/
+
+`Warning`
+DO NOT BACKUP with wildcard matching
+
+I tested to backup indexes with wildcard, It works but when you want to put back the data, elasticdump takes ALL the DATA from ALL index from the the json file to feed the one you provide in the url. Exemple :
+
+```bash
+elasticdump --input=es_test-index-wildcard.json --output=http://localhost:9200/test-index-1 --type=data
+```
+
+In this exemple the file es_test-index-wildcard.json was the result of the following command, which matches 2 indexes (test-index-1 and test-index-2)
+
+```bash
+elasticdump --input=http://localhost:9200/test-index-* --output=es_test-index-1.json --type=data
+```
+
+So, I'll have to manually expand all various indexes in order to back them up ! 
+
 
 __Elasticsearch Cluster Topology__
 ![GitHub Logo](../src/elasticsearch_cluster_topology.png)
+
+### Templates
+Change the future index sharding and and replicas and other stuff.  
+For example, if you have a mono-node cluster, you don't want any replica nor sharding.
+
+```bash
+curl -X POST '127.0.0.1:9200/_template/default' \
+ -H 'Content-Type: application/json' \
+ -d '
+ {
+  "index_patterns": ["*"],
+  "order": -1,
+  "settings": {
+    "number_of_shards": "1",
+    "number_of_replicas": "0"
+  }
+}
+ ' \
+ | jq .
+```
+
+
 
 ## Php-FPM
 check config
