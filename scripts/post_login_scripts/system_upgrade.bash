@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+DIR="$(dirname "$0")"
+
 function display () {
 	echo "---------------------------------------------"
 	echo "[+]  $1"
@@ -16,28 +18,34 @@ function display_separator () {
 
 function print_apt_repositories(){
 	display 'Here are your configured APT repositories'
-	../get_remote_apt_reposotires_url.bash;
+	$DIR/../get_remote_apt_reposotires_url.bash;
 	display_separator
 };
 
 function list_upgradable(){
 	display 'Here are a list of upgradable packages'
+    sudo apt-get update -y;
     apt list --upgradable;
     display_separator
 };
 
-function patching(){
+function upgrade(){
     # sudo specified because this was from my bootstrap script for an
     # ec2 instance remove the sudos as previously stated if you are 
     # going to exec it from your current shell
     display 'Running upgrade of all your packages (including linux version)'
-    sudo apt-get update -y;
     sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y;
     display_separator
 };
+
+function auto_remove(){
+	display 'Clearing all your useless packages'
+	sudo apt autoremove;
+}
 
 
 # main
 print_apt_repositories;
 list_upgradable;
-patching;
+upgrade;
+auto_remove;
