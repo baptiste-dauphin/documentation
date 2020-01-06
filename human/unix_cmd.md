@@ -307,6 +307,13 @@ tar --help
 | -C          | Set dir name to extract files                 |
 | --directory | same                                          |
 
+### gunzip
+Default, extract file to STOUT  
+`-c : write on standard output, keep original files unchanged`
+```bash
+gunzip -c file.gz > file
+```
+
 ### grep
 
 ### less
@@ -2961,8 +2968,13 @@ ORDER BY table_schema, data_length + index_length DESC;
 SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
 ```
 ##### Feed database
+put the .sql.gz file into STDIN of gunzip and then, send to mysql
 ```bash
-gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]
+gunzip < [compressed_filename.sql.gz] | mysql -u [user] -p[password] [databasename]
+```
+If you encouter errors like `foreign key`
+```bash
+gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
 ```
 ##### All in one usage <3
 ```bash
