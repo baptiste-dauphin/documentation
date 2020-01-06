@@ -27,6 +27,7 @@
   - [Netcat](#netcat)
   - [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
+  - [Gpg](#gpg)
   - [Vault](#vault)
   - [Ssh](#ssh)
   - [OpenSSL](#openssl)
@@ -1267,6 +1268,16 @@ echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 151
 
 
 # Security
+## Gpg
+### gpg-agent
+Display your public AND private keys from the gpg-agent keyring
+```bash
+gpg --list-keys
+gpg --list-secret-keys
+```
+
+[How to generate gpg public/private key pair](https://gitlab.com/help/user/project/repository/gpg_signed_commits/index.md)
+
 ## Vault
 ```bash
 vault login -method=ldap username=$USER
