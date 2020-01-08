@@ -42,6 +42,7 @@
   - [SaltStack](#saltstack)
   - [Apache](#apache)
   - [Nginx](#nginx)
+  - [Bind9](#bind9)
   - [Zabbix](#zabbix)
   - [Elastic Search](#elastic-search)
   - [Php-FPM](#php-fpm)
@@ -2284,6 +2285,74 @@ server {
 }
 ```
 
+## Bind9
+https://wiki.csnu.org/index.php/Installation_et_configuration_de_bind9  
+the process name of bind9 is "named"
+### rndc
+__name server control utility__
+
+Write (dump) cache of named in default file (__/var/cache/bind/named_dump.db__)  
+dumpdb [-all|-cache|-zones|-adb|-bad|-fail] [view ...]
+```bash
+rndc dumpdb -cache default_any
+```
+
+enable query logging in default location (__/var/log/bind9/query.log__)
+```bash
+rndc querylog [on|off]
+```
+
+toggle querylog mode
+```bash
+rndc querylog
+```
+
+flush   Flushes all of the server's caches.
+```bash
+rndc flush
+```
+flush [view]  Flushes the server's cache for a view.
+```bash
+rndc flush default_any
+```
+
+get unic master zone loaded
+```bash
+named-checkconf -z 2> /dev/null | grep 'zone' | sort -u | awk '{print $2}' | rev | cut --delimiter=/ -f2 | rev | sort -u
+named-checkconf -z 2> /dev/null | grep 'zone' | grep -v 'bad\|errors' | sort -u | awk '{print $2}' | rev | cut --delimiter=/ -f2 | rev | sort -u
+```
+
+keep cache
+```bash
+systemctl reload bind9
+```
+empty cache
+```bash
+systemctl restart bind9
+```
+
+### dig
+```bash
+dig @8.8.8.8 +short www.qwant.com +nodnssec
+dig @8.8.8.8 +short google.com +notcp
+dig @8.8.8.8 +noall +answer +tcp www.qwant.com A
+dig @8.8.8.8 +noall +answer +notcp www.qwant.com A
+```
+
+others options
+- +short
+- +(no)tcp
+- +(no)dnssec
+- +noall
+- +answer
+- type
+
+[Full manual](https://linux.die.net/man/1/dig)
+
+
+
+
+
 
 
 ## Zabbix
@@ -3074,6 +3143,36 @@ mysqldump -u [user] -p[pass] --no-data mydb > mydb.sql
 To export to file (`data only`)
 ```bash
 mysqldump -u [user] -p[pass] --no-create-info mydb > mydb.sql
+```
+
+Exemple
+```bash
+mysqldump \
+-u root \
+-p user1 \
+--single-transaction \
+--skip-add-locks \
+--skip-lock-tables \
+--skip-set-charset \
+--no-data \
+> db1_STRUCTURE.sql
+
+mysqldump \
+-u root \
+-p user1 \
+--single-transaction \
+--skip-add-locks \
+--skip-lock-tables \
+--skip-set-charset \
+--no-create-info \
+> db1_DATA.sql
+```
+```sql
+CREATE DATABASE db1;
+```
+```bash
+mysql -u root -p db1 < db1_STRUCTURE.sql
+mysql -u root -p db1 < db1_DATA.sql
 ```
 
 
