@@ -2229,6 +2229,41 @@ Upgrade Salt-Minion:
 {% if (key | regex_match('.*dyn.company.tld.*', ignorecase=True)) != None %}
 ```
 
+#### Useful exemple
+##### Netcat
+```bash
+salt -C "minion.local or minion2.local" \
+> cmd.run "docker run debian /bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306' | grep open"
+minion.local:
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    debconf: delaying package configuration, since apt-utils is not installed
+    (UNKNOWN) [10.3.3.3] 3306 (?) open
+
+minion2.local:
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    debconf: delaying package configuration, since apt-utils is not installed
+    (UNKNOWN) [10.3.3.3] 3306 (?) open
+```
+
+##### MySQL connexion
+Will print you the GRANTS for the user
+```bash
+echo "enter your password" ; read -s password ; \
+salt "*" \
+cmd.run "docker pull imega/mysql-client ; docker run --rm imega/mysql-client mysql --host=10.10.10.10 --user=b.dauphin --password=$password --database=db1 --execute='SHOW GRANTS FOR CURRENT_USER();'" \
+env='{"http_proxy": "http://10.10.10.10:9999"}'
+```
+
 ## Apache
 Validate config before reload/restart
 ```bash
@@ -2918,6 +2953,7 @@ mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
 Show users and remote client IP or subnet etc
 ```sql
 SELECT user, host FROM mysql.user;
+select user, host FROM mysql.user WHERE user = 'b.dauphin';
 ```
 
 Show current queries
@@ -2987,6 +3023,8 @@ If you encouter errors like `foreign key`
 ```bash
 gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
 ```
+[Full explanation](https://tableplus.com/blog/2018/08/mysql-how-to-temporarily-disable-foreign-key-constraints.html)
+
 ##### All in one usage <3
 ```bash
 mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
@@ -3028,19 +3066,22 @@ mysqldump -h 10.10.10.10 \
 | gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
 ```
 
-To export to file (data only)
-```bash
-mysqldump -u [user] -p[pass] --no-create-info mydb > mydb.sql
-```
-
-To export to file (structure only)
+To export to file (`structure only`)
 ```bash
 mysqldump -u [user] -p[pass] --no-data mydb > mydb.sql
 ```
 
+To export to file (`data only`)
+```bash
+mysqldump -u [user] -p[pass] --no-create-info mydb > mydb.sql
+```
+
+
 To import to database
 ```bash
 mysql -u [user] -p[pass] mydb < mydb.sql
+or
+gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
 ```
 
 ## Percona XtraDB Cluster
@@ -3433,6 +3474,18 @@ docker run -d \
 -e "discovery.type=single-node" \
 elasticsearch:7.4.1
 ```
+
+### Run a single command and output
+(no interactive)
+```bash
+docker run debian ls
+
+docker run debian /bin/bash -c 'cd /home ; ls -l'
+
+docker run debian \
+/bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306'
+```
+
 #### Volumes
 ```bash
 docker volume create my_app
