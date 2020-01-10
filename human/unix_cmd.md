@@ -27,6 +27,8 @@
   - [Netcat](#netcat)
   - [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
+  - [Gpg](#gpg)
+  - [Vault](#vault)
   - [Ssh](#ssh)
   - [OpenSSL](#openssl)
   - [Fail2Ban](#fail2ban)
@@ -40,6 +42,7 @@
   - [SaltStack](#saltstack)
   - [Apache](#apache)
   - [Nginx](#nginx)
+  - [Bind9](#bind9)
   - [Zabbix](#zabbix)
   - [Elastic Search](#elastic-search)
   - [Php-FPM](#php-fpm)
@@ -54,16 +57,42 @@
   - [Log Rotate](#log-rotate)
 - [Databases](#databases)
   - [MySQL](#mysql)
+  - [MySQL - tool](#mysql---tool)
   - [Percona XtraDB Cluster](#percona-xtradb-cluster)
   - [Redis](#redis)
   - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
   - [Storage](#storage)
+  - [LVM](#lvm)
   - [Listing](#listing)
   - [Monitor](#monitor)
-- [Virtualization \(OS-level\)](#virtualization-os-level)
-  - [Containers](#containers)
+- [Virtualization](#virtualization)
+  - [Docker](#docker)
+  - [Docker Swarm](#docker-swarm)
+- [Kubernetes](#kubernetes)
+  - [Context](#context)
+  - [Deployment](#deployment)
+  - [Pod](#pod)
+  - [Service](#service)
+  - [ConfigMap](#configmap)
+  - [Secrets](#secrets)
+  - [RBAC](#rbac)
+  - [Ingress](#ingress)
+  - [Config extraction](#config-extraction)
+  - [Common cmd](#common-cmd)
+  - [Helm](#helm)
+- [CentOS](#centos)
+  - [Iptables](#iptables-1)
+  - [OS Version](#os-version)
+  - [Yum](#yum)
+- [ArchLinux](#archlinux)
+  - [File system](#file-system-1)
+  - [Grub](#grub)
+  - [package manager](#package-manager)
+  - [Wi-Fi](#wi-fi)
 - [Miscellaneous](#miscellaneous)
+  - [Raspberry](#raspberry)
+  - [Sublime-text](#sublime-text)
   - [Regex](#regex)
   - [Markdown](#markdown)
   - [Pimp my terminal](#pimp-my-terminal)
@@ -100,6 +129,20 @@ You have to be __sudoer__ (i.e. being member of 'sudo' group)
 ensure you're in sudo group, by checking groups you belong to
 ```bash
 groups
+```
+
+In ordre to edit sudoer file, use the proper tool `visudo`
+#### Edit
+```bash
+visudo -f /var/tmp/sudoers.new   
+visudo -f /etc/sudoers
+```
+
+#### Checkconfig
+```bash
+visudo -c  
+/etc/sudoers: parsed OK
+/etc/sudoers.d/dev: parsed OK
 ```
 
 ## Group
@@ -223,6 +266,11 @@ service sddm restart    : restart sddm (to load new monitor)
 update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
 
+##### Automatically starting applications on i3 startup
+
+https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup
+
+
 ## Shell
 ### Stream
 #### Redirection
@@ -260,6 +308,13 @@ tar --help
 | -v          | verbose                                       |
 | -C          | Set dir name to extract files                 |
 | --directory | same                                          |
+
+### gunzip
+Default, extract file to STOUT  
+`-c : write on standard output, keep original files unchanged`
+```bash
+gunzip -c file.gz > file
+```
 
 ### grep
 
@@ -1084,6 +1139,7 @@ cat /{lib,etc,run}/netplan/*.yaml
 ### Show network connections, listening process
 ## Netstat
 (old way)
+
 | command         | specification                               |
 |:----------------|:--------------------------------------------|
 | netstat -t      | list tcp connections                        |
@@ -1105,6 +1161,13 @@ cat /{lib,etc,run}/netplan/*.yaml
 |:-----------|:-------------------------------------|
 | ss -tulipe | more info on listening process       |
 | ss tlpn    | print listen tcp socket with process |
+
+```bash
+ss -ltpn sport eq 2377
+ss -t '( sport = :ssh )'
+ss -ltn sport gt 500
+ss -ltn sport le 500
+```
 
 ## TCP Dump
 Real time, just see what’s going on, by looking at all interfaces.
@@ -1206,6 +1269,23 @@ echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 151
 
 
 # Security
+## Gpg
+### gpg-agent
+Display your public AND private keys from the gpg-agent keyring
+```bash
+gpg --list-keys
+gpg --list-secret-keys
+```
+
+[How to generate gpg public/private key pair](https://gitlab.com/help/user/project/repository/gpg_signed_commits/index.md)
+
+## Vault
+```bash
+vault login -method=ldap username=$USER
+```
+
+Will set up a token under `~/.vault-token`
+
 ## Ssh
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
@@ -1242,6 +1322,11 @@ openssl s_client -connect qwant.com:443 -servername qwant.com           < /dev/n
 openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/null | openssl x509 -text -noout -dates
 ```
 
+Useful use case
+```bash
+openssl x509 --text --noout --in ./dev.bdauphin.io.pem -subject -issuer
+```
+
 #### Get info about a certificate from __file__
 (.pem)
 ```bash
@@ -1249,6 +1334,18 @@ openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
 
 # debian 7, openssl style
 openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
+```
+
+#### Test full chain
+OpenSSL verify with `-CAfile`
+```bash
+openssl verify ./dev.bdauphin.io.pem
+CN = dev.bdauphin.io.pem
+error 20 at 0 depth lookup: unable to get local issuer certificate
+error ./dev.bdauphin.io: verification failed
+
+openssl verify -CAfile ./bdauphin.io_intermediate_certificate.pem ./dev.bdauphin.io.pem
+./dev.bdauphin.io: OK
 ```
 
 ##### openssl s_client all arguments
@@ -2150,6 +2247,41 @@ Upgrade Salt-Minion:
 {% if (key | regex_match('.*dyn.company.tld.*', ignorecase=True)) != None %}
 ```
 
+#### Useful exemple
+##### Netcat
+```bash
+salt -C "minion.local or minion2.local" \
+> cmd.run "docker run debian /bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306' | grep open"
+minion.local:
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    debconf: delaying package configuration, since apt-utils is not installed
+    (UNKNOWN) [10.3.3.3] 3306 (?) open
+
+minion2.local:
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    debconf: delaying package configuration, since apt-utils is not installed
+    (UNKNOWN) [10.3.3.3] 3306 (?) open
+```
+
+##### MySQL connexion
+Will print you the GRANTS for the user
+```bash
+echo "enter your password" ; read -s password ; \
+salt "*" \
+cmd.run "docker pull imega/mysql-client ; docker run --rm imega/mysql-client mysql --host=10.10.10.10 --user=b.dauphin --password=$password --database=db1 --execute='SHOW GRANTS FOR CURRENT_USER();'" \
+env='{"http_proxy": "http://10.10.10.10:9999"}'
+```
+
 ## Apache
 Validate config before reload/restart
 ```bash
@@ -2170,6 +2302,74 @@ server {
 }
 ```
 
+## Bind9
+https://wiki.csnu.org/index.php/Installation_et_configuration_de_bind9  
+the process name of bind9 is "named"
+### rndc
+__name server control utility__
+
+Write (dump) cache of named in default file (__/var/cache/bind/named_dump.db__)  
+dumpdb [-all|-cache|-zones|-adb|-bad|-fail] [view ...]
+```bash
+rndc dumpdb -cache default_any
+```
+
+enable query logging in default location (__/var/log/bind9/query.log__)
+```bash
+rndc querylog [on|off]
+```
+
+toggle querylog mode
+```bash
+rndc querylog
+```
+
+flush   Flushes all of the server's caches.
+```bash
+rndc flush
+```
+flush [view]  Flushes the server's cache for a view.
+```bash
+rndc flush default_any
+```
+
+get unic master zone loaded
+```bash
+named-checkconf -z 2> /dev/null | grep 'zone' | sort -u | awk '{print $2}' | rev | cut --delimiter=/ -f2 | rev | sort -u
+named-checkconf -z 2> /dev/null | grep 'zone' | grep -v 'bad\|errors' | sort -u | awk '{print $2}' | rev | cut --delimiter=/ -f2 | rev | sort -u
+```
+
+keep cache
+```bash
+systemctl reload bind9
+```
+empty cache
+```bash
+systemctl restart bind9
+```
+
+### dig
+```bash
+dig @8.8.8.8 +short www.qwant.com +nodnssec
+dig @8.8.8.8 +short google.com +notcp
+dig @8.8.8.8 +noall +answer +tcp www.qwant.com A
+dig @8.8.8.8 +noall +answer +notcp www.qwant.com A
+```
+
+others options
+- +short
+- +(no)tcp
+- +(no)dnssec
+- +noall
+- +answer
+- type
+
+[Full manual](https://linux.die.net/man/1/dig)
+
+
+
+
+
 
 
 ## Zabbix
@@ -2178,6 +2378,16 @@ Verify your url
 ```
 https://zabbix.company/zabbix.php?action=dashboard.view
 https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
+```
+### Test zabbix agent key
+```bash
+### Test a given item
+zabbix_agentd -t system.hostname
+zabbix_agentd -t system.swap.size[all,free]
+zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+
+### print all known items 
+zabbix_agentd -p
 ```
 
 #### zabbix server info request (to perform a first test)
@@ -2248,6 +2458,51 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
+### Dump / Backup
+Very good tutorial
+https://blog.ruanbekker.com/blog/2017/11/22/using-elasticdump-to-backup-elasticsearch-indexes-to-json/
+
+`Warning`
+DO NOT BACKUP with wildcard matching
+
+I tested to backup indexes with wildcard, It works but when you want to put back the data, elasticdump takes ALL the DATA from ALL index from the the json file to feed the one you provide in the url. Exemple :
+
+```bash
+elasticdump --input=es_test-index-wildcard.json --output=http://localhost:9200/test-index-1 --type=data
+```
+
+In this exemple the file es_test-index-wildcard.json was the result of the following command, which matches 2 indexes (test-index-1 and test-index-2)
+
+```bash
+elasticdump --input=http://localhost:9200/test-index-* --output=es_test-index-1.json --type=data
+```
+
+So, I'll have to manually expand all various indexes in order to back them up ! 
+
+
+__Elasticsearch Cluster Topology__
+![GitHub Logo](../src/elasticsearch_cluster_topology.png)
+
+### Templates
+Change the future index sharding and and replicas and other stuff.  
+For example, if you have a mono-node cluster, you don't want any replica nor sharding.
+
+```bash
+curl -X POST '127.0.0.1:9200/_template/default' \
+ -H 'Content-Type: application/json' \
+ -d '
+ {
+  "index_patterns": ["*"],
+  "order": -1,
+  "settings": {
+    "number_of_shards": "1",
+    "number_of_replicas": "0"
+  }
+}
+ ' \
+ | jq .
+```
+
 
 
 ## Php-FPM
@@ -2288,6 +2543,16 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 ## Python
+#### Knowledge
+
+Symbol | Meaning
+-|-
+() | tuple
+[] | list
+{} | dictionary
+
+[Python tutorial](https://docs.python.org/3/tutorial/datastructures.html)
+
 #### Common commands
 > list all versions of python (system wide)
 ```bash
@@ -2774,6 +3039,7 @@ mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
 Show users and remote client IP or subnet etc
 ```sql
 SELECT user, host FROM mysql.user;
+select user, host FROM mysql.user WHERE user = 'b.dauphin';
 ```
 
 Show current queries
@@ -2835,12 +3101,35 @@ ORDER BY table_schema, data_length + index_length DESC;
 SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
 ```
 ##### Feed database
+put the .sql.gz file into STDIN of gunzip and then, send to mysql
 ```bash
-gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]
+gunzip < [compressed_filename.sql.gz] | mysql -u [user] -p[password] [databasename]
 ```
+If you encouter errors like `foreign key`
+```bash
+gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
+```
+[Full explanation](https://tableplus.com/blog/2018/08/mysql-how-to-temporarily-disable-foreign-key-constraints.html)
+
 ##### All in one usage <3
 ```bash
 mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
+```
+
+## MySQL - tool
+Run after an mysql upgrade. Update system tables like `performance_schema`
+```bash
+mysql_upgrade -u root -p
+```
+
+Test configuration before restart. Will output if some error exist
+```bash
+mysqld --help
+```
+
+Simulate the running config If you would have been started mysql
+```bash
+mysqld --print-defaults
 ```
 ### Dump
 with __mysqldump__
@@ -2861,6 +3150,54 @@ mysqldump -h 10.10.10.10 \
 --skip-lock-tables \
 --single-transaction \
 | gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
+```
+
+To export to file (`structure only`)
+```bash
+mysqldump -u [user] -p[pass] --no-data mydb > mydb.sql
+```
+
+To export to file (`data only`)
+```bash
+mysqldump -u [user] -p[pass] --no-create-info mydb > mydb.sql
+```
+
+Exemple
+```bash
+mysqldump \
+-u root \
+-p user1 \
+--single-transaction \
+--skip-add-locks \
+--skip-lock-tables \
+--skip-set-charset \
+--no-data \
+> db1_STRUCTURE.sql
+
+mysqldump \
+-u root \
+-p user1 \
+--single-transaction \
+--skip-add-locks \
+--skip-lock-tables \
+--skip-set-charset \
+--no-create-info \
+> db1_DATA.sql
+```
+```sql
+CREATE DATABASE db1;
+```
+```bash
+mysql -u root -p db1 < db1_STRUCTURE.sql
+mysql -u root -p db1 < db1_DATA.sql
+```
+
+
+To import to database
+```bash
+mysql -u [user] -p[pass] mydb < mydb.sql
+or
+gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
 ```
 
 ## Percona XtraDB Cluster
@@ -3014,6 +3351,178 @@ conv=noerror,sync \
 status=progress
 ```
 
+## LVM
+LVM stands for Logical Volume Management  
+Basically, you have 3 nested levels in lvm
+- __Physical volume__ (`pv`)
+- __Volume Group__ (`vg`)
+- __Logical volume__ (`lv`) which is the only one you can mount on a system
+### Enlarge LVM parition with additional disk
+list disks
+```bash
+lsblk
+```
+
+Run fdisk to manage disks 
+```bash
+fdisk /dev/sdx
+m n p
+t #### new partition
+8e #### for partition type "Linux LVM"
+w #### write changes on disk
+```
+
+Initialize a disk or PARTITION for use by LVM  
+/dev/sdx : file system path of a __physical__ disk  
+/dev/sdxX : file system path of a __partition__ of a physical disk  
+```bash
+pvcreate /dev/sdxX
+```
+
+Add physical volumes to a volume group (/dev/sdb1)
+```bash
+vgdisplay /dev/sdaX
+```
+```bash
+vgextend system-vg /dev/sdbx
+```
+
+Extend the size of a logical volume
+```bash
+lvextend -l +100%FREE /dev/vg_data/lv_data
+```
+`/dev/vg_data/lv_data` is still a mountable device with a __greater physical size__ but with the __same file system size__ as previous. So you need to extend the fs to the new extended physical size.  
+
+```bash
+resize2fs /dev/VG_Name/LV_Name
+```
+
+Optional : notice that lvm create a directory with vg name and subfile with lv name  
+```bash
+resize2fs /dev/HOSTNAME-vg/root
+resize2fs /dev/system-vg/root
+```
+
+Ensure the __extend procedure__ has succeed don't use `lsblk` Bbut `df` instead
+```bash
+df -h 
+```
+
+
+
+### Add a disk on system and mount it on new root directory (/data)
+Create the new directory 
+```bash
+mkdir /data
+```
+
+1 - create the __physical volume__
+```bash
+pvcreate /dev/sdb
+pvdisplay
+```
+
+2 - create the __volume group__
+```bash
+vgcreate vg_NAME /dev/sdb
+vgdisplay
+```
+
+3 - create the logical volume
+```bash
+lvcreate -l +100%FREE -n lv_NAME vg_NAME
+lvdisplay
+```
+
+4 - Create the file system
+```bash
+mkfs.ext4 /dev/mapper/vg_NAME-lv_NAME
+```
+
+5 - mount the Logicial Volume in /data
+```bash
+mount /dev/mapper/vg_NAME-lv_NAME /data
+```
+
+6 - Optional but recommended. Make persistent the mount of the lv even after reboot.  
+copy the first line, and replace with LV path
+```bash
+vim /etc/fstab
+```
+
+
+### Delete partition in a disk
+Follow the instruction
+```bash
+cfdisk /dev/sdb
+```
+
+
+### Reduce a LV size
+If you want to remove a physical disk contained in a LV
+[Tutorial](https://www.rootusers.com/lvm-resize-how-to-decrease-an-lvm-partition/)
+
+
+
+### Various LVM commands
+```bash
+pvs
+pvdisplay
+vgdisplay
+lvdisplay
+fdisk -l
+```
+### How to remove bad disk from LVM2 with the less data loss on other PVs
+```bash
+# pvdisplay
+Couldnt find device with uuid EvbqlT-AUsZ-MfKi-ZSOz-Lh6L-Y3xC-KiLcYx.
+  --- Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name               vg_srvlinux
+  PV Size               931.51 GiB / not usable 4.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              238466
+  Free PE               0
+  Allocated PE          238466
+  PV UUID               xhwmxE-27ue-dHYC-xAk8-Xh37-ov3t-frl20d
+
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               vg_srvlinux
+  PV Size               465.76 GiB / not usable 3.00 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              119234
+  Free PE               0
+  Allocated PE          119234
+  PV UUID               EvbqlT-AUsZ-MfKi-ZSOz-Lh6L-Y3xC-KiLcYx
+
+
+
+#### vgreduce --removemissing --force vg_srvlinux
+
+
+  Couldnt find device with uuid EvbqlT-AUsZ-MfKi-ZSOz-Lh6L-Y3xC-KiLcYx.
+  Removing partial LV LogVol00.
+  Logical volume "LogVol00" successfully removed
+  Wrote out consistent volume group vg_srvlinux
+
+#### pvdisplay
+
+ --- Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name               vg_srvlinux
+  PV Size               931.51 GiB / not usable 4.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              238466
+  Free PE               238466
+  Allocated PE          0
+  PV UUID               xhwmxE-27ue-dHYC-xAk8-Xh37-ov3t-frl20d
+```
+
+
 ## Listing
 ```bash
 lspci
@@ -3050,7 +3559,8 @@ sudo dpkg-reconfigure libxrandr2
 logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
 
 
-# Virtualization (OS-level)
+# Virtualization
+Virtualization (OS-level)  
 OS-level virtualization refers to an operating system __paradigm__ in which the kernel allows the existence of multiple isolated user-space instances. Such instances, called
 - __containers__ (Solaris, Docker)
 - __Zones__ (Solaris)
@@ -3068,14 +3578,54 @@ Those instance may __look like__ real computers from the point of view of progra
 #### __Overhead__
 Operating-system-level virtualization usually imposes less overhead than full virtualization because programs in virtual partitions __use the operating system's normal system call interface__ and do not need to be subjected to emulation or be run in an intermediate virtual machine, __as is the case with full virtualization__ (such as VMware ESXi, QEMU or Hyper-V) and paravirtualization (such as Xen or User-mode Linux). This form of virtualization also does not require hardware support for efficient performance.   
 [Wikipedia of Virtualization OS-level](https://en.wikipedia.org/wiki/OS-level_virtualization)
-## Containers
-### Docker
+
+## Docker
+### Run
+```bash
+docker run -d \
+--name elasticsearch \
+--net somenetwork \
+--volume my_app:/usr/share/elasticsearch/data \
+-p 9200:9200 -p 9300:9300 \
+-e "discovery.type=single-node" \
+elasticsearch:7.4.1
+```
+
+### Run a single command and output
+(no interactive)
+```bash
+docker run debian ls
+
+docker run debian /bin/bash -c 'cd /home ; ls -l'
+
+docker run debian \
+/bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306'
+```
+
+#### Volumes
+```bash
+docker volume create my_app
+```
+
+#### Cheat sheet
+avoid false positives  
+^ : begin with  
+$ : end with  
+```bash
+docker ps -aqf "name=^containername$"
+```
+
+Info of filesystem
+```bash
+docker inspect -f '{{ json .Mounts }}' $(docker ps -aqf "name=elasticsearch") | jq
+```
+
+## Docker Swarm
 (On swarm __manager__) find where an app is running
 ```bash
 docker service ps <app_name>
 ```
 
-Useful commands
 print cluster nodes
 ```bash
 docker node ls
@@ -3086,10 +3636,416 @@ get address + role
 for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
 ```
 
-### Docker-proxy
-[Explanations](https://windsock.io/the-docker-proxy/)
+Print labels of nodes
+```bash
+docker node ls -q | xargs docker node inspect \
+  -f '[{{ .Description.Hostname }}]: {{ range $k, $v := .Spec.Labels }}{{ $k }}={{ $v }} {{end}}'
+```
 
-# Miscellaneous
+### Join new node
+swarm manager shell
+```bash
+docker swarm join-token worker
+```
+We output a copy pastable bash line, like the following ! (Be carefull it doesn't include listen ip of the worker)
+
+new worker shell
+
+```bash
+docker swarm join \
+  --token <TOKEN_WORKER> \
+  --listen-addr WORKER-LISTEN-IP:2377 \
+   <MANGER-LISTEN-IP>:2377
+```
+
+
+# Kubernetes
+## Context
+Create you a context to work easier  
+__context__ = `given_user` + `given_cluster` + `given_namespace`
+
+```bash
+kubectl config set-context bdauphin-training \
+--user b.dauphin-k8s-home-cluster \
+--cluster k8s-home-cluster \
+--namespace dev-scrapper
+```
+
+Print your current context and cluster info
+```bash
+kubectl config get-contexts
+kubectl cluster-info
+```
+
+
+
+## Deployment
+A Deployment provides declarative updates for Pods and ReplicaSets.
+
+You describe a desired state in a Deployment, and the Deployment Controller changes the actual state to the desired state at a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all their resources with new Deployments.  
+```bash
+kubectl create deployment nginx-test-deploy --image nginx -n bdauphin-test
+```
+
+## Pod
+I do not recommend to declare a pod directly. Prefer using deploy
+
+> Restart a pod
+The quickest way is to set the number of replica to zero and then, put back your desired number of rep
+```bash
+kubectl scale deployment nginx --replicas=0
+kubectl scale deployment nginx --replicas=5
+```
+[good tuto](https://medium.com/faun/how-to-restart-kubernetes-pod-7c702ca984c1)
+
+## Service
+```bash
+kubectl create service nodeport bdauphin-nginx-test --tcp=8080:80
+```
+
+## ConfigMap
+ConfigMaps allow you to decouple configuration artifacts from image content to keep containerized applications portable. This page provides a series of usage examples demonstrating how to create ConfigMaps and configure Pods using data stored in ConfigMaps.
+
+Most of the time it's a list of key-value pairs  
+
+It can be defined as environment variables  
+and/or
+Be mounted into the pod at a specified path
+
+## Secrets
+Kubernetes secret objects let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys. Putting this information in a secret is safer and more flexible than putting it verbatim in a Pod definition or in a container image . See Secrets design document for more information.
+
+## RBAC
+Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise.  
+[complete doc](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+* Role : defines rules 
+* Role Binding
+
+### Role
+Defines  
+- __Rules__
+  - __API Groups__  
+  default : core API group
+  - __resources__  
+  ex : pod
+  - __verbs__  
+  allowed methods
+
+A Role can only be used to grant access to resources within a single namespace. Here’s an example Role in the “default” namespace that can be used to grant read access to pods:  
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: pod-reader
+rules:
+- apiGroups: [""]  #### "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+```
+
+
+### RoleBinding
+Defines  
+- __Subjects__
+  - __Kind__  
+  ex : user
+  - __name__  
+  ex : jane
+  - __apiGroup__  
+- __Role References__
+  - __Kind__  
+  ex : Role
+  - __name__  
+  ex : pod-reader
+  - __apiGroup__  
+
+A role binding grants the permissions defined in a role to a user or set of users. It holds a list of subjects (users, groups, or service accounts), and a reference to the role being granted. Permissions can be granted within a namespace with a RoleBinding, or cluster-wide with a ClusterRoleBinding.
+
+
+Example  
+This role binding allows "jane" to read pods in the "default" namespace.
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-pods
+  namespace: default
+subjects:
+- kind: User
+  name: jane #### Name is case sensitive
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role #### this must be Role or ClusterRole
+  name: pod-reader #### this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+```
+
+## Ingress
+An API object that manages external access to the services in a cluster, typically HTTP.  
+Ingress can provide load balancing, SSL termination and name-based virtual hosting.
+
+__What is ingress ?__  
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+```
+  internet
+      |
+ [ Ingress ]
+ --|-----|--
+ [ Services ]
+```
+
+An Ingress can be configured to give Services externally-reachable URLs, load balance traffic, terminate SSL / TLS, and offer name based virtual hosting. An Ingress controller is responsible for fulfilling the Ingress, usually with a load balancer, though it may also configure your edge router or additional frontends to help handle the traffic.
+
+An Ingress does not expose arbitrary ports or protocols. Exposing services __other than HTTP and HTTPS__ to the internet typically uses a service of type __Service.Type=NodePort__ or __Service.Type=LoadBalancer__.
+
+
+
+
+## Config extraction
+__Why use config file instead of CLI ?__
+* Cli is good for begin, help to understand. But heavy to use everyday
+* Often complexe definition, easier to use a config file
+* Can version (git)
+
+```bash
+kubectl get deploy nginx                              -o yaml | tee nginx-deploy.yaml
+kubectl get serviceaccounts/default -n bdauphin-test  -o yaml | tee serviceaccounts.yaml
+kubectl get pods/nginx-65d61548fd-mfhpr               -o yaml | tee pod.yaml
+```
+
+## Common cmd
+first, get all into your current namespace. Or specify another one
+```bash
+watch -n 1 kubectl get all -o wide
+watch -n 1 kubectl get all -o wide -n default
+```
+
+## Helm
+Client : helm  
+Server : tiller
+
+Helm uses go template render engine 
+
+### Generate your first chart
+```bash
+helm create $mychart
+helm create elasticsearch
+```
+
+Helm will create a new directory in your project called mychart with
+```bash
+elasticsearch
+├── charts
+├── Chart.yaml
+├── templates
+│   ├── deployment.yaml
+│   ├── _helpers.tpl
+│   ├── ingress.yaml
+│   ├── NOTES.txt
+│   ├── service.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
+```
+
+### Templates
+The most important piece of the puzzle is the `templates/` directory.  
+
+It’s worth noting however, that the directory is named templates, and Helm runs each file in this directory through a [Go template](https://golang.org/pkg/text/template/) rendering engine.
+
+```bash
+helm install --dry-run --debug ./elasticsearch
+helm install ./elasticsearch
+```
+
+### Values
+The template in service.yaml makes use of the Helm-specific objects `.Chart` and `.Values`.
+
+Values | Default | override | meaning
+-|-|-|-
+`.Chart` |  |  | provides metadata about the chart to your definitions such as the name, or version
+`.Values` | `values.yaml` | `--set key=value`, `--values $file` | key element of Helm charts, used to expose configuration that can be set at the time of deployment
+
+For more advanced configuration, a user can specify a YAML file containing overrides with the `--values` option.
+
+```bash
+helm install --dry-run --debug ./mychart --set service.internalPort=8080
+helm install --dry-run --debug ./mychart --values myCustomeValues.yaml
+```
+
+### Worth knowing cmd
+As you develop your chart, it’s a good idea to run it through the linter to ensure you’re following best practices and that your templates are well-formed. Run the helm lint command to see the linter in action:
+```bash
+helm lint ./mychart
+==> Linting ./mychart
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, no failures
+```
+
+# CentOS
+CentOS specific commands which differs from debian
+## Iptables
+```bash
+iptables-save > /etc/sysconfig/iptables
+```
+## OS Version
+```bash
+cat /etc/system-release
+CentOS Linux release 7.6.1810 (Core)
+```
+## Yum
+```bash
+yum install httpd
+yum remove  postgresql.x86_64
+yum update postgresql.x86_64
+yum search firefox
+yum info samba-common.i686
+
+yum groupinstall 'DNS Name Server'
+
+yum repolist
+
+yum check-update
+
+yum list | less
+yum list installed | less
+yum provides /etc/sysconfig/nf
+yum grouplist
+
+yum list installed | grep unzip
+```
+`to be updated...`
+
+# ArchLinux
+Installation
+## File system
+### EFI
+#### fs creation
+```
+mkfs.fat -F32 /dev/sdb5
+```
+
+#### fstab
+```
+/dev/sdb5 /efi vfat rw,relatime 0 2
+```
+
+
+## Grub
+
+### install grub executable
+```
+pacman -S grub
+```
+
+### install grub directory
+##### your grub name will be "GRUB_ARCH"
+```
+grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=GRUB_ARCH
+```
+
+### generate grub config (update-grub equivalent)
+```
+grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+## package manager
+#### full system upgrade
+```
+pacman -Syu
+```
+
+#### Query installed/local packages by regex
+sudo pacman -Qsq pulseaudio
+
+### Pacman apt equivalent
+https://wiki.archlinux.org/index.php/Pacman/Rosetta
+### My packages
+```
+sudo pacman -S pulseaudio tree xf86-video-intel mesa-dri opencl-nvidia sudo polkit lxsession kernel headers git gdm terminator keepass firefox
+```
+
+## Wi-Fi
+#### With gdm (gnome desktop manager)
+You have just have to use the service NetworkManager, which it way much more simple than other wireless connection manager (like wicd, netctl).
+NetworkManager will allow you to graphically setup once your wifi settings and autodiscover SSID.
+```
+systemctl start NetworkManager
+# and enable it at boot, by default no wifi connection manager is enable on archlinux
+systemctl enable NetworkManager
+```
+Then, fill in your infos in your graphical wifi settings
+
+# Miscellaneous
+## Raspberry
+### Raspbian Release
+#### Latest
+https://www.raspberrypi.org/downloads/raspbian/
+
+## Sublime-text
+### Preparing package installation
+Before, you can download and install awesome packages, you first have to install the __Package Control package__. It's dumb, but it's not included in sublime-text installation...
+
+The simplest method of installation is through the Sublime Text console. The console is accessed via the __ctrl+\`__ shortcut or the __View > Show Console__ menu. Once open, paste the appropriate Python code for your version of Sublime Text into the console. 
+
+```python
+import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) 
+```
+[official source](https://packagecontrol.io/installation)
+This code creates the Installed Packages folder for you (if necessary), and then downloads the Package Control.sublime-package into it. The download will be done over HTTP instead of HTTPS due to Python standard library limitations, however the file will be validated using SHA-256.
+
+
+### Install a package (__insp__)
+Open __commande palette__
+```
+ctrl + shift + p
+```
+Then, open __sublime-text package manager__, select __Package Control: Install package__ by shortname __insp__
+```
+insp
+```
+Then, enter
+
+### My packages
+
+Name | Usage | __insp__ name| URL
+----|----|-----|------
+Markdown Preview | To see a preview of your README.md files before commit them | `MarkdownPreview` | https://facelessuser.github.io/MarkdownPreview/install/
+Compare Side-By-Side | Compares two tabs | `Compare Side-By-Side` | https://packagecontrol.io/packages/Compare%20Side-By-Side
+Generic Config | Syntax generic config colorization |
+PowerCursors | multiple cursors placements |
+Materialize | Several beautiful __color scheme__
+MarkdownPreview | Preview your .md file 
+Markdown​TOC | Generate your Table of content of MarkDown files
+
+### Shortcut
+
+Name | shortcut
+-----|---------
+Do anything (command palet) | `Ctrl + Shirt + P`
+Switch previous / next tab | `ctrl + shift + page_up` \ `ctrl + shift + page_down`
+Switch to a specific tab | `ctrl + p`, and write name of your tab (file)
+Move a line or a block of line | `ctrl + shift + arrow up` \ `ctrl + shift + arrow down`
+Switch upper case | `Ctrl + k` and then `Ctrl + u`
+Switch lower case | `Ctrl + k` and then `Ctrl + l`
+Sort Lines | `F9` (Edit > Sort Lines)
+Goto anywhere | `Ctrl + R`
+Open any file | `Ctrl + P`
+Goto line number | `ctrl + G`
+Spell check | `F6`
+New cursor above/below | `alt+shift+arrow`
+
+
+#### older
+Lite images: https://downloads.raspberrypi.org/raspbian_lite/images/  
+With desktop: https://downloads.raspberrypi.org/raspbian/images/  
+With desktop & recommended software: https://downloads.raspberrypi.org/raspbian_full/images/
+
 ## Regex
 Online tester
 https://regex101.com/
