@@ -1322,6 +1322,11 @@ openssl s_client -connect qwant.com:443 -servername qwant.com           < /dev/n
 openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/null | openssl x509 -text -noout -dates
 ```
 
+Useful use case
+```bash
+openssl x509 --text --noout --in ./dev.bdauphin.io.pem -subject -issuer
+```
+
 #### Get info about a certificate from __file__
 (.pem)
 ```bash
@@ -1329,6 +1334,18 @@ openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
 
 # debian 7, openssl style
 openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
+```
+
+#### Test full chain
+OpenSSL verify with `-CAfile`
+```bash
+openssl verify ./dev.bdauphin.io.pem
+CN = dev.bdauphin.io.pem
+error 20 at 0 depth lookup: unable to get local issuer certificate
+error ./dev.bdauphin.io: verification failed
+
+openssl verify -CAfile ./bdauphin.io_intermediate_certificate.pem ./dev.bdauphin.io.pem
+./dev.bdauphin.io: OK
 ```
 
 ##### openssl s_client all arguments
