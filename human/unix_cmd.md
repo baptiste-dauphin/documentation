@@ -1304,6 +1304,8 @@ cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/
 ```bash
 rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
 ```
+
+
 ## OpenSSL
 ### Definitions
 | Keywork     | meaning |
@@ -1346,6 +1348,23 @@ error ./dev.bdauphin.io: verification failed
 
 openssl verify -CAfile ./bdauphin.io_intermediate_certificate.pem ./dev.bdauphin.io.pem
 ./dev.bdauphin.io: OK
+```
+
+#### Common usage
+Test certificate validation + right adresses
+```bash
+for certif in * ; do openssl verify -CAfile ../baptiste-dauphin.io_intermediate_certificate.pem $certif ; done
+dev.baptiste-dauphin.io.pem: OK
+plive.baptiste-dauphin.io.pem: OK
+www.baptiste-dauphin.io.pem: OK
+
+for certif in * ; do openssl x509 -in $certif -noout -text | egrep '(Subject|DNS):' ; done
+        Subject: CN = dev.baptiste-dauphin.com
+                DNS:dev.baptiste-dauphin.com, DNS:dav-dev.baptiste-dauphin.com, DNS:provisionning-dev.baptiste-dauphin.com, DNS:share-dev.baptiste-dauphin.com
+        Subject: CN = plive.baptiste-dauphin.com
+                DNS:plive.baptiste-dauphin.com, DNS:dav-plive.baptiste-dauphin.com, DNS:provisionning-plive.baptiste-dauphin.com, DNS:share-plive.baptiste-dauphin.com
+        Subject: CN = www.baptiste-dauphin.com
+                DNS:www.baptiste-dauphin.com, DNS:dav.baptiste-dauphin.com, DNS:provisionning.baptiste-dauphin.com, DNS:share.baptiste-dauphin.com
 ```
 
 ##### openssl s_client all arguments
