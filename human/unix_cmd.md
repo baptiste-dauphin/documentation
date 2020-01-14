@@ -123,18 +123,12 @@ switch to a user (default root)
 su -
 su - b.dauphin
 ```
-### sudo
-Switch to root
-You have to be __sudoer__ (i.e. being member of 'sudo' group)
-ensure you're in sudo group, by checking groups you belong to
-```bash
-groups
-```
 
-In ordre to edit sudoer file, use the proper tool `visudo`
+### sudo
 #### Edit
+In ordre to edit sudoer file, use the proper tool `visudo`. Because even for `root` the file is `readonly`
 ```bash
-visudo -f /var/tmp/sudoers.new   
+visudo -f /var/tmp/sudoers.new
 visudo -f /etc/sudoers
 ```
 
@@ -143,6 +137,9 @@ visudo -f /etc/sudoers
 visudo -c  
 /etc/sudoers: parsed OK
 /etc/sudoers.d/dev: parsed OK
+
+visudo -f /etc/sudoers.d/qwbind-dev -c
+/etc/sudoers.d/qwbind-dev: parsed OK
 ```
 
 ## Group
