@@ -2460,6 +2460,148 @@ curl \
 -X POST https://zabbix.company/api_jsonrpc.php | jq .
 ```
 
+##### get hostid with name(s)
+Replace `$hostname1`,`$hostname2` and `$token`
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid"],
+        "filter": {
+            "host": [
+                ""$hostname1","$hostname2"
+            ]
+        }
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq '.result'
+```
+
+##### Get groups of a specific host(s)
+Replace `$hostname1`,`$hostname2` and `$token`
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid"],
+      "selectGroups": "extend",
+        "filter": {
+            "host": [
+                "$hostname1","$hostname2"
+            ]
+        }
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq .
+```
+
+##### Get host by TAG(S)
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["name"],     
+        "selectTags": "extend",
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": 1
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+
+Output __hostid__, __host__ and __name__
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid","host","name"],     
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": 1
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+##### Get host by multiple TAGS
+
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["name"],     
+        "tags": [
+            {
+                "tag": "app",
+                "value": "swarm",
+                "operator": "1"
+            },
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": "1"
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq .
+```
+
+##### Modify TAG
+`Warning` erase all others tags + can set only one tag... So I do not recommend using this shity feature.
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.update",
+    "params": {
+      "hostid": "12345",
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "staging"
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq '.result'
+```
 
 ## Elastic Search
 
