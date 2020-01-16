@@ -193,10 +193,11 @@ bar {
 
 ## Custom add
 set $sink_number "$(pactl list sinks short | tail -n 1 | cut -f 1)"
+set $volume_delta "10%"
 
 bindsym F9 exec pactl set-sink-mute    $sink_number toggle # toggle mute / unmute
-bindsym F10 exec pactl set-sink-volume $sink_number -5%    # decrease sound volume
-bindsym F11 exec pactl set-sink-volume $sink_number +5%    # increase sound volume
+bindsym F10 exec pactl set-sink-volume $sink_number -$volume_delta    # decrease sound volume
+bindsym F11 exec pactl set-sink-volume $sink_number +$volume_delta    # increase sound volume
 
 # startup exec
 exec --no-startup-id xrandr --output $monitor2 --auto --right-of $monitor1
