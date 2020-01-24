@@ -656,6 +656,7 @@ ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
 
 ## File system
 Unix File types
+
 | Description                         | symbol              |
 |:------------------------------------|:--------------------|
 | Regular file                        | -                   |
