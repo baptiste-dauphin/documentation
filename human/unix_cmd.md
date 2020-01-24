@@ -123,18 +123,12 @@ switch to a user (default root)
 su -
 su - b.dauphin
 ```
-### sudo
-Switch to root
-You have to be __sudoer__ (i.e. being member of 'sudo' group)
-ensure you're in sudo group, by checking groups you belong to
-```bash
-groups
-```
 
-In ordre to edit sudoer file, use the proper tool `visudo`
+### sudo
 #### Edit
+In ordre to edit sudoer file, use the proper tool `visudo`. Because even for `root` the file is `readonly`
 ```bash
-visudo -f /var/tmp/sudoers.new   
+visudo -f /var/tmp/sudoers.new
 visudo -f /etc/sudoers
 ```
 
@@ -143,6 +137,9 @@ visudo -f /etc/sudoers
 visudo -c  
 /etc/sudoers: parsed OK
 /etc/sudoers.d/dev: parsed OK
+
+visudo -f /etc/sudoers.d/qwbind-dev -c
+/etc/sudoers.d/qwbind-dev: parsed OK
 ```
 
 ## Group
@@ -659,6 +656,7 @@ ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
 
 ## File system
 Unix File types
+
 | Description                         | symbol              |
 |:------------------------------------|:--------------------|
 | Regular file                        | -                   |
@@ -1304,6 +1302,8 @@ cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/
 ```bash
 rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
 ```
+
+
 ## OpenSSL
 ### Definitions
 | Keywork     | meaning |
@@ -1346,6 +1346,23 @@ error ./dev.bdauphin.io: verification failed
 
 openssl verify -CAfile ./bdauphin.io_intermediate_certificate.pem ./dev.bdauphin.io.pem
 ./dev.bdauphin.io: OK
+```
+
+#### Common usage
+Test certificate validation + right adresses
+```bash
+for certif in * ; do openssl verify -CAfile ../baptiste-dauphin.io_intermediate_certificate.pem $certif ; done
+dev.baptiste-dauphin.io.pem: OK
+plive.baptiste-dauphin.io.pem: OK
+www.baptiste-dauphin.io.pem: OK
+
+for certif in * ; do openssl x509 -in $certif -noout -text | egrep '(Subject|DNS):' ; done
+        Subject: CN = dev.baptiste-dauphin.com
+                DNS:dev.baptiste-dauphin.com, DNS:dav-dev.baptiste-dauphin.com, DNS:provisionning-dev.baptiste-dauphin.com, DNS:share-dev.baptiste-dauphin.com
+        Subject: CN = plive.baptiste-dauphin.com
+                DNS:plive.baptiste-dauphin.com, DNS:dav-plive.baptiste-dauphin.com, DNS:provisionning-plive.baptiste-dauphin.com, DNS:share-plive.baptiste-dauphin.com
+        Subject: CN = www.baptiste-dauphin.com
+                DNS:www.baptiste-dauphin.com, DNS:dav.baptiste-dauphin.com, DNS:provisionning.baptiste-dauphin.com, DNS:share.baptiste-dauphin.com
 ```
 
 ##### openssl s_client all arguments
@@ -2444,6 +2461,148 @@ curl \
 -X POST https://zabbix.company/api_jsonrpc.php | jq .
 ```
 
+##### get hostid with name(s)
+Replace `$hostname1`,`$hostname2` and `$token`
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid"],
+        "filter": {
+            "host": [
+                ""$hostname1","$hostname2"
+            ]
+        }
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq '.result'
+```
+
+##### Get groups of a specific host(s)
+Replace `$hostname1`,`$hostname2` and `$token`
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid"],
+      "selectGroups": "extend",
+        "filter": {
+            "host": [
+                "$hostname1","$hostname2"
+            ]
+        }
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq .
+```
+
+##### Get host by TAG(S)
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["name"],     
+        "selectTags": "extend",
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": 1
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+
+Output __hostid__, __host__ and __name__
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid","host","name"],     
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": 1
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+##### Get host by multiple TAGS
+
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["name"],     
+        "tags": [
+            {
+                "tag": "app",
+                "value": "swarm",
+                "operator": "1"
+            },
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": "1"
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq .
+```
+
+##### Modify TAG
+`Warning` erase all others tags + can set only one tag... So I do not recommend using this shity feature.
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.update",
+    "params": {
+      "hostid": "12345",
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "staging"
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq '.result'
+```
 
 ## Elastic Search
 
