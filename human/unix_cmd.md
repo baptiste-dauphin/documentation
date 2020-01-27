@@ -1554,7 +1554,7 @@ This is here we enable jails
 
 ## NTP
 stands for Network Time Protocol
-![GitHub Logo](../src/ntp_stratum.png)
+![GitHub Logo](./src/ntp_stratum.png)
 
 ### Client
 Debian, Ubuntu, Fedora, CentOS, and most operating system vendors, __don't package NTP into client and server packages separately__. When you install NTP, you've made your computer __both a server, and a client simultaneously.__
@@ -1638,7 +1638,7 @@ ntpq -p
 ```
 
 ## Git
-![GitHub Logo](../src/git_cheat.png)
+![GitHub Logo](./src/git_cheat.png)
 
 ### Global info
 ```bash
@@ -1839,7 +1839,7 @@ The git revert command can be considered an 'undo' type command, however, it is 
 
 Reverting should be used when you want to apply the inverse of a commit from your project history. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
 
-![GitHub Logo](../src/git_revert.svg)
+![GitHub Logo](./src/git_revert.svg)
 
 ```bash
 git revert <commit hash>
@@ -1859,7 +1859,7 @@ Git reset & three trees of Git
 
 To properly understand git reset usage, we must first understand Git's internal state management systems. Sometimes these mechanisms are called Git's "three trees".
 
-![GitHub Logo](../src/git_reset.svg)
+![GitHub Logo](./src/git_reset.svg)
 
 #### Undo a commit and redo
 ```bash
@@ -2681,7 +2681,7 @@ So, I'll have to manually expand all various indexes in order to back them up !
 
 
 __Elasticsearch Cluster Topology__
-![GitHub Logo](../src/elasticsearch_cluster_topology.png)
+![GitHub Logo](./src/elasticsearch_cluster_topology.png)
 
 ### Templates
 Change the future index sharding and and replicas and other stuff.  
@@ -3792,10 +3792,14 @@ Operating-system-level virtualization usually imposes less overhead than full vi
 ```
 Docker CLI -> Docker Engine -> containerd -> containerd-shim -> runC (or other runtime)
 ```
-Note that dockerd (docker daemon) has no child. The master process of all containers is `containerd`
+Note that dockerd (docker daemon) has no child. The master process of all containers is `containerd`.  
+There is __only one containerd-shim by process__ and it manages the STDIO FIFO and keeps it open for the container in case containerd or Docker dies.
 
-runC is built on libcontainer which is the same container library powering a Docker engine installation. Prior to the version 1.11, Docker engine was used to manage volumes, networks, containers, images etc.. Now, the Docker architecture is broken into four components: Docker engine, containerd, containerd-shm and runC. The binaries are respectively called docker, docker-containerd, docker-containerd-shim, and docker-runc.
-To run a container, Docker engine creates the image, pass it to containerd. containerd calls containerd-shim that uses runC to run the container. __Then, containerd-shim allows the runtime (runC in this case) to exit after it starts the container : This way we can run daemon-less containers because we are not having to have the long running runtime processes for containers.__
+runC is built on libcontainer which is the same container library powering a Docker engine installation. Prior to the version 1.11, Docker engine was used to manage volumes, networks, containers, images etc.. Now, the Docker architecture is broken into four components: Docker engine, containerd, containerd-shm and runC. The binaries are respectively called docker, docker-containerd, docker-containerd-shim, and docker-runc.  
+To run a container, Docker engine creates the image, pass it to containerd. containerd calls containerd-shim that uses runC to run the container.  
+__Then, containerd-shim allows the runtime (runC in this case) to exit after it starts the container : This way we can run daemon-less containers because we are not having to have the long running runtime processes for containers.__
+
+![GitHub Logo](./src/docker_architecture.jpeg)
 
 ### Find all the containerized process on the system
 
