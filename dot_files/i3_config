@@ -194,15 +194,22 @@ bar {
 ## Custom add
 set $sink_number "$(pactl list sinks short | tail -n 1 | cut -f 1)"
 set $volume_delta "10%"
+set $post_login_cmd_path "~/Git/documentation/scripts/post_login_scripts/startup.sh"
 
-bindsym F9 exec pactl set-sink-mute    $sink_number toggle # toggle mute / unmute
+bindsym F9 exec  pactl set-sink-mute   $sink_number toggle
 bindsym F10 exec pactl set-sink-volume $sink_number -$volume_delta    # decrease sound volume
 bindsym F11 exec pactl set-sink-volume $sink_number +$volume_delta    # increase sound volume
 
-# startup exec
+## STARTUP EXEC
+
+# By using the exec keyword outside a keybinding, you can configure which commands will be performed by i3 on initial startup
+# exec commands will not run when restarting i3, 
+# if you need a command to run also when restarting i3 you should use the exec_always keyword. These commands will be run in order.
+
 exec --no-startup-id xrandr --output $monitor2 --auto --right-of $monitor1
 exec --no-startup-id xrandr --output $monitor3 --auto --right-of $monitor2
-exec_always --no-startup-id numlockx on
+exec_always --no-startup-id numlockx  on
+exec_always --no-startup-id setxkbmap fr
 exec --no-startup-id blueman-applet
 exec --no-startup-id i3-msg 'workspace $ws2; exec mattermost-desktop'
 exec --no-startup-id i3-msg 'workspace $ws1; exec blueman-manager'
@@ -210,6 +217,7 @@ exec --no-startup-id i3-msg 'workspace $ws1; exec pavucontrol'
 exec --no-startup-id i3-msg 'workspace $ws1; exec firefox-esr -P music'
 exec --no-startup-id i3-msg 'workspace $ws3; exec firefox-esr -P work'
 exec --no-startup-id i3-msg 'workspace $ws8; exec thunderbird'
-exec --no-startup-id i3-msg 'workspace $ws10; exec i3-sensible-terminal'
-# last position because popup
+# args for gnome-terminal
+exec --no-startup-id i3-msg 'workspace $ws10; exec i3-sensible-terminal -x zsh -c $post_login_cmd_path'
+# last position because popup (placement fails)
 exec --no-startup-id i3-msg 'workspace $ws9; exec keepass2'
