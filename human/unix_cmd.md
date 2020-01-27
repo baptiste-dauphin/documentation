@@ -5,6 +5,7 @@
   - [Group](#group)
   - [Apt](#apt)
   - [Performance](#performance)
+  - [htop](#htop)
   - [Update-alternatives](#update-alternatives)
   - [Graphic](#graphic)
   - [Shell](#shell)
@@ -62,6 +63,7 @@
   - [Redis](#redis)
   - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
+  - [Memory](#memory)
   - [Storage](#storage)
   - [LVM](#lvm)
   - [Listing](#listing)
@@ -173,14 +175,38 @@ apt-get clean
 htop
 nload
 ```
-Memory information
+### Memory information
 ```bash
 free -g
 ```
+#### Sort by memory
+
+To sort by memory usage we can use either __%MEM__ or __RSS__ columns.  
+- `RSS` __Resident Set Size__ is a total memory usage in kilobytes
+- `%RAM` shows the same information in terms of percent usage of total memory amount __available__.
+
+```bash
+ps aux --sort=+rss
+ps aux --sort=%mem
+```
+
 Empty swap
 ```bash
 swapoff -a && swapon -a
 ```
+## htop
+How to read memory usage in htop?
+```bash
+htop
+```
+- Hide `user` threads `shift + H`
+- Hide `kernel` threads `shift + K`
+- close the process tree view `F5`
+- then you can sort out the process of your interest by PID and read the RES column
+- sort by __MEM%__ by pressing `shift + M`, or `F3` to search in cmd line)
+
+
+
 
 ### Get memory physical size
 
@@ -1286,8 +1312,22 @@ Will set up a token under `~/.vault-token`
 ## Ssh
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
+
 ```bash
 sshd -t
+```
+
+Test connection to multiple servers
+```bash
+for outscale_instance in 10.10.10.1 10.10.10.2 10.10.10.3 10.10.10.4 \
+; do ssh $outscale_instance -q exit \
+&& echo "$outscale_instance :" connection succeed \
+|| echo "$outscale_instance :" connection failed \
+; done
+10.10.10.1 : connection succeed
+10.10.10.2 : connection succeed
+10.10.10.3 : connection failed
+10.10.10.4 : connection succeed
 ```
 
 quickly copy your ssh public key to a remote server
@@ -2401,6 +2441,7 @@ https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
 zabbix_agentd -t system.hostname
 zabbix_agentd -t system.swap.size[all,free]
 zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+zabbix_agentd -t vm.memory.size[pavailable]
 
 ### print all known items 
 zabbix_agentd -p
@@ -3474,6 +3515,14 @@ AND time > now() - 30s
 * [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
 
 # Hardware
+## Memory
+### Add memory and make it visible by Debian OS
+Even if you add memory with VMWare, debian won't see it `free -m`
+You have to make it 'online'
+```bash
+grep offline /sys/devices/system/memory/*/state | while read line; do echo online > ${line/:*/}; done
+```
+
 ## Storage
 can be
 - Disk
@@ -3738,6 +3787,42 @@ Operating-system-level virtualization usually imposes less overhead than full vi
 [Wikipedia of Virtualization OS-level](https://en.wikipedia.org/wiki/OS-level_virtualization)
 
 ## Docker
+
+```
+Docker CLI -> Docker Engine -> containerd -> containerd-shim -> runC (or other runtime)
+```
+Note that dockerd (docker daemon) has no child. The master process of all containers is `containerd`
+
+runC is built on libcontainer which is the same container library powering a Docker engine installation. Prior to the version 1.11, Docker engine was used to manage volumes, networks, containers, images etc.. Now, the Docker architecture is broken into four components: Docker engine, containerd, containerd-shm and runC. The binaries are respectively called docker, docker-containerd, docker-containerd-shim, and docker-runc.
+To run a container, Docker engine creates the image, pass it to containerd. containerd calls containerd-shim that uses runC to run the container. __Then, containerd-shim allows the runtime (runC in this case) to exit after it starts the container : This way we can run daemon-less containers because we are not having to have the long running runtime processes for containers.__
+
+### Find all the containerized process on the system
+
+Get pid of containerd
+```bash
+pidof containerd
+921
+```
+
+Get child of containerd (i.e. pid of containerd-shim) i.e. search for process who has for parent process containerd ( hence --ppid )
+```bash
+ps -o pid --no-headers --ppid $(pidof containerd)
+19485
+```
+
+Get child of containerd-shim (i.e. the real final containerized process)
+```bash
+ps -o pid --no-headers --ppid $(ps -o pid --no-headers --ppid $(pidof containerd))
+19502
+```
+
+Get the name of the output process
+```bash
+ps -p $(ps -o pid --no-headers --ppid $(ps -o pid --no-headers --ppid $(pidof containerd))) -o comm=
+bash
+```
+
+
 ### Run
 ```bash
 docker run -d \
@@ -3771,6 +3856,16 @@ avoid false positives
 $ : end with  
 ```bash
 docker ps -aqf "name=^containername$"
+```
+
+Print only running command
+```bash
+docker ps --format "{{.Command}}" --no-trunc
+```
+Resources management
+```bash
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" --no-stream
 ```
 
 Info of filesystem
