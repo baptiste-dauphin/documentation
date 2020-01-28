@@ -3801,6 +3801,8 @@ __Then, containerd-shim allows the runtime (runC in this case) to exit after it 
 
 ![GitHub Logo](./src/docker_architecture.jpeg)
 
+[Sources](https://medium.com/faun/docker-containerd-standalone-runtimes-heres-what-you-should-know-b834ef155426)
+
 ### Find all the containerized process on the system
 
 Get pid of containerd
