@@ -2658,7 +2658,7 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
-### Dump / Backup
+### Dump / Backup
 Very good tutorial
 https://blog.ruanbekker.com/blog/2017/11/22/using-elasticdump-to-backup-elasticsearch-indexes-to-json/
 
