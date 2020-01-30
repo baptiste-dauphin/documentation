@@ -1,0 +1,22 @@
+# Comportement technique
+
+- Code Review
+Cherche à comprendre l'existant plutot que de juste "faire ce qu'on te dit" et de passer à autre chose. Exemple, c'est bien d'utiliser un playbook ansible qui fonctionne déjà tout seul ou d'appliquer un orchestrator saltstack mais en faisant ça tu gardes mystiques le savoir faire et tu te maintiens dans les utilisateurs classiques. Ton rôle est de savoir faire les choses en les ayant compris sinon comment pourrais-tu dépanner ou améliorer/optimiser l'existant ?
+
+- Automatise tout
+Si tu te surprends à réalisé une tâche 2 fois, c'est très probable que tu aies encore besoin d'y revenir plus tard. C'est donc une perte de temps sur la longueur. Il n'y aucunes valeurs ajouté à refaire la même choses plusieurs fois (à part si tu es nouveau et que tu apprends) mais avec les années d'éxpérience que tu accumules c'est de moins en moins vrai.
+
+- Utilise Git
+Versionne tout ce que tu fais, c'est ultra pratique. Essayes sans
+
+- Cherche la roue existante plutôt que de la coder toi même (et mal en plus)
+avant de reconstruire la roue, pense au fait que quelqu'un d'autre a très certainement déjà été confronté au même probleme que toi avant.  
+Regarde sur ton moteur de recherche préféré, sur GitHub, GitLab, Reddit, StackOverflow stack, Medium, 
+
+# Comportement social
+- Les autres sont intelligents
+Combien de fois j'ai enttendu "il est pas futé celui-là, pourquoi il nous demande ça ? Il a rien compris, c'est déjà existant, on a déjà un tool qui fait ça et il y a déjà acces. Vraiment pas futé ce DevOps/dev/sysAdmin/directeur..."
+
+
+
+[Source](https://blog.devolutions.net/2018/02/system-administrators-10-best-practices-for-career-success-happiness)
