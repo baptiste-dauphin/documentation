@@ -5,6 +5,7 @@
   - [Group](#group)
   - [Apt](#apt)
   - [Performance](#performance)
+  - [htop](#htop)
   - [Update-alternatives](#update-alternatives)
   - [Graphic](#graphic)
   - [Shell](#shell)
@@ -62,6 +63,7 @@
   - [Redis](#redis)
   - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
+  - [Memory](#memory)
   - [Storage](#storage)
   - [LVM](#lvm)
   - [Listing](#listing)
@@ -173,14 +175,38 @@ apt-get clean
 htop
 nload
 ```
-Memory information
+### Memory information
 ```bash
 free -g
 ```
+#### Sort by memory
+
+To sort by memory usage we can use either __%MEM__ or __RSS__ columns.  
+- `RSS` __Resident Set Size__ is a total memory usage in kilobytes
+- `%RAM` shows the same information in terms of percent usage of total memory amount __available__.
+
+```bash
+ps aux --sort=+rss
+ps aux --sort=%mem
+```
+
 Empty swap
 ```bash
 swapoff -a && swapon -a
 ```
+## htop
+How to read memory usage in htop?
+```bash
+htop
+```
+- Hide `user` threads `shift + H`
+- Hide `kernel` threads `shift + K`
+- close the process tree view `F5`
+- then you can sort out the process of your interest by PID and read the RES column
+- sort by __MEM%__ by pressing `shift + M`, or `F3` to search in cmd line)
+
+
+
 
 ### Get memory physical size
 
@@ -1287,8 +1313,22 @@ Will set up a token under `~/.vault-token`
 ## Ssh
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
+
 ```bash
 sshd -t
+```
+
+Test connection to multiple servers
+```bash
+for outscale_instance in 10.10.10.1 10.10.10.2 10.10.10.3 10.10.10.4 \
+; do ssh $outscale_instance -q exit \
+&& echo "$outscale_instance :" connection succeed \
+|| echo "$outscale_instance :" connection failed \
+; done
+10.10.10.1 : connection succeed
+10.10.10.2 : connection succeed
+10.10.10.3 : connection failed
+10.10.10.4 : connection succeed
 ```
 
 quickly copy your ssh public key to a remote server
@@ -1514,7 +1554,7 @@ This is here we enable jails
 
 ## NTP
 stands for Network Time Protocol
-![GitHub Logo](../src/ntp_stratum.png)
+![GitHub Logo](./src/ntp_stratum.png)
 
 ### Client
 Debian, Ubuntu, Fedora, CentOS, and most operating system vendors, __don't package NTP into client and server packages separately__. When you install NTP, you've made your computer __both a server, and a client simultaneously.__
@@ -1598,7 +1638,7 @@ ntpq -p
 ```
 
 ## Git
-![GitHub Logo](../src/git_cheat.png)
+![GitHub Logo](./src/git_cheat.png)
 
 ### Global info
 ```bash
@@ -1799,7 +1839,7 @@ The git revert command can be considered an 'undo' type command, however, it is 
 
 Reverting should be used when you want to apply the inverse of a commit from your project history. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
 
-![GitHub Logo](../src/git_revert.svg)
+![GitHub Logo](./src/git_revert.svg)
 
 ```bash
 git revert <commit hash>
@@ -1819,7 +1859,7 @@ Git reset & three trees of Git
 
 To properly understand git reset usage, we must first understand Git's internal state management systems. Sometimes these mechanisms are called Git's "three trees".
 
-![GitHub Logo](../src/git_reset.svg)
+![GitHub Logo](./src/git_reset.svg)
 
 #### Undo a commit and redo
 ```bash
@@ -2402,6 +2442,7 @@ https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
 zabbix_agentd -t system.hostname
 zabbix_agentd -t system.swap.size[all,free]
 zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+zabbix_agentd -t vm.memory.size[pavailable]
 
 ### print all known items 
 zabbix_agentd -p
@@ -2617,7 +2658,7 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
-### Dump / Backup
+### Dump / Backup
 Very good tutorial
 https://blog.ruanbekker.com/blog/2017/11/22/using-elasticdump-to-backup-elasticsearch-indexes-to-json/
 
@@ -2640,7 +2681,7 @@ So, I'll have to manually expand all various indexes in order to back them up !
 
 
 __Elasticsearch Cluster Topology__
-![GitHub Logo](../src/elasticsearch_cluster_topology.png)
+![GitHub Logo](./src/elasticsearch_cluster_topology.png)
 
 ### Templates
 Change the future index sharding and and replicas and other stuff.  
@@ -3475,6 +3516,14 @@ AND time > now() - 30s
 * [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
 
 # Hardware
+## Memory
+### Add memory and make it visible by Debian OS
+Even if you add memory with VMWare, debian won't see it `free -m`
+You have to make it 'online'
+```bash
+grep offline /sys/devices/system/memory/*/state | while read line; do echo online > ${line/:*/}; done
+```
+
 ## Storage
 can be
 - Disk
@@ -3739,6 +3788,48 @@ Operating-system-level virtualization usually imposes less overhead than full vi
 [Wikipedia of Virtualization OS-level](https://en.wikipedia.org/wiki/OS-level_virtualization)
 
 ## Docker
+
+```
+Docker CLI -> Docker Engine -> containerd -> containerd-shim -> runC (or other runtime)
+```
+Note that dockerd (docker daemon) has no child. The master process of all containers is `containerd`.  
+There is __only one containerd-shim by process__ and it manages the STDIO FIFO and keeps it open for the container in case containerd or Docker dies.
+
+runC is built on libcontainer which is the same container library powering a Docker engine installation. Prior to the version 1.11, Docker engine was used to manage volumes, networks, containers, images etc.. Now, the Docker architecture is broken into four components: Docker engine, containerd, containerd-shm and runC. The binaries are respectively called docker, docker-containerd, docker-containerd-shim, and docker-runc.  
+To run a container, Docker engine creates the image, pass it to containerd. containerd calls containerd-shim that uses runC to run the container.  
+__Then, containerd-shim allows the runtime (runC in this case) to exit after it starts the container : This way we can run daemon-less containers because we are not having to have the long running runtime processes for containers.__
+
+![GitHub Logo](./src/docker_architecture.jpeg)
+
+[Sources](https://medium.com/faun/docker-containerd-standalone-runtimes-heres-what-you-should-know-b834ef155426)
+
+### Find all the containerized process on the system
+
+Get pid of containerd
+```bash
+pidof containerd
+921
+```
+
+Get child of containerd (i.e. pid of containerd-shim) i.e. search for process who has for parent process containerd ( hence --ppid )
+```bash
+ps -o pid --no-headers --ppid $(pidof containerd)
+19485
+```
+
+Get child of containerd-shim (i.e. the real final containerized process)
+```bash
+ps -o pid --no-headers --ppid $(ps -o pid --no-headers --ppid $(pidof containerd))
+19502
+```
+
+Get the name of the output process
+```bash
+ps -p $(ps -o pid --no-headers --ppid $(ps -o pid --no-headers --ppid $(pidof containerd))) -o comm=
+bash
+```
+
+
 ### Run
 ```bash
 docker run -d \
@@ -3772,6 +3863,16 @@ avoid false positives
 $ : end with  
 ```bash
 docker ps -aqf "name=^containername$"
+```
+
+Print only running command
+```bash
+docker ps --format "{{.Command}}" --no-trunc
+```
+Resources management
+```bash
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" --no-stream
 ```
 
 Info of filesystem
