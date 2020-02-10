@@ -246,9 +246,11 @@ Default system software (Debian)
  update-alternatives - maintain symbolic links determining default commands 
  ```
 
-List existing selections
+List existing selections and list the one you wanna see
 ```bash
 update-alternatives --get-selections
+
+update-alternatives --list x-www-browser
 ```
 
 Modify existing selection interactively
@@ -261,10 +263,12 @@ Create a new selection
 update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
 
-Example : Change default terminal
+Change default terminal or browser
 will prompt you an interactive console to chose among recognized software
 ```bash
 sudo update-alternatives --config x-terminal-emulator
+
+sudo update-alternatives --config x-www-browser
 ```
 
 ## Graphic
@@ -1037,6 +1041,15 @@ Run journalctl with the --vacuum-time option to remove archived journal files wi
 ```
 journalctl --vacuum-time=1years
 ```
+
+#### Logger
+To write into the journal
+```bash
+logger -n syslog.baptiste-dauphin.com --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test'
+
+for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done
+```
+
 
 ## Iptables
 [Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
