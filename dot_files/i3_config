@@ -193,7 +193,7 @@ bar {
 
 ## Custom add
 set $sink_number "$(pactl list sinks short | tail -n 1 | cut -f 1)"
-set $volume_delta "10%"
+set $volume_delta "6%"
 set $post_login_cmd_path "~/Git/documentation/scripts/post_login_scripts/startup.sh"
 
 bindsym F9 exec  pactl set-sink-mute   $sink_number toggle
@@ -208,16 +208,30 @@ bindsym F11 exec pactl set-sink-volume $sink_number +$volume_delta    # increase
 
 exec --no-startup-id xrandr --output $monitor2 --auto --right-of $monitor1
 exec --no-startup-id xrandr --output $monitor3 --auto --right-of $monitor2
+
 exec_always --no-startup-id numlockx  on
 exec_always --no-startup-id setxkbmap fr
 exec --no-startup-id blueman-applet
-exec --no-startup-id i3-msg 'workspace $ws2; exec mattermost-desktop'
+
+## ws1
 exec --no-startup-id i3-msg 'workspace $ws1; exec blueman-manager'
 exec --no-startup-id i3-msg 'workspace $ws1; exec pavucontrol'
-exec --no-startup-id i3-msg 'workspace $ws1; exec firefox-esr -P music'
-exec --no-startup-id i3-msg 'workspace $ws3; exec firefox-esr -P work'
+# exec --no-startup-id i3-msg 'workspace $ws1; exec firefox-esr -P music'
+exec --no-startup-id i3-msg 'workspace $ws1; exec brave-browser-stable'
+
+## ws2
+# exec --no-startup-id i3-msg 'workspace $ws2; exec mattermost-desktop'
+# exec --no-startup-id i3-msg 'workspace $ws3; exec firefox-esr -P work'
+exec --no-startup-id i3-msg 'workspace $ws2; exec brave-browser-stable'
+
+## ws3
+exec --no-startup-id i3-msg 'workspace $ws3; exec brave-browser-stable'
+
+## ws8
 exec --no-startup-id i3-msg 'workspace $ws8; exec thunderbird'
-# args for gnome-terminal
-exec --no-startup-id i3-msg 'workspace $ws10; exec i3-sensible-terminal -x zsh -c $post_login_cmd_path'
-# last position because popup (placement fails)
+
+## ws9
 exec --no-startup-id i3-msg 'workspace $ws9; exec keepass2'
+
+## ws10
+exec --no-startup-id i3-msg 'workspace $ws10; exec i3-sensible-terminal -x zsh -c $post_login_cmd_path'
