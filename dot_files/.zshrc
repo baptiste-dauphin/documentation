@@ -121,12 +121,12 @@ alias ll='ls -l'
 alias hashtag="echo \"grep -iv '^\s*[#\;]\|^\s*$'\""
 alias post_login='bash $personal_git_dir_path/documentation/scripts/post_login_scripts/startup.sh'
 alias ggbn="git branch | grep \* | cut -d ' ' -f2"
-alias myaliases='grep ^alias ~/.zshrc'
+alias myaliases="egrep '^\s*alias' ~/.zshrc --color"
 alias cdoverlord='cd $company_git_dir_path/$overlord_dir'
 alias cdinfra='cd $company_git_dir_path/infra'
 alias cddoc='cd $personal_git_dir_path/documentation'
 alias cdk8s='cdinfra && cd k8s-deployment'
-alias new_working_sheet_of_the_the_day="new_working_sheet_of_the_the_day $company_git_dir_path/doc_perso_fatalis/working_sheet_of_the_day"
+alias new_working_sheet_of_the_the_day='new_working_sheet_of_the_the_day $company_git_dir_path/doc_perso_fatalis/working_sheet_of_the_day'
 # zshrc='${=EDITOR} ~/.zshrc'
 alias i3config='${=EDITOR} ~/.config/i3/config'
 alias backup_i3config='cat ~/.config/i3/config > $personal_git_dir_path/documentation/dot_files/i3_config'
