@@ -4350,7 +4350,10 @@ With desktop: https://downloads.raspberrypi.org/raspbian/images/
 With desktop & recommended software: https://downloads.raspberrypi.org/raspbian_full/images/
 
 ## Regex
-Online tester
+Excellent tutorial  
+https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
+
+Online tester  
 https://regex101.com/
 
 ## Markdown
