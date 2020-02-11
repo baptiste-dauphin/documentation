@@ -98,6 +98,7 @@
   - [Regex](#regex)
   - [Markdown](#markdown)
   - [Pimp my terminal](#pimp-my-terminal)
+  - [xdg-settings / update-alternatives](#xdg-settings--update-alternatives)
 - [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
@@ -1648,6 +1649,35 @@ ntpq -p
 vim /etc/ntp.conf
 sudo service ntp restart
 ntpq -p
+
+
+ntpstat
+
+unsynchronised
+time server re-starting
+polling server every 64 s
+
+
+ntpstat
+
+synchronised to NTP server (10.10.10.10) at stratum 4 
+       time correct to within 323 ms
+       polling server every 64 s
+
+
+
+ntpq -c peers
+
+remote refid st t when poll reach delay offset jitter
+======================================================================
+hamilton-nat.nu .INIT. 16 u - 64 0 0.000 0.000 0.001
+ns2.telecom.lt .INIT. 16 u - 64 0 0.000 0.000 0.001
+fidji.daupheus. .INIT. 16 u - 64 0 0.000 0.000 0.001
+```
+
+#### Drift
+```bash
+
 ```
 
 ## Git
@@ -4332,14 +4362,14 @@ https://regex101.com/
 gnome-terminal
 GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
 
-Debian
+### Debian
 1- Ensure that your terminal is `gnome-terminal`
 ```bash
 update-alternatives --get-selections | grep -i term
 x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
 ```
 
-Graphicaly
+#### Graphicaly
 Install  `dconf`
 ```bash
 sudo apt-get install dconf-tools
@@ -4394,6 +4424,33 @@ gsettings list-recursively org.gnome.desktop.interface
 To reset all valuses of keys run following command in terminal:
 ```bash
 gsettings reset-recursively org.gnome.desktop.interface
+```
+
+## xdg-settings / update-alternatives
+In some case, __update-alternatives__ is not enough. Especially for __Url Handling or web browsing__  
+`xdg-settings - get various settings from the desktop environment`
+
+### Set brave as default browser
+In my use case, I set up update-alternatives but it didn't change the behaviour for URL handling (printed in my terminal especially useful after `git push` for creating a merge request).  
+Correctly setup but doesn't affect behaviour
+```
+sudo update-alternatives --config x-www-browser
+```
+
+```bash
+xdg-settings check default-web-browser brave.desktop
+no
+
+xdg-settings --list default-url-scheme-handler
+Known properties:
+  default-url-scheme-handler    Default handler for URL scheme
+  default-web-browser           Default web browser
+
+
+xdg-settings get default-web-browser
+firefox-esr.desktop
+
+
 ```
 
 
