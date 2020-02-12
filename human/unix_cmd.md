@@ -3924,9 +3924,11 @@ docker inspect -f '{{ json .Mounts }}' $(docker ps -aqf "name=elasticsearch") | 
 ```
 
 ## Docker Swarm
-(On swarm __manager__) find where an app is running
+(On swarm __manager__) find where an app is running. Find the last updated date
 ```bash
 docker service ps <app_name>
+
+docker service inspect log-master_logstash -f '{{ json .UpdatedAt }}'
 ```
 
 print cluster nodes
