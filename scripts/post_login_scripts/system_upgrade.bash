@@ -24,8 +24,10 @@ function print_apt_repositories(){
 
 function list_upgradable(){
 	display 'Here are a list of upgradable packages'
-    sudo apt-get update -y;
+	display_separator
     apt list --upgradable;
+    display_separator
+    sudo apt-get update -y;
     display_separator
 };
 
