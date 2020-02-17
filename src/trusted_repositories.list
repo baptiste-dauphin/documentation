@@ -1,0 +1,11 @@
+It will serve the following repositories:
+
+Saltstack : https://repo.saltstack.com/
+Zabbix : https://repo.zabbix.com/
+Docker : https://download.docker.com/
+Gitlab :https://packages.gitlab.com/
+PHP Sury :https://packages.sury.org/
+NodeJS :https://deb.nodesource.com/
+Phusion Passenger : https://oss-binaries.phusionpassenger.com/
+
+Warning: apt key don't seem to work with apt-cacher to get the GPG key.
