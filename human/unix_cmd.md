@@ -13,6 +13,7 @@
   - [File system](#file-system)
   - [Init.d](#initd)
   - [Systemd](#systemd)
+  - [Syslog-ng](#syslog-ng)
   - [Journal](#journal)
   - [Iptables](#iptables)
 - [Network](#network)
@@ -439,6 +440,9 @@ tar xf file.tar -C /path/to/directory
 ```
 
 ### Bash
+### Every day use
+[A pretty good tutorial](https://github.com/jlevy/the-art-of-command-line#everyday-use)
+
 #### Common commands
 
 | Command                     | meaning                                                                                   |
@@ -901,6 +905,46 @@ systemctl show --property=Environment docker
 systemctl show docker --no-pager | grep proxy
 ```
 
+## Syslog-ng
+syslog-ng is a syslog implementation which can take log messages from sources and forward them to destinations, based on powerful filter directives.  
+Note: With `systemd's journal` (journalctl), syslog-ng is `not needed` by most users.
+
+If you wish to use both the journald and syslog-ng files, ensure the following settings are in effect. For systemd-journald, in the `/etc/systemd/journald.conf` file, `Storage=` either set to auto or unset (which defaults to auto) and `ForwardToSyslog=` set to no or unset (defaults to no). For `/etc/syslog-ng/syslog-ng.conf`, you need the following `source` stanza:
+
+```
+source src {
+  # syslog-ng
+  internal();
+  # systemd-journald
+  system();
+};
+```
+
+[A very good overview, official doc](https://github.com/syslog-ng/syslog-ng#syslog-ng)
+[Still a very good ArchLinux tutorial](https://wiki.archlinux.org/index.php/Syslog-ng)
+
+### syslog-ng and systemd journal
+Starting with syslog-ng version 3.6.1 the default `system()` source on Linux systems using systemd uses `journald` as its standard `system()` source.
+
+Typically
+
+- `systemd-journald`
+  - stores message from __unit__ that it manages `sshd.service`
+  - unit.{service,slice,socket,scope,path,timer,mount,device,swap}
+
+- `syslog-ng`
+  - read __INPUT__ message from `systemd-journald`
+  - write __OUTPUT__ various files under `/var/log/*`
+
+Examples from default config:
+```
+log { source(s_src); filter(f_auth); destination(d_auth); };
+log { source(s_src); filter(f_cron); destination(d_cron); };
+log { source(s_src); filter(f_daemon); destination(d_daemon); };
+log { source(s_src); filter(f_kern); destination(d_kern); };
+```
+
+
 ## Journal
 ### Definition
 journalctl is a command for viewing logs collected by systemd. The systemd-journald service is responsible for systemd’s log collection, and it retrieves messages from the kernel, systemd services, and other sources.
@@ -1046,9 +1090,15 @@ journalctl --vacuum-time=1years
 #### Logger
 To write into the journal
 ```bash
-logger -n syslog.baptiste-dauphin.com --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test'
+logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test'
 
-for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done
+for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done
+
+salt -C 'G@app:api and G@env:production and G@client:mattrunks' \
+cmd.run "for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done" \
+shell=/bin/bash
+
+logger '@cim: {"name1":"value1", "name2":"value2"}'
 ```
 
 
