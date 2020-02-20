@@ -1091,6 +1091,8 @@ journalctl --vacuum-time=1years
 To write into the journal
 ```bash
 logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test'
+logger -n syslog.baptiste-dauphin.com --rfc3164 --udp -P 514 -t 'sshd'        -p local7.info 'sshd error : test '
+logger -n syslog.baptiste-dauphin.com --rfc3164 --udp -P 514 -t 'sshd'        -p auth.info 'sshd error : test'
 
 for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done
 
@@ -1375,6 +1377,34 @@ vault login -method=ldap username=$USER
 Will set up a token under `~/.vault-token`
 
 ## Ssh
+by default `ssh` reads `stdin`. When ssh is run in the background or in a script we need to redirect /dev/null into stdin.  
+Here is what we can do.
+```bash
+ssh    shadows.cs.hut.fi "uname -a" < /dev/null
+
+ssh -n shadows.cs.hut.fi "uname -a"
+```
+
+### Test multiple ssh connexion use case
+Will generate an output file containing 1 IP / line
+
+```bash
+for minion in minion1 minion2 database_dev random_id debian minion3 \
+; do ipam $minion | tail -n 1 | awk '{print $1}' \
+>> minions.list \
+; done
+```
+
+Run parallelized `exit` after a test of a ssh connection
+```bash
+while read minion_ip; do
+    (ssh -n $minion_ip exit \
+    && echo Success \
+    || echo CONNECTION_ERROR) &
+done <minions.list
+
+```
+
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
 
