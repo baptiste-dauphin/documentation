@@ -1595,6 +1595,10 @@ openssl req -new -sha256 -key $(SUB.MYDOMAIN.TLD).key -nodes -out $(SUB.MYDOMAIN
 You can verify the content of your csr token here :
 [DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
 
+### Chose a sage curves for elliptic-curve cryptography
+
+https://safecurves.cr.yp.to/
+
 ## Fail2Ban
 ### Useful commands
 
@@ -1877,6 +1881,14 @@ Unmerged paths:
   both modified:   path/to/file
 ```
 
+#### keep the local file or the remote file __during merge__ (conflict)
+```bash
+git checkout --theirs /path/to/file
+
+git checkout --ours /path/to/file
+```
+
+
 #### Undo/move your work
 with __Git reset__ and __Git stash__
 go at the previous commit. 
@@ -1920,6 +1932,8 @@ Or if you want to keep only the REMOTE work
 ```bash
 git pull -X theirs origin master
 ```
+
+
 
 #### Log
 ##### Find commit by author or since a specific date
@@ -2840,6 +2854,8 @@ php-fpm7.2 -t
 ```bash
 haproxy -f /etc/haproxy/haproxy.cfg -c -V
 ```
+### logging
+[Meaning of various status codes](https://www.haproxy.org/download/1.1/doc/haproxy-en.txt)
 
 ## Java
 ### JDK
@@ -2877,63 +2893,68 @@ Symbol | Meaning
 
 [Python tutorial](https://docs.python.org/3/tutorial/datastructures.html)
 
-#### Common commands
-> list all versions of python (system wide)
+Work with variables, if you don't know if the variable exists
+Jinja2 example
+
+```python
+{% if min_verbose_level is defined
+      and min_verbose_level      %}
+    and level({{ min_verbose_level }} .. emerg);
+{% endif %}
+```
+
+list all versions of python (system wide)
 ```bash
 ls -ls /usr/bin/python*
 ```
 
-> install pip3
+### Pip
+
+install pip3
 ```bash
 apt-get install build-essential python3-dev python3-pip
 ```
 
-> install a package
+install a package
 ```bash
 pip install virtualenv
-
 pip --proxy http://10.10.10.10:5000 install docker
 ```
 
-> install without TLS verif (not recommended)
+install without TLS verif (not recommended)
 ```bash
 pip install --trusted-host pypi.python.org \
             --trusted-host github.com \
             https://github.com/Exodus-Privacy/exodus-core/releases/download/v1.0.13/exodus_core-1.0.13.tar.gz
 ```
 
-> Show information about one or more installed packages
-
+Show information about one or more installed packages
 ```bash
 pip3 show $package_name
 pip3 show virtualenv
 ```
 
-> print all installed package (depends on your environement venv or system-wide)
-
+print all installed package (depends on your environement venv or system-wide)
 ```bash
 pip3 freeze
 ```
 
-> install from local sources (setup.py required)
-
+install from local sources (setup.py required)
 ```bash
 python setup.py install --record files.txt
 ```
 
-> print dependencies tree of a specified package
+print dependencies tree of a specified package
 ```bash
 pipdeptree -p uwsgi
 ```
 
-> global site-packages ("dist-packages") directories
-
+global site-packages ("dist-packages") directories
 ```bash
 python3 -m site
 ```
 
-> more concise list
-
+more concise list
 ```bash
 python3 -c "import site; print(site.getsitepackages())"
 ```
@@ -2964,9 +2985,10 @@ some_root_dir/
 
 #### 2) setup.py content (in the dir)
 Utility function to read the README file.  
-Used for the long_description.  It's nice, because now 1) we have a top level  
-README file and 2) it's easier to type in the README file than to put a raw  
-string in below ...  
+Used for the long_description.  
+It's nice, because now 
+- we have a top level README file
+- it's easier to type in the README file than to put a raw string in below ...  
 
 ```python
 import os
@@ -3641,7 +3663,7 @@ AND time > now() - 30s
 
 # Hardware
 ## Memory
-### Add memory and make it visible by Debian OS
+### Add memory and make it visible by Debian OS
 Even if you add memory with VMWare, debian won't see it `free -m`
 You have to make it 'online'
 ```bash
