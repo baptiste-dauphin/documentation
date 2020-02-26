@@ -194,7 +194,7 @@ bar {
 ## Custom add
 set $sink_number "$(pactl list sinks short | tail -n 1 | cut -f 1)"
 set $volume_delta "5%"
-set $post_login_cmd_path "~/Git/documentation/scripts/post_login_scripts/startup.sh"
+set $post_login_cmd_path "~/Git/personal/documentation/scripts/post_login_scripts/startup.sh"
 
 bindsym F9 exec  pactl set-sink-mute   $sink_number toggle
 bindsym F10 exec pactl set-sink-volume $sink_number -$volume_delta    # decrease sound volume
@@ -209,10 +209,10 @@ bindsym F11 exec pactl set-sink-volume $sink_number +$volume_delta    # increase
 # exec --no-startup-id 'xrandr --output $monitor2 --auto --right-of $monitor1'
 # exec --no-startup-id 'xrandr --output $monitor3 --auto --right-of $monitor2'
 
-exec_always --no-startup-id '~/Git/personal/documentation/scripts/post_login_scripts/monitors-placement.sh'
-exec_always --no-startup-id 'exec numlockx  on'
-exec_always --no-startup-id 'exec setxkbmap fr'
-exec        --no-startup-id 'exec blueman-applet'
+exec --no-startup-id 'exec ~/Git/personal/documentation/scripts/post_login_scripts/monitors-placement.sh'
+exec --no-startup-id 'exec numlockx  on'
+exec --no-startup-id 'exec setxkbmap fr'
+exec --no-startup-id 'exec blueman-applet'
 
 ## ws1
 exec --no-startup-id i3-msg 'workspace $ws1; exec blueman-manager'

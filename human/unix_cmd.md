@@ -2261,6 +2261,7 @@ salt -S 192.168.40.0/24 test.version
 compound match
 ```bash
 salt -C 'S@10.0.0.0/24 and G@os:Debian' test.version
+salt -C '( G@environment:staging or G@environment:production ) and G@soft:redis*' test.ping
 ```
 [full doc](https://docs.saltstack.com/en/latest/topics/targeting/globbing.html)
 [Compound matchers](https://docs.saltstack.com/en/latest/topics/targeting/compound.html)
