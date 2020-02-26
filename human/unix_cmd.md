@@ -2883,7 +2883,36 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 ## Python
-#### Knowledge
+### Jinja2
+#### Playing with empty lines
+
+```python
+{%   %}
+{%-  %}
+{%  -%}
+{%- -%}
+```
+(By default) __add__ an empty line __before__ `jinja rendering` and __add__ one __after__
+```python
+{%  set site_url = 'www.' + domain  %}
+```
+
+__remove__ the empty line __before__ `jinja rendering` and __add__ one __after__
+```python
+{%- set site_url = 'www.' + domain  %}
+```
+
+__add__ the empty line __before__ `jinja rendering` and __remove__ one __after__
+```python
+{%  set site_url = 'www.' + domain -%}
+```
+
+__remove__ the empty line __before__ `jinja rendering` and __remove__ one __after__
+```python
+{%- set site_url = 'www.' + domain -%}
+```
+
+#### Symbol
 
 Symbol | Meaning
 -|-
