@@ -84,6 +84,10 @@
   - [Config extraction](#config-extraction)
   - [Common cmd](#common-cmd)
   - [Helm](#helm)
+- [Provider](#provider)
+  - [Cloud](#cloud)
+  - [DNS](#dns)
+- [Back up domains](#back-up-domains)
 - [CentOS](#centos)
   - [Iptables](#iptables-1)
   - [OS Version](#os-version)
@@ -100,6 +104,7 @@
   - [Markdown](#markdown)
   - [Pimp my terminal](#pimp-my-terminal)
   - [xdg-settings / update-alternatives](#xdg-settings--update-alternatives)
+  - [Unclassified](#unclassified)
 - [Definitions](#definitions)
 
 <!-- /MarkdownTOC -->
@@ -2854,7 +2859,8 @@ php-fpm7.2 -t
 ```bash
 haproxy -f /etc/haproxy/haproxy.cfg -c -V
 ```
-### logging
+
+### logging
 [Meaning of various status codes](https://www.haproxy.org/download/1.1/doc/haproxy-en.txt)
 
 ## Java
@@ -4324,6 +4330,41 @@ helm lint ./mychart
 1 chart(s) linted, no failures
 ```
 
+# Provider
+## Cloud
+## DNS
+### Gandi
+* [Generate your API Key](https://doc.livedns.gandi.net/#id5)  
+[Official documentation](https://doc.livedns.gandi.net/)
+* Get your company id (i.e. __sharing_id__)
+```bash
+curl -H"Authorization: Apikey $APIKEY" \
+  "https://api.gandi.net/v5/organization/organizations\?type=company" \
+  | jq '.[].id'
+```
+
+
+# Back up domains
+#### List all domains
+```bash
+curl -H"X-Api-Key: $APIKEY" \
+  https://dns.api.gandi.net/api/v5/domains\?sharing_id\=$SHARING_ID \
+  | jq -r '.[].fqdn' \
+  > domain.list
+```
+
+#### Copy data
+For each records in a given domain get all records info (type, ttl, name, href, values) and create.
+```bash
+mkdir domains_records
+
+while read domain; do
+  (curl -H"X-Api-Key: $APIKEY" \
+    https://dns.api.gandi.net/api/v5/domains/$domain/records\?sharing_id\=$SHARING_ID \
+    | jq . > ./domains_records/$domain) &
+done <domain.list
+```
+
 # CentOS
 CentOS specific commands which differs from debian
 ## Iptables
@@ -4586,8 +4627,12 @@ Known properties:
 
 xdg-settings get default-web-browser
 firefox-esr.desktop
+```
 
-
+## Unclassified
+Get weather in your terminal
+```bash
+curl http://v2.wttr.in/Rouen
 ```
 
 
