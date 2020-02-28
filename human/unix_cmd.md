@@ -44,6 +44,7 @@
   - [SaltStack](#saltstack)
   - [Apache](#apache)
   - [Nginx](#nginx)
+  - [DNS](#dns)
   - [Bind9](#bind9)
   - [Zabbix](#zabbix)
   - [Elastic Search](#elastic-search)
@@ -86,7 +87,7 @@
   - [Helm](#helm)
 - [Provider](#provider)
   - [Cloud](#cloud)
-  - [DNS](#dns)
+  - [DNS](#dns-1)
 - [CentOS](#centos)
   - [Iptables](#iptables-1)
   - [OS Version](#os-version)
@@ -2500,6 +2501,12 @@ server {
     return 301 https://$host$request_uri;
 }
 ```
+## DNS
+The Domain Name System is a `hierarchical` and `decentralized` __naming system__ for computers, services, or other resources connected to the Internet or a private network.  
+It associates various information with domain names assigned to each of the participating entities.  
+Public Resolver
+![GitHub Logo](./src/quad9_infographic@2x.png)
+
 
 ## Bind9
 https://wiki.csnu.org/index.php/Installation_et_configuration_de_bind9  
