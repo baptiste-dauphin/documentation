@@ -2504,7 +2504,12 @@ server {
 ## DNS
 The Domain Name System is a `hierarchical` and `decentralized` __naming system__ for computers, services, or other resources connected to the Internet or a private network.  
 It associates various information with domain names assigned to each of the participating entities.  
-Public Resolver
+
+### How it works
+![GitHub Logo](./src/Domain_name_space.svg)
+
+### Public Resolver classic flow
+
 ![GitHub Logo](./src/quad9_infographic@2x.png)
 
 
