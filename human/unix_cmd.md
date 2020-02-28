@@ -87,7 +87,6 @@
 - [Provider](#provider)
   - [Cloud](#cloud)
   - [DNS](#dns)
-- [Back up domains](#back-up-domains)
 - [CentOS](#centos)
   - [Iptables](#iptables-1)
   - [OS Version](#os-version)
@@ -4033,6 +4032,18 @@ docker run debian \
 /bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306'
 ```
 
+### Pipe into container
+```bash
+gitlab GET /groups/987/variables/DOCKER_TLS_CERT \
+| jq -r .value | \
+docker run \
+--rm \
+-i \
+--entrypoint=sh \
+frapsoft/openssl \
+-c 'openssl x509 -in /dev/stdin -noout -dates 2>/dev/null'
+```
+
 #### Volumes
 ```bash
 docker volume create my_app
@@ -4332,7 +4343,7 @@ helm lint ./mychart
 
 # Provider
 ## Cloud
-## DNS
+## DNS
 ### Gandi
 * [Generate your API Key](https://doc.livedns.gandi.net/#id5)  
 [Official documentation](https://doc.livedns.gandi.net/)
@@ -4343,9 +4354,8 @@ curl -H"Authorization: Apikey $APIKEY" \
   | jq '.[].id'
 ```
 
-
-# Back up domains
-#### List all domains
+#### Back up domains
+List all domains
 ```bash
 curl -H"X-Api-Key: $APIKEY" \
   https://dns.api.gandi.net/api/v5/domains\?sharing_id\=$SHARING_ID \
@@ -4353,7 +4363,7 @@ curl -H"X-Api-Key: $APIKEY" \
   > domain.list
 ```
 
-#### Copy data
+Copy data  
 For each records in a given domain get all records info (type, ttl, name, href, values) and create.
 ```bash
 mkdir domains_records
