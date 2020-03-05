@@ -5,6 +5,7 @@
   - [Group](#group)
   - [Apt](#apt)
   - [Performance](#performance)
+  - [htop](#htop)
   - [Update-alternatives](#update-alternatives)
   - [Graphic](#graphic)
   - [Shell](#shell)
@@ -12,6 +13,7 @@
   - [File system](#file-system)
   - [Init.d](#initd)
   - [Systemd](#systemd)
+  - [Syslog-ng](#syslog-ng)
   - [Journal](#journal)
   - [Iptables](#iptables)
 - [Network](#network)
@@ -42,6 +44,7 @@
   - [SaltStack](#saltstack)
   - [Apache](#apache)
   - [Nginx](#nginx)
+  - [DNS](#dns)
   - [Bind9](#bind9)
   - [Zabbix](#zabbix)
   - [Elastic Search](#elastic-search)
@@ -62,11 +65,11 @@
   - [Redis](#redis)
   - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
-	- [Storage](#storage)
-	- [LVM](#lvm)
-	- [Listing](#listing)
-	- [Monitor](#monitor)
-	- [Bluetooth](#bluetooth)
+  - [Memory](#memory)
+  - [Storage](#storage)
+  - [LVM](#lvm)
+  - [Listing](#listing)
+  - [Monitor](#monitor)
 - [Virtualization](#virtualization)
   - [Docker](#docker)
   - [Docker Swarm](#docker-swarm)
@@ -82,6 +85,9 @@
   - [Config extraction](#config-extraction)
   - [Common cmd](#common-cmd)
   - [Helm](#helm)
+- [Provider](#provider)
+  - [Cloud](#cloud)
+  - [DNS](#dns-1)
 - [CentOS](#centos)
   - [Iptables](#iptables-1)
   - [OS Version](#os-version)
@@ -97,6 +103,8 @@
   - [Regex](#regex)
   - [Markdown](#markdown)
   - [Pimp my terminal](#pimp-my-terminal)
+  - [xdg-settings / update-alternatives](#xdg-settings--update-alternatives)
+  - [Unclassified](#unclassified)
 - [Definitions](#definitions)
 - [Media / Platform](#media--platform)
 - [DevOps](#devops)
@@ -177,14 +185,38 @@ apt-get clean
 htop
 nload
 ```
-Memory information
+### Memory information
 ```bash
 free -g
 ```
+#### Sort by memory
+
+To sort by memory usage we can use either __%MEM__ or __RSS__ columns.  
+- `RSS` __Resident Set Size__ is a total memory usage in kilobytes
+- `%RAM` shows the same information in terms of percent usage of total memory amount __available__.
+
+```bash
+ps aux --sort=+rss
+ps aux --sort=%mem
+```
+
 Empty swap
 ```bash
 swapoff -a && swapon -a
 ```
+## htop
+How to read memory usage in htop?
+```bash
+htop
+```
+- Hide `user` threads `shift + H`
+- Hide `kernel` threads `shift + K`
+- close the process tree view `F5`
+- then you can sort out the process of your interest by PID and read the RES column
+- sort by __MEM%__ by pressing `shift + M`, or `F3` to search in cmd line)
+
+
+
 
 ### Get memory physical size
 
@@ -224,9 +256,11 @@ Default system software (Debian)
  update-alternatives - maintain symbolic links determining default commands 
  ```
 
-List existing selections
+List existing selections and list the one you wanna see
 ```bash
 update-alternatives --get-selections
+
+update-alternatives --list x-www-browser
 ```
 
 Modify existing selection interactively
@@ -239,10 +273,12 @@ Create a new selection
 update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
 
-Example : Change default terminal
+Change default terminal or browser
 will prompt you an interactive console to chose among recognized software
 ```bash
 sudo update-alternatives --config x-terminal-emulator
+
+sudo update-alternatives --config x-www-browser
 ```
 
 ## Graphic
@@ -412,6 +448,9 @@ tar xf file.tar -C /path/to/directory
 ```
 
 ### Bash
+### Every day use
+[A pretty good tutorial](https://github.com/jlevy/the-art-of-command-line#everyday-use)
+
 #### Common commands
 
 | Command                     | meaning                                                                                   |
@@ -880,6 +919,46 @@ systemctl show --property=Environment docker
 systemctl show docker --no-pager | grep proxy
 ```
 
+## Syslog-ng
+syslog-ng is a syslog implementation which can take log messages from sources and forward them to destinations, based on powerful filter directives.  
+Note: With `systemd's journal` (journalctl), syslog-ng is `not needed` by most users.
+
+If you wish to use both the journald and syslog-ng files, ensure the following settings are in effect. For systemd-journald, in the `/etc/systemd/journald.conf` file, `Storage=` either set to auto or unset (which defaults to auto) and `ForwardToSyslog=` set to no or unset (defaults to no). For `/etc/syslog-ng/syslog-ng.conf`, you need the following `source` stanza:
+
+```
+source src {
+  # syslog-ng
+  internal();
+  # systemd-journald
+  system();
+};
+```
+
+[A very good overview, official doc](https://github.com/syslog-ng/syslog-ng#syslog-ng)
+[Still a very good ArchLinux tutorial](https://wiki.archlinux.org/index.php/Syslog-ng)
+
+### syslog-ng and systemd journal
+Starting with syslog-ng version 3.6.1 the default `system()` source on Linux systems using systemd uses `journald` as its standard `system()` source.
+
+Typically
+
+- `systemd-journald`
+  - stores message from __unit__ that it manages `sshd.service`
+  - unit.{service,slice,socket,scope,path,timer,mount,device,swap}
+
+- `syslog-ng`
+  - read __INPUT__ message from `systemd-journald`
+  - write __OUTPUT__ various files under `/var/log/*`
+
+Examples from default config:
+```
+log { source(s_src); filter(f_auth); destination(d_auth); };
+log { source(s_src); filter(f_cron); destination(d_cron); };
+log { source(s_src); filter(f_daemon); destination(d_daemon); };
+log { source(s_src); filter(f_kern); destination(d_kern); };
+```
+
+
 ## Journal
 ### Definition
 journalctl is a command for viewing logs collected by systemd. The systemd-journald service is responsible for systemd’s log collection, and it retrieves messages from the kernel, systemd services, and other sources.
@@ -1021,6 +1100,23 @@ Run journalctl with the --vacuum-time option to remove archived journal files wi
 ```
 journalctl --vacuum-time=1years
 ```
+
+#### Logger
+To write into the journal
+```bash
+logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test'
+logger -n syslog.baptiste-dauphin.com --rfc3164 --udp -P 514 -t 'sshd'        -p local7.info 'sshd error : test '
+logger -n syslog.baptiste-dauphin.com --rfc3164 --udp -P 514 -t 'sshd'        -p auth.info 'sshd error : test'
+
+for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done
+
+salt -C 'G@app:api and G@env:production and G@client:mattrunks' \
+cmd.run "for ((i=0; i < 10; ++i)); do logger -n syslog.baptiste-dauphin.com --rfc3164 --tcp -P 514 -t 'php95.8-fpm' -p local7.error 'php-fpm error test' ; done" \
+shell=/bin/bash
+
+logger '@cim: {"name1":"value1", "name2":"value2"}'
+```
+
 
 ## Iptables
 [Some good explanations](https://connect.ed-diamond.com/GNU-Linux-Magazine/GLMFHS-041/Introduction-a-Netfilter-et-iptables)
@@ -1295,10 +1391,52 @@ vault login -method=ldap username=$USER
 Will set up a token under `~/.vault-token`
 
 ## Ssh
+by default `ssh` reads `stdin`. When ssh is run in the background or in a script we need to redirect /dev/null into stdin.  
+Here is what we can do.
+```bash
+ssh    shadows.cs.hut.fi "uname -a" < /dev/null
+
+ssh -n shadows.cs.hut.fi "uname -a"
+```
+
+### Test multiple ssh connexion use case
+Will generate an output file containing 1 IP / line
+
+```bash
+for minion in minion1 minion2 database_dev random_id debian minion3 \
+; do ipam $minion | tail -n 1 | awk '{print $1}' \
+>> minions.list \
+; done
+```
+
+Run parallelized `exit` after a test of a ssh connection
+```bash
+while read minion_ip; do
+    (ssh -n $minion_ip exit \
+    && echo Success \
+    || echo CONNECTION_ERROR) &
+done <minions.list
+
+```
+
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
+
 ```bash
 sshd -t
+```
+
+Test connection to multiple servers
+```bash
+for outscale_instance in 10.10.10.1 10.10.10.2 10.10.10.3 10.10.10.4 \
+; do ssh $outscale_instance -q exit \
+&& echo "$outscale_instance :" connection succeed \
+|| echo "$outscale_instance :" connection failed \
+; done
+10.10.10.1 : connection succeed
+10.10.10.2 : connection succeed
+10.10.10.3 : connection failed
+10.10.10.4 : connection succeed
 ```
 
 quickly copy your ssh public key to a remote server
@@ -1471,6 +1609,10 @@ openssl req -new -sha256 -key $(SUB.MYDOMAIN.TLD).key -nodes -out $(SUB.MYDOMAIN
 You can verify the content of your csr token here :
 [DigiCert Tool](https://ssltools.digicert.com/checker/views/csrCheck.jsp)
 
+### Chose a sage curves for elliptic-curve cryptography
+
+https://safecurves.cr.yp.to/
+
 ## Fail2Ban
 ### Useful commands
 
@@ -1524,7 +1666,7 @@ This is here we enable jails
 
 ## NTP
 stands for Network Time Protocol
-![GitHub Logo](../src/ntp_stratum.png)
+![GitHub Logo](./src/ntp_stratum.png)
 
 ### Client
 Debian, Ubuntu, Fedora, CentOS, and most operating system vendors, __don't package NTP into client and server packages separately__. When you install NTP, you've made your computer __both a server, and a client simultaneously.__
@@ -1605,10 +1747,39 @@ ntpq -p
 vim /etc/ntp.conf
 sudo service ntp restart
 ntpq -p
+
+
+ntpstat
+
+unsynchronised
+time server re-starting
+polling server every 64 s
+
+
+ntpstat
+
+synchronised to NTP server (10.10.10.10) at stratum 4 
+       time correct to within 323 ms
+       polling server every 64 s
+
+
+
+ntpq -c peers
+
+remote refid st t when poll reach delay offset jitter
+======================================================================
+hamilton-nat.nu .INIT. 16 u - 64 0 0.000 0.000 0.001
+ns2.telecom.lt .INIT. 16 u - 64 0 0.000 0.000 0.001
+fidji.daupheus. .INIT. 16 u - 64 0 0.000 0.000 0.001
+```
+
+#### Drift
+```bash
+
 ```
 
 ## Git
-![GitHub Logo](../src/git_cheat.png)
+![GitHub Logo](./src/git_cheat.png)
 
 ### Global info
 ```bash
@@ -1724,6 +1895,14 @@ Unmerged paths:
   both modified:   path/to/file
 ```
 
+#### keep the local file or the remote file __during merge__ (conflict)
+```bash
+git checkout --theirs /path/to/file
+
+git checkout --ours /path/to/file
+```
+
+
 #### Undo/move your work
 with __Git reset__ and __Git stash__
 go at the previous commit. 
@@ -1768,6 +1947,8 @@ Or if you want to keep only the REMOTE work
 git pull -X theirs origin master
 ```
 
+
+
 #### Log
 ##### Find commit by author or since a specific date
 ```bash
@@ -1809,7 +1990,7 @@ The git revert command can be considered an 'undo' type command, however, it is 
 
 Reverting should be used when you want to apply the inverse of a commit from your project history. This can be useful, for example, if you’re tracking down a bug and find that it was introduced by a single commit. Instead of manually going in, fixing it, and committing a new snapshot, you can use git revert to automatically do all of this for you.
 
-![GitHub Logo](../src/git_revert.svg)
+![GitHub Logo](./src/git_revert.svg)
 
 ```bash
 git revert <commit hash>
@@ -1829,7 +2010,7 @@ Git reset & three trees of Git
 
 To properly understand git reset usage, we must first understand Git's internal state management systems. Sometimes these mechanisms are called Git's "three trees".
 
-![GitHub Logo](../src/git_reset.svg)
+![GitHub Logo](./src/git_reset.svg)
 
 #### Undo a commit and redo
 ```bash
@@ -2108,6 +2289,7 @@ salt -S 192.168.40.0/24 test.version
 compound match
 ```bash
 salt -C 'S@10.0.0.0/24 and G@os:Debian' test.version
+salt -C '( G@environment:staging or G@environment:production ) and G@soft:redis*' test.ping
 ```
 [full doc](https://docs.saltstack.com/en/latest/topics/targeting/globbing.html)
 [Compound matchers](https://docs.saltstack.com/en/latest/topics/targeting/compound.html)
@@ -2328,6 +2510,17 @@ server {
     return 301 https://$host$request_uri;
 }
 ```
+## DNS
+The Domain Name System is a `hierarchical` and `decentralized` __naming system__ for computers, services, or other resources connected to the Internet or a private network.  
+It associates various information with domain names assigned to each of the participating entities.  
+
+### How it works
+![GitHub Logo](./src/Domain_name_space.svg)
+
+### Public Resolver classic flow
+
+![GitHub Logo](./src/quad9_infographic@2x.png)
+
 
 ## Bind9
 https://wiki.csnu.org/index.php/Installation_et_configuration_de_bind9  
@@ -2412,6 +2605,7 @@ https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
 zabbix_agentd -t system.hostname
 zabbix_agentd -t system.swap.size[all,free]
 zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+zabbix_agentd -t vm.memory.size[pavailable]
 
 ### print all known items 
 zabbix_agentd -p
@@ -2627,7 +2821,7 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
 
-### Dump / Backup
+### Dump / Backup
 Very good tutorial
 https://blog.ruanbekker.com/blog/2017/11/22/using-elasticdump-to-backup-elasticsearch-indexes-to-json/
 
@@ -2650,7 +2844,7 @@ So, I'll have to manually expand all various indexes in order to back them up !
 
 
 __Elasticsearch Cluster Topology__
-![GitHub Logo](../src/elasticsearch_cluster_topology.png)
+![GitHub Logo](./src/elasticsearch_cluster_topology.png)
 
 ### Templates
 Change the future index sharding and and replicas and other stuff.  
@@ -2686,6 +2880,9 @@ php-fpm7.2 -t
 haproxy -f /etc/haproxy/haproxy.cfg -c -V
 ```
 
+### logging
+[Meaning of various status codes](https://www.haproxy.org/download/1.1/doc/haproxy-en.txt)
+
 ## Java
 ### JDK
 version
@@ -2712,7 +2909,36 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 ## Python
-#### Knowledge
+### Jinja2
+#### Playing with empty lines
+
+```python
+{%   %}
+{%-  %}
+{%  -%}
+{%- -%}
+```
+(By default) __add__ an empty line __before__ `jinja rendering` and __add__ one __after__
+```python
+{%  set site_url = 'www.' + domain  %}
+```
+
+__remove__ the empty line __before__ `jinja rendering` and __add__ one __after__
+```python
+{%- set site_url = 'www.' + domain  %}
+```
+
+__add__ the empty line __before__ `jinja rendering` and __remove__ one __after__
+```python
+{%  set site_url = 'www.' + domain -%}
+```
+
+__remove__ the empty line __before__ `jinja rendering` and __remove__ one __after__
+```python
+{%- set site_url = 'www.' + domain -%}
+```
+
+#### Symbol
 
 Symbol | Meaning
 -|-
@@ -2722,63 +2948,68 @@ Symbol | Meaning
 
 [Python tutorial](https://docs.python.org/3/tutorial/datastructures.html)
 
-#### Common commands
-> list all versions of python (system wide)
+Work with variables, if you don't know if the variable exists
+Jinja2 example
+
+```python
+{% if min_verbose_level is defined
+      and min_verbose_level      %}
+    and level({{ min_verbose_level }} .. emerg);
+{% endif %}
+```
+
+list all versions of python (system wide)
 ```bash
 ls -ls /usr/bin/python*
 ```
 
-> install pip3
+### Pip
+
+install pip3
 ```bash
 apt-get install build-essential python3-dev python3-pip
 ```
 
-> install a package
+install a package
 ```bash
 pip install virtualenv
-
 pip --proxy http://10.10.10.10:5000 install docker
 ```
 
-> install without TLS verif (not recommended)
+install without TLS verif (not recommended)
 ```bash
 pip install --trusted-host pypi.python.org \
             --trusted-host github.com \
             https://github.com/Exodus-Privacy/exodus-core/releases/download/v1.0.13/exodus_core-1.0.13.tar.gz
 ```
 
-> Show information about one or more installed packages
-
+Show information about one or more installed packages
 ```bash
 pip3 show $package_name
 pip3 show virtualenv
 ```
 
-> print all installed package (depends on your environement venv or system-wide)
-
+print all installed package (depends on your environement venv or system-wide)
 ```bash
 pip3 freeze
 ```
 
-> install from local sources (setup.py required)
-
+install from local sources (setup.py required)
 ```bash
 python setup.py install --record files.txt
 ```
 
-> print dependencies tree of a specified package
+print dependencies tree of a specified package
 ```bash
 pipdeptree -p uwsgi
 ```
 
-> global site-packages ("dist-packages") directories
-
+global site-packages ("dist-packages") directories
 ```bash
 python3 -m site
 ```
 
-> more concise list
-
+more concise list
 ```bash
 python3 -c "import site; print(site.getsitepackages())"
 ```
@@ -2809,9 +3040,10 @@ some_root_dir/
 
 #### 2) setup.py content (in the dir)
 Utility function to read the README file.  
-Used for the long_description.  It's nice, because now 1) we have a top level  
-README file and 2) it's easier to type in the README file than to put a raw  
-string in below ...  
+Used for the long_description.  
+It's nice, because now 
+- we have a top level README file
+- it's easier to type in the README file than to put a raw string in below ...  
 
 ```python
 import os
@@ -3485,6 +3717,14 @@ AND time > now() - 30s
 * [Official doc](https://docs.influxdata.com/influxdb/v1.7/query_language/schema_exploration/)
 
 # Hardware
+## Memory
+### Add memory and make it visible by Debian OS
+Even if you add memory with VMWare, debian won't see it `free -m`
+You have to make it 'online'
+```bash
+grep offline /sys/devices/system/memory/*/state | while read line; do echo online > ${line/:*/}; done
+```
+
 ## Storage
 can be
 - Disk
@@ -3762,6 +4002,48 @@ Operating-system-level virtualization usually imposes less overhead than full vi
 [Wikipedia of Virtualization OS-level](https://en.wikipedia.org/wiki/OS-level_virtualization)
 
 ## Docker
+
+```
+Docker CLI -> Docker Engine -> containerd -> containerd-shim -> runC (or other runtime)
+```
+Note that dockerd (docker daemon) has no child. The master process of all containers is `containerd`.  
+There is __only one containerd-shim by process__ and it manages the STDIO FIFO and keeps it open for the container in case containerd or Docker dies.
+
+runC is built on libcontainer which is the same container library powering a Docker engine installation. Prior to the version 1.11, Docker engine was used to manage volumes, networks, containers, images etc.. Now, the Docker architecture is broken into four components: Docker engine, containerd, containerd-shm and runC. The binaries are respectively called docker, docker-containerd, docker-containerd-shim, and docker-runc.  
+To run a container, Docker engine creates the image, pass it to containerd. containerd calls containerd-shim that uses runC to run the container.  
+__Then, containerd-shim allows the runtime (runC in this case) to exit after it starts the container : This way we can run daemon-less containers because we are not having to have the long running runtime processes for containers.__
+
+![GitHub Logo](./src/docker_architecture.jpeg)
+
+[Sources](https://medium.com/faun/docker-containerd-standalone-runtimes-heres-what-you-should-know-b834ef155426)
+
+### Find all the containerized process on the system
+
+Get pid of containerd
+```bash
+pidof containerd
+921
+```
+
+Get child of containerd (i.e. pid of containerd-shim) i.e. search for process who has for parent process containerd ( hence --ppid )
+```bash
+ps -o pid --no-headers --ppid $(pidof containerd)
+19485
+```
+
+Get child of containerd-shim (i.e. the real final containerized process)
+```bash
+ps -o pid --no-headers --ppid $(ps -o pid --no-headers --ppid $(pidof containerd))
+19502
+```
+
+Get the name of the output process
+```bash
+ps -p $(ps -o pid --no-headers --ppid $(ps -o pid --no-headers --ppid $(pidof containerd))) -o comm=
+bash
+```
+
+
 ### Run
 ```bash
 docker run -d \
@@ -3784,6 +4066,18 @@ docker run debian \
 /bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306'
 ```
 
+### Pipe into container
+```bash
+gitlab GET /groups/987/variables/DOCKER_TLS_CERT \
+| jq -r .value | \
+docker run \
+--rm \
+-i \
+--entrypoint=sh \
+frapsoft/openssl \
+-c 'openssl x509 -in /dev/stdin -noout -dates 2>/dev/null'
+```
+
 #### Volumes
 ```bash
 docker volume create my_app
@@ -3797,15 +4091,27 @@ $ : end with
 docker ps -aqf "name=^containername$"
 ```
 
+Print only running command
+```bash
+docker ps --format "{{.Command}}" --no-trunc
+```
+Resources management
+```bash
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}" --no-stream
+```
+
 Info of filesystem
 ```bash
 docker inspect -f '{{ json .Mounts }}' $(docker ps -aqf "name=elasticsearch") | jq
 ```
 
 ## Docker Swarm
-(On swarm __manager__) find where an app is running
+(On swarm __manager__) find where an app is running. Find the last updated date
 ```bash
 docker service ps <app_name>
+
+docker service inspect log-master_logstash -f '{{ json .UpdatedAt }}'
 ```
 
 print cluster nodes
@@ -4069,6 +4375,40 @@ helm lint ./mychart
 1 chart(s) linted, no failures
 ```
 
+# Provider
+## Cloud
+## DNS
+### Gandi
+* [Generate your API Key](https://doc.livedns.gandi.net/#id5)  
+[Official documentation](https://doc.livedns.gandi.net/)
+* Get your company id (i.e. __sharing_id__)
+```bash
+curl -H"Authorization: Apikey $APIKEY" \
+  "https://api.gandi.net/v5/organization/organizations\?type=company" \
+  | jq '.[].id'
+```
+
+#### Back up domains
+List all domains
+```bash
+curl -H"X-Api-Key: $APIKEY" \
+  https://dns.api.gandi.net/api/v5/domains\?sharing_id\=$SHARING_ID \
+  | jq -r '.[].fqdn' \
+  > domain.list
+```
+
+Copy data  
+For each records in a given domain get all records info (type, ttl, name, href, values) and create.
+```bash
+mkdir domains_records
+
+while read domain; do
+  (curl -H"X-Api-Key: $APIKEY" \
+    https://dns.api.gandi.net/api/v5/domains/$domain/records\?sharing_id\=$SHARING_ID \
+    | jq . > ./domains_records/$domain) &
+done <domain.list
+```
+
 # CentOS
 CentOS specific commands which differs from debian
 ## Iptables
@@ -4229,7 +4569,10 @@ With desktop: https://downloads.raspberrypi.org/raspbian/images/
 With desktop & recommended software: https://downloads.raspberrypi.org/raspbian_full/images/
 
 ## Regex
-Online tester
+Excellent tutorial  
+https://medium.com/factory-mind/regex-tutorial-a-simple-cheatsheet-by-examples-649dc1c3f285
+
+Online tester  
 https://regex101.com/
 
 ## Markdown
@@ -4241,14 +4584,14 @@ https://regex101.com/
 gnome-terminal
 GNOME Terminal (the default Ubuntu terminal): `Open Terminal` → `Preferences` and click on the selected profile under `Profiles`. Check Custom font under Text Appearance and select `MesloLGS NF Regular` or `Hack` or the font you like.
 
-Debian
+### Debian
 1- Ensure that your terminal is `gnome-terminal`
 ```bash
 update-alternatives --get-selections | grep -i term
 x-terminal-emulator            manual   /usr/bin/gnome-terminal.wrapper
 ```
 
-Graphicaly
+#### Graphicaly
 Install  `dconf`
 ```bash
 sudo apt-get install dconf-tools
@@ -4303,6 +4646,37 @@ gsettings list-recursively org.gnome.desktop.interface
 To reset all valuses of keys run following command in terminal:
 ```bash
 gsettings reset-recursively org.gnome.desktop.interface
+```
+
+## xdg-settings / update-alternatives
+In some case, __update-alternatives__ is not enough. Especially for __Url Handling or web browsing__  
+`xdg-settings - get various settings from the desktop environment`
+
+### Set brave as default browser
+In my use case, I set up update-alternatives but it didn't change the behaviour for URL handling (printed in my terminal especially useful after `git push` for creating a merge request).  
+Correctly setup but doesn't affect behaviour
+```
+sudo update-alternatives --config x-www-browser
+```
+
+```bash
+xdg-settings check default-web-browser brave.desktop
+no
+
+xdg-settings --list default-url-scheme-handler
+Known properties:
+  default-url-scheme-handler    Default handler for URL scheme
+  default-web-browser           Default web browser
+
+
+xdg-settings get default-web-browser
+firefox-esr.desktop
+```
+
+## Unclassified
+Get weather in your terminal
+```bash
+curl http://v2.wttr.in/Rouen
 ```
 
 

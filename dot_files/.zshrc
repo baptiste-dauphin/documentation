@@ -2,13 +2,15 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/home/baptiste/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="powerlevel10k/powerlevel10k"
+DEFAULT_USER=$(whoami)
+# ZSH_THEME="random"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -65,6 +67,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(
   git
   common-aliases
+  last-working-dir
+  zsh-syntax-highlighting
+  kubectl
+  helm
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -72,7 +78,6 @@ source $ZSH/oh-my-zsh.sh
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
-export EDITOR='subl'
 
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
@@ -98,14 +103,42 @@ export EDITOR='subl'
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Load my (professinal + personal) datas
+source ~/Git/git.values
+
+## export
+export EDITOR=$editor
+export KUBE_EDITOR='${=EDITOR}'
+export VAULT_ADDR=$vault_addr
+export TERM="xterm-256color"
+# add personal repo scripts to PATH
+export PATH=$PATH:$personal_git_dir_path/documentation/scripts/bin
+
+## alias
+# source $personal_git_dir_path/documentation/scripts/alias.bash
 alias ll='ls -l'
-alias la='ls -A'
-alias l='ls -CF'
-alias sshh='grep "Host " ~/.ssh/config'
-alias sshconfig='subl ~/.ssh/config'
-alias overlord='grep "Host " ~/.ssh/config | grep -i overlord'
-alias template='grep "Host " ~/.ssh/config | grep -i template'
-alias cdg='cd /home/baptiste/Gitlab/saltstack-www'
 alias hashtag="echo \"grep -iv '^\s*[#\;]\|^\s*$'\""
-alias post_login="echo \"bash /home/baptiste/GitHub/documentation/scripts/post_login_scripts/startup.sh\""
-export VAULT_ADDR="https://vault.internal.tld/"
+alias post_login='bash $personal_git_dir_path/documentation/scripts/post_login_scripts/startup.sh'
+alias ggbn="git branch | grep \* | cut -d ' ' -f2"
+alias myaliases="egrep '^\s*alias' ~/.zshrc --color"
+alias cdoverlord='cd $company_git_dir_path/$overlord_dir'
+alias cdinfra='cd $company_git_dir_path/infra'
+alias cddoc='cd $personal_git_dir_path/documentation'
+alias cdk8s='cdinfra && cd k8s-deployment'
+alias new_working_sheet_of_the_the_day='new_working_sheet_of_the_the_day $company_git_dir_path/doc_perso_fatalis/working_sheet_of_the_day'
+# zshrc='${=EDITOR} ~/.zshrc'
+alias i3config='${=EDITOR} ~/.config/i3/config'
+alias backup_i3config='cat ~/.config/i3/config > $personal_git_dir_path/documentation/dot_files/i3_config'
+alias backup_zshrc='cat ~/.zshrc > $personal_git_dir_path/documentation/dot_files/.zshrc'
+alias color='ccze -A'
+alias sshconfig='${=EDITOR} ~/.ssh/config'
+
+
+## eval
+eval $(dircolors $personal_git_dir_path/dircolors-solarized/dircolors.ansi-dark)
+
+
+# Autocomplete
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C $HOME/bin/vault vault
