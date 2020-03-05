@@ -1,62 +1,66 @@
 <!-- MarkdownTOC levels="1,2" autolink="true" -->
 
 - [System](#system)
-	- [User](#user)
-	- [Group](#group)
-	- [Apt](#apt)
-	- [Performance](#performance)
-	- [Update-alternatives](#update-alternatives)
-	- [Graphic](#graphic)
-	- [Shell](#shell)
-	- [Process](#process)
-	- [File system](#file-system)
-	- [Init.d](#initd)
-	- [Systemd](#systemd)
-	- [Journal](#journal)
-	- [Iptables](#iptables)
+  - [User](#user)
+  - [Group](#group)
+  - [Apt](#apt)
+  - [Performance](#performance)
+  - [Update-alternatives](#update-alternatives)
+  - [Graphic](#graphic)
+  - [Shell](#shell)
+  - [Process](#process)
+  - [File system](#file-system)
+  - [Init.d](#initd)
+  - [Systemd](#systemd)
+  - [Journal](#journal)
+  - [Iptables](#iptables)
 - [Network](#network)
-	- [netplan](#netplan)
-	- [Netstat](#netstat)
-	- [ss](#ss)
-	- [TCP Dump](#tcp-dump)
-	- [systemd-networkd](#systemd-networkd)
-	- [ENI](#eni)
-	- [vlan](#vlan)
-	- [NAT](#nat)
-	- [VPN](#vpn)
-	- [Netcat](#netcat)
-	- [Internet Exchange Point](#internet-exchange-point)
+  - [netplan](#netplan)
+  - [Netstat](#netstat)
+  - [ss](#ss)
+  - [TCP Dump](#tcp-dump)
+  - [systemd-networkd](#systemd-networkd)
+  - [ENI](#eni)
+  - [vlan](#vlan)
+  - [NAT](#nat)
+  - [VPN](#vpn)
+  - [Netcat](#netcat)
+  - [Internet Exchange Point](#internet-exchange-point)
 - [Security](#security)
-	- [Ssh](#ssh)
-	- [OpenSSL](#openssl)
-	- [Fail2Ban](#fail2ban)
+  - [Gpg](#gpg)
+  - [Vault](#vault)
+  - [Ssh](#ssh)
+  - [OpenSSL](#openssl)
+  - [Fail2Ban](#fail2ban)
 - [Software](#software)
-	- [NTP](#ntp)
-	- [Git](#git)
-	- [Tmux](#tmux)
-	- [Email system](#email-system)
-	- [OpenLDAP](#openldap)
-	- [Active Directory](#active-directory)
-	- [SaltStack](#saltstack)
-	- [Apache](#apache)
-	- [Nginx](#nginx)
-	- [Zabbix](#zabbix)
-	- [Elastic Search](#elastic-search)
-	- [Php-FPM](#php-fpm)
-	- [HAProxy](#haproxy)
-	- [Java](#java)
-	- [Python](#python)
-	- [RabbitMQ](#rabbitmq)
-	- [Ansible](#ansible)
-	- [Node js](#node-js)
-	- [Yarn](#yarn)
-	- [Varnish](#varnish)
-	- [Log Rotate](#log-rotate)
+  - [NTP](#ntp)
+  - [Git](#git)
+  - [Tmux](#tmux)
+  - [Email system](#email-system)
+  - [OpenLDAP](#openldap)
+  - [Active Directory](#active-directory)
+  - [SaltStack](#saltstack)
+  - [Apache](#apache)
+  - [Nginx](#nginx)
+  - [Bind9](#bind9)
+  - [Zabbix](#zabbix)
+  - [Elastic Search](#elastic-search)
+  - [Php-FPM](#php-fpm)
+  - [HAProxy](#haproxy)
+  - [Java](#java)
+  - [Python](#python)
+  - [RabbitMQ](#rabbitmq)
+  - [Ansible](#ansible)
+  - [Node js](#node-js)
+  - [Yarn](#yarn)
+  - [Varnish](#varnish)
+  - [Log Rotate](#log-rotate)
 - [Databases](#databases)
-	- [MySQL](#mysql)
-	- [Percona XtraDB Cluster](#percona-xtradb-cluster)
-	- [Redis](#redis)
-	- [InfluxDB](#influxdb)
+  - [MySQL](#mysql)
+  - [MySQL - tool](#mysql---tool)
+  - [Percona XtraDB Cluster](#percona-xtradb-cluster)
+  - [Redis](#redis)
+  - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
 	- [Storage](#storage)
 	- [LVM](#lvm)
@@ -64,32 +68,35 @@
 	- [Monitor](#monitor)
 	- [Bluetooth](#bluetooth)
 - [Virtualization](#virtualization)
-	- [Docker](#docker)
-	- [Docker Swarm](#docker-swarm)
+  - [Docker](#docker)
+  - [Docker Swarm](#docker-swarm)
 - [Kubernetes](#kubernetes)
-	- [Context](#context)
-	- [Deployment](#deployment)
-	- [Pod](#pod)
-	- [Service](#service)
-	- [RBAC](#rbac)
-	- [Ingress](#ingress)
-	- [Config extraction](#config-extraction)
-	- [Common cmd](#common-cmd)
+  - [Context](#context)
+  - [Deployment](#deployment)
+  - [Pod](#pod)
+  - [Service](#service)
+  - [ConfigMap](#configmap)
+  - [Secrets](#secrets)
+  - [RBAC](#rbac)
+  - [Ingress](#ingress)
+  - [Config extraction](#config-extraction)
+  - [Common cmd](#common-cmd)
+  - [Helm](#helm)
 - [CentOS](#centos)
-	- [Iptables](#iptables-1)
-	- [OS Version](#os-version)
-	- [Yum](#yum)
+  - [Iptables](#iptables-1)
+  - [OS Version](#os-version)
+  - [Yum](#yum)
 - [ArchLinux](#archlinux)
-	- [File system](#file-system-1)
-	- [Grub](#grub)
-	- [package manager](#package-manager)
-	- [Wi-Fi](#wi-fi)
+  - [File system](#file-system-1)
+  - [Grub](#grub)
+  - [package manager](#package-manager)
+  - [Wi-Fi](#wi-fi)
 - [Miscellaneous](#miscellaneous)
-	- [Raspberry](#raspberry)
-	- [Sublime-text](#sublime-text)
-	- [Regex](#regex)
-	- [Markdown](#markdown)
-	- [Pimp my terminal](#pimp-my-terminal)
+  - [Raspberry](#raspberry)
+  - [Sublime-text](#sublime-text)
+  - [Regex](#regex)
+  - [Markdown](#markdown)
+  - [Pimp my terminal](#pimp-my-terminal)
 - [Definitions](#definitions)
 - [Media / Platform](#media--platform)
 - [DevOps](#devops)
@@ -120,12 +127,23 @@ switch to a user (default root)
 su -
 su - b.dauphin
 ```
+
 ### sudo
-Switch to root
-You have to be __sudoer__ (i.e. being member of 'sudo' group)
-ensure you're in sudo group, by checking groups you belong to
+#### Edit
+In ordre to edit sudoer file, use the proper tool `visudo`. Because even for `root` the file is `readonly`
 ```bash
-groups
+visudo -f /var/tmp/sudoers.new
+visudo -f /etc/sudoers
+```
+
+#### Checkconfig
+```bash
+visudo -c  
+/etc/sudoers: parsed OK
+/etc/sudoers.d/dev: parsed OK
+
+visudo -f /etc/sudoers.d/qwbind-dev -c
+/etc/sudoers.d/qwbind-dev: parsed OK
 ```
 
 ## Group
@@ -249,6 +267,11 @@ service sddm restart    : restart sddm (to load new monitor)
 update-alternatives --install /usr/bin/x-window-manager x-window-manager /usr/bin/i3 20
 ```
 
+##### Automatically starting applications on i3 startup
+
+https://i3wm.org/docs/userguide.html#_automatically_starting_applications_on_i3_startup
+
+
 ## Shell
 ### Stream
 #### Redirection
@@ -286,6 +309,13 @@ tar --help
 | -v          | verbose                                       |
 | -C          | Set dir name to extract files                 |
 | --directory | same                                          |
+
+### gunzip
+Default, extract file to STOUT  
+`-c : write on standard output, keep original files unchanged`
+```bash
+gunzip -c file.gz > file
+```
 
 ### grep
 
@@ -636,6 +666,7 @@ ipcs -s | grep zabbix | awk ' { print $2 } ' | xargs -I {} ipcrm -s {}
 
 ## File system
 Unix File types
+
 | Description                         | symbol              |
 |:------------------------------------|:--------------------|
 | Regular file                        | -                   |
@@ -1116,6 +1147,7 @@ cat /{lib,etc,run}/netplan/*.yaml
 ### Show network connections, listening process
 ## Netstat
 (old way)
+
 | command         | specification                               |
 |:----------------|:--------------------------------------------|
 | netstat -t      | list tcp connections                        |
@@ -1137,6 +1169,13 @@ cat /{lib,etc,run}/netplan/*.yaml
 |:-----------|:-------------------------------------|
 | ss -tulipe | more info on listening process       |
 | ss tlpn    | print listen tcp socket with process |
+
+```bash
+ss -ltpn sport eq 2377
+ss -t '( sport = :ssh )'
+ss -ltn sport gt 500
+ss -ltn sport le 500
+```
 
 ## TCP Dump
 Real time, just see what’s going on, by looking at all interfaces.
@@ -1238,6 +1277,23 @@ echo '<187>Apr 29 15:26:16 qwarch plop[12458]: baptiste' | nc -u 10.10.10.10 151
 
 
 # Security
+## Gpg
+### gpg-agent
+Display your public AND private keys from the gpg-agent keyring
+```bash
+gpg --list-keys
+gpg --list-secret-keys
+```
+
+[How to generate gpg public/private key pair](https://gitlab.com/help/user/project/repository/gpg_signed_commits/index.md)
+
+## Vault
+```bash
+vault login -method=ldap username=$USER
+```
+
+Will set up a token under `~/.vault-token`
+
 ## Ssh
 > Test sshd config before reloading (avoid fail on restart/reload and cutting our own hand)  
 sshd = ssh daemon
@@ -1256,6 +1312,8 @@ cat ~/.ssh/id_ed25519.pub | ssh pi@192.168.1.41 "mkdir -p ~/.ssh && chmod 700 ~/
 ```bash
 rsync -au --progress -e "ssh -i path/to/private_key" user@10.10.10.10:~/remote_path /output/path
 ```
+
+
 ## OpenSSL
 ### Definitions
 | Keywork     | meaning |
@@ -1274,6 +1332,11 @@ openssl s_client -connect qwant.com:443 -servername qwant.com           < /dev/n
 openssl s_client -connect qwantjunior.fr:443 -servername qwantjunior.fr < /dev/null | openssl x509 -text -noout -dates
 ```
 
+Useful use case
+```bash
+openssl x509 --text --noout --in ./dev.bdauphin.io.pem -subject -issuer
+```
+
 #### Get info about a certificate from __file__
 (.pem)
 ```bash
@@ -1281,6 +1344,35 @@ openssl x509 --text --noout --in /etc/ssl/private/sub.domain.tld.pem
 
 # debian 7, openssl style
 openssl x509 -text -in  /etc/ssl/private/sub.domain.tld.pem
+```
+
+#### Test full chain
+OpenSSL verify with `-CAfile`
+```bash
+openssl verify ./dev.bdauphin.io.pem
+CN = dev.bdauphin.io.pem
+error 20 at 0 depth lookup: unable to get local issuer certificate
+error ./dev.bdauphin.io: verification failed
+
+openssl verify -CAfile ./bdauphin.io_intermediate_certificate.pem ./dev.bdauphin.io.pem
+./dev.bdauphin.io: OK
+```
+
+#### Common usage
+Test certificate validation + right adresses
+```bash
+for certif in * ; do openssl verify -CAfile ../baptiste-dauphin.io_intermediate_certificate.pem $certif ; done
+dev.baptiste-dauphin.io.pem: OK
+plive.baptiste-dauphin.io.pem: OK
+www.baptiste-dauphin.io.pem: OK
+
+for certif in * ; do openssl x509 -in $certif -noout -text | egrep '(Subject|DNS):' ; done
+        Subject: CN = dev.baptiste-dauphin.com
+                DNS:dev.baptiste-dauphin.com, DNS:dav-dev.baptiste-dauphin.com, DNS:provisionning-dev.baptiste-dauphin.com, DNS:share-dev.baptiste-dauphin.com
+        Subject: CN = plive.baptiste-dauphin.com
+                DNS:plive.baptiste-dauphin.com, DNS:dav-plive.baptiste-dauphin.com, DNS:provisionning-plive.baptiste-dauphin.com, DNS:share-plive.baptiste-dauphin.com
+        Subject: CN = www.baptiste-dauphin.com
+                DNS:www.baptiste-dauphin.com, DNS:dav.baptiste-dauphin.com, DNS:provisionning.baptiste-dauphin.com, DNS:share.baptiste-dauphin.com
 ```
 
 ##### openssl s_client all arguments
@@ -2182,6 +2274,41 @@ Upgrade Salt-Minion:
 {% if (key | regex_match('.*dyn.company.tld.*', ignorecase=True)) != None %}
 ```
 
+#### Useful exemple
+##### Netcat
+```bash
+salt -C "minion.local or minion2.local" \
+> cmd.run "docker run debian /bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306' | grep open"
+minion.local:
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    debconf: delaying package configuration, since apt-utils is not installed
+    (UNKNOWN) [10.3.3.3] 3306 (?) open
+
+minion2.local:
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    
+    WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
+    
+    debconf: delaying package configuration, since apt-utils is not installed
+    (UNKNOWN) [10.3.3.3] 3306 (?) open
+```
+
+##### MySQL connexion
+Will print you the GRANTS for the user
+```bash
+echo "enter your password" ; read -s password ; \
+salt "*" \
+cmd.run "docker pull imega/mysql-client ; docker run --rm imega/mysql-client mysql --host=10.10.10.10 --user=b.dauphin --password=$password --database=db1 --execute='SHOW GRANTS FOR CURRENT_USER();'" \
+env='{"http_proxy": "http://10.10.10.10:9999"}'
+```
+
 ## Apache
 Validate config before reload/restart
 ```bash
@@ -2202,6 +2329,74 @@ server {
 }
 ```
 
+## Bind9
+https://wiki.csnu.org/index.php/Installation_et_configuration_de_bind9  
+the process name of bind9 is "named"
+### rndc
+__name server control utility__
+
+Write (dump) cache of named in default file (__/var/cache/bind/named_dump.db__)  
+dumpdb [-all|-cache|-zones|-adb|-bad|-fail] [view ...]
+```bash
+rndc dumpdb -cache default_any
+```
+
+enable query logging in default location (__/var/log/bind9/query.log__)
+```bash
+rndc querylog [on|off]
+```
+
+toggle querylog mode
+```bash
+rndc querylog
+```
+
+flush   Flushes all of the server's caches.
+```bash
+rndc flush
+```
+flush [view]  Flushes the server's cache for a view.
+```bash
+rndc flush default_any
+```
+
+get unic master zone loaded
+```bash
+named-checkconf -z 2> /dev/null | grep 'zone' | sort -u | awk '{print $2}' | rev | cut --delimiter=/ -f2 | rev | sort -u
+named-checkconf -z 2> /dev/null | grep 'zone' | grep -v 'bad\|errors' | sort -u | awk '{print $2}' | rev | cut --delimiter=/ -f2 | rev | sort -u
+```
+
+keep cache
+```bash
+systemctl reload bind9
+```
+empty cache
+```bash
+systemctl restart bind9
+```
+
+### dig
+```bash
+dig @8.8.8.8 +short www.qwant.com +nodnssec
+dig @8.8.8.8 +short google.com +notcp
+dig @8.8.8.8 +noall +answer +tcp www.qwant.com A
+dig @8.8.8.8 +noall +answer +notcp www.qwant.com A
+```
+
+others options
+- +short
+- +(no)tcp
+- +(no)dnssec
+- +noall
+- +answer
+- type
+
+[Full manual](https://linux.die.net/man/1/dig)
+
+
+
+
+
 
 
 ## Zabbix
@@ -2210,6 +2405,16 @@ Verify your url
 ```
 https://zabbix.company/zabbix.php?action=dashboard.view
 https://zabbix.company/zabbix/zabbix.php?action=dashboard.view
+```
+### Test zabbix agent key
+```bash
+### Test a given item
+zabbix_agentd -t system.hostname
+zabbix_agentd -t system.swap.size[all,free]
+zabbix_agentd -t vfs.file.md5sum[/etc/passwd]
+
+### print all known items 
+zabbix_agentd -p
 ```
 
 #### zabbix server info request (to perform a first test)
@@ -2266,6 +2471,148 @@ curl \
 -X POST https://zabbix.company/api_jsonrpc.php | jq .
 ```
 
+##### get hostid with name(s)
+Replace `$hostname1`,`$hostname2` and `$token`
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid"],
+        "filter": {
+            "host": [
+                ""$hostname1","$hostname2"
+            ]
+        }
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq '.result'
+```
+
+##### Get groups of a specific host(s)
+Replace `$hostname1`,`$hostname2` and `$token`
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid"],
+      "selectGroups": "extend",
+        "filter": {
+            "host": [
+                "$hostname1","$hostname2"
+            ]
+        }
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq .
+```
+
+##### Get host by TAG(S)
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["name"],     
+        "selectTags": "extend",
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": 1
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+
+Output __hostid__, __host__ and __name__
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["hostid","host","name"],     
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": 1
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.company/api_jsonrpc.php | jq .
+```
+##### Get host by multiple TAGS
+
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.get",
+    "params": {
+      "output": ["name"],     
+        "tags": [
+            {
+                "tag": "app",
+                "value": "swarm",
+                "operator": "1"
+            },
+            {
+                "tag": "environment",
+                "value": "dev",
+                "operator": "1"
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq .
+```
+
+##### Modify TAG
+`Warning` erase all others tags + can set only one tag... So I do not recommend using this shity feature.
+```bash
+curl \
+-d '{
+    "jsonrpc": "2.0",
+    "method": "host.update",
+    "params": {
+      "hostid": "12345",
+        "tags": [
+            {
+                "tag": "environment",
+                "value": "staging"
+            }
+        ]
+    },
+    "id": 2,
+    "auth": "$token"
+  }' \
+-H "Content-Type: application/json-rpc" \
+-X POST https://zabbix.tld/api_jsonrpc.php | jq '.result'
+```
 
 ## Elastic Search
 
@@ -2279,6 +2626,51 @@ By default, each index in Elasticsearch is allocated __5 primary shards__ and __
 | savoir l'état du cluster à un instant T                  | /_cat/health                                                                                                       |
 | full stats index                                         | /__INDEX__/_stats?pretty=true                                                                                      |
 | Kopg plugin                                              | /_plugin/kopf                                                                                                      |
+
+### Dump / Backup
+Very good tutorial
+https://blog.ruanbekker.com/blog/2017/11/22/using-elasticdump-to-backup-elasticsearch-indexes-to-json/
+
+`Warning`
+DO NOT BACKUP with wildcard matching
+
+I tested to backup indexes with wildcard, It works but when you want to put back the data, elasticdump takes ALL the DATA from ALL index from the the json file to feed the one you provide in the url. Exemple :
+
+```bash
+elasticdump --input=es_test-index-wildcard.json --output=http://localhost:9200/test-index-1 --type=data
+```
+
+In this exemple the file es_test-index-wildcard.json was the result of the following command, which matches 2 indexes (test-index-1 and test-index-2)
+
+```bash
+elasticdump --input=http://localhost:9200/test-index-* --output=es_test-index-1.json --type=data
+```
+
+So, I'll have to manually expand all various indexes in order to back them up ! 
+
+
+__Elasticsearch Cluster Topology__
+![GitHub Logo](../src/elasticsearch_cluster_topology.png)
+
+### Templates
+Change the future index sharding and and replicas and other stuff.  
+For example, if you have a mono-node cluster, you don't want any replica nor sharding.
+
+```bash
+curl -X POST '127.0.0.1:9200/_template/default' \
+ -H 'Content-Type: application/json' \
+ -d '
+ {
+  "index_patterns": ["*"],
+  "order": -1,
+  "settings": {
+    "number_of_shards": "1",
+    "number_of_replicas": "0"
+  }
+}
+ ' \
+ | jq .
+```
 
 
 
@@ -2320,6 +2712,16 @@ keytool -delete -alias dolphin_ltd_subordinate_ca -keystore /usr/jdk64/jdk1.7.0_
 ```
 
 ## Python
+#### Knowledge
+
+Symbol | Meaning
+-|-
+() | tuple
+[] | list
+{} | dictionary
+
+[Python tutorial](https://docs.python.org/3/tutorial/datastructures.html)
+
 #### Common commands
 > list all versions of python (system wide)
 ```bash
@@ -2806,6 +3208,7 @@ mysql -u root -p -e 'SHOW VARIABLES WHERE Variable_Name LIKE "%dir";'
 Show users and remote client IP or subnet etc
 ```sql
 SELECT user, host FROM mysql.user;
+select user, host FROM mysql.user WHERE user = 'b.dauphin';
 ```
 
 Show current queries
@@ -2867,12 +3270,35 @@ ORDER BY table_schema, data_length + index_length DESC;
 SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" FROM information_schema.tables GROUP BY table_schema;
 ```
 ##### Feed database
+put the .sql.gz file into STDIN of gunzip and then, send to mysql
 ```bash
-gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]
+gunzip < [compressed_filename.sql.gz] | mysql -u [user] -p[password] [databasename]
 ```
+If you encouter errors like `foreign key`
+```bash
+gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
+```
+[Full explanation](https://tableplus.com/blog/2018/08/mysql-how-to-temporarily-disable-foreign-key-constraints.html)
+
 ##### All in one usage <3
 ```bash
 mysql -u baptiste -p -h database.baptiste-dauphin.com -e "SELECT table_schema 'DATABASE_1', ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) 'DB Size in MB' FROM information_schema.tables GROUP BY table_schema;"
+```
+
+## MySQL - tool
+Run after an mysql upgrade. Update system tables like `performance_schema`
+```bash
+mysql_upgrade -u root -p
+```
+
+Test configuration before restart. Will output if some error exist
+```bash
+mysqld --help
+```
+
+Simulate the running config If you would have been started mysql
+```bash
+mysqld --print-defaults
 ```
 ### Dump
 with __mysqldump__
@@ -2893,6 +3319,54 @@ mysqldump -h 10.10.10.10 \
 --skip-lock-tables \
 --single-transaction \
 | gzip  > /home/b.dauphin/backup-`date +%d-%m-%Y-%H:%M:%S`.sql.gz
+```
+
+To export to file (`structure only`)
+```bash
+mysqldump -u [user] -p[pass] --no-data mydb > mydb.sql
+```
+
+To export to file (`data only`)
+```bash
+mysqldump -u [user] -p[pass] --no-create-info mydb > mydb.sql
+```
+
+Exemple
+```bash
+mysqldump \
+-u root \
+-p user1 \
+--single-transaction \
+--skip-add-locks \
+--skip-lock-tables \
+--skip-set-charset \
+--no-data \
+> db1_STRUCTURE.sql
+
+mysqldump \
+-u root \
+-p user1 \
+--single-transaction \
+--skip-add-locks \
+--skip-lock-tables \
+--skip-set-charset \
+--no-create-info \
+> db1_DATA.sql
+```
+```sql
+CREATE DATABASE db1;
+```
+```bash
+mysql -u root -p db1 < db1_STRUCTURE.sql
+mysql -u root -p db1 < db1_DATA.sql
+```
+
+
+To import to database
+```bash
+mysql -u [user] -p[pass] mydb < mydb.sql
+or
+gunzip < heros_db.sql.gz | mysql --init-command="SET SESSION FOREIGN_KEY_CHECKS=0;" -u root -p heros
 ```
 
 ## Percona XtraDB Cluster
@@ -3298,6 +3772,18 @@ docker run -d \
 -e "discovery.type=single-node" \
 elasticsearch:7.4.1
 ```
+
+### Run a single command and output
+(no interactive)
+```bash
+docker run debian ls
+
+docker run debian /bin/bash -c 'cd /home ; ls -l'
+
+docker run debian \
+/bin/bash -c 'http_proxy=http://10.100.100.100:1598 apt update ; http_proxy=http://10.100.100.100:1598 apt install netcat -y ; nc -zvn 10.3.3.3 3306'
+```
+
 #### Volumes
 ```bash
 docker volume create my_app
@@ -3332,6 +3818,27 @@ get address + role
 for node in $(docker node ls -q); do     docker node inspect --format '{{.Status.Addr}} ({{.Spec.Role}})' $node; done
 ```
 
+Print labels of nodes
+```bash
+docker node ls -q | xargs docker node inspect \
+  -f '[{{ .Description.Hostname }}]: {{ range $k, $v := .Spec.Labels }}{{ $k }}={{ $v }} {{end}}'
+```
+
+### Join new node
+swarm manager shell
+```bash
+docker swarm join-token worker
+```
+We output a copy pastable bash line, like the following ! (Be carefull it doesn't include listen ip of the worker)
+
+new worker shell
+
+```bash
+docker swarm join \
+  --token <TOKEN_WORKER> \
+  --listen-addr WORKER-LISTEN-IP:2377 \
+   <MANGER-LISTEN-IP>:2377
+```
 
 
 # Kubernetes
@@ -3377,6 +3884,18 @@ kubectl scale deployment nginx --replicas=5
 ```bash
 kubectl create service nodeport bdauphin-nginx-test --tcp=8080:80
 ```
+
+## ConfigMap
+ConfigMaps allow you to decouple configuration artifacts from image content to keep containerized applications portable. This page provides a series of usage examples demonstrating how to create ConfigMaps and configure Pods using data stored in ConfigMaps.
+
+Most of the time it's a list of key-value pairs  
+
+It can be defined as environment variables  
+and/or
+Be mounted into the pod at a specified path
+
+## Secrets
+Kubernetes secret objects let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys. Putting this information in a secret is safer and more flexible than putting it verbatim in a Pod definition or in a container image . See Secrets design document for more information.
 
 ## RBAC
 Role-based access control (RBAC) is a method of regulating access to computer or network resources based on the roles of individual users within an enterprise.  
@@ -3487,6 +4006,68 @@ watch -n 1 kubectl get all -o wide
 watch -n 1 kubectl get all -o wide -n default
 ```
 
+## Helm
+Client : helm  
+Server : tiller
+
+Helm uses go template render engine 
+
+### Generate your first chart
+```bash
+helm create $mychart
+helm create elasticsearch
+```
+
+Helm will create a new directory in your project called mychart with
+```bash
+elasticsearch
+├── charts
+├── Chart.yaml
+├── templates
+│   ├── deployment.yaml
+│   ├── _helpers.tpl
+│   ├── ingress.yaml
+│   ├── NOTES.txt
+│   ├── service.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
+```
+
+### Templates
+The most important piece of the puzzle is the `templates/` directory.  
+
+It’s worth noting however, that the directory is named templates, and Helm runs each file in this directory through a [Go template](https://golang.org/pkg/text/template/) rendering engine.
+
+```bash
+helm install --dry-run --debug ./elasticsearch
+helm install ./elasticsearch
+```
+
+### Values
+The template in service.yaml makes use of the Helm-specific objects `.Chart` and `.Values`.
+
+Values | Default | override | meaning
+-|-|-|-
+`.Chart` |  |  | provides metadata about the chart to your definitions such as the name, or version
+`.Values` | `values.yaml` | `--set key=value`, `--values $file` | key element of Helm charts, used to expose configuration that can be set at the time of deployment
+
+For more advanced configuration, a user can specify a YAML file containing overrides with the `--values` option.
+
+```bash
+helm install --dry-run --debug ./mychart --set service.internalPort=8080
+helm install --dry-run --debug ./mychart --values myCustomeValues.yaml
+```
+
+### Worth knowing cmd
+As you develop your chart, it’s a good idea to run it through the linter to ensure you’re following best practices and that your templates are well-formed. Run the helm lint command to see the linter in action:
+```bash
+helm lint ./mychart
+==> Linting ./mychart
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, no failures
+```
 
 # CentOS
 CentOS specific commands which differs from debian
