@@ -62,10 +62,11 @@
   - [Redis](#redis)
   - [InfluxDB](#influxdb)
 - [Hardware](#hardware)
-  - [Storage](#storage)
-  - [LVM](#lvm)
-  - [Listing](#listing)
-  - [Monitor](#monitor)
+	- [Storage](#storage)
+	- [LVM](#lvm)
+	- [Listing](#listing)
+	- [Monitor](#monitor)
+	- [Bluetooth](#bluetooth)
 - [Virtualization](#virtualization)
   - [Docker](#docker)
   - [Docker Swarm](#docker-swarm)
@@ -97,6 +98,9 @@
   - [Markdown](#markdown)
   - [Pimp my terminal](#pimp-my-terminal)
 - [Definitions](#definitions)
+- [Media / Platform](#media--platform)
+- [DevOps](#devops)
+	- [GitLab](#gitlab)
 
 <!-- /MarkdownTOC -->
 
@@ -551,6 +555,12 @@ debian style
 ```bash
 ps -ef
 ps -o pid,user,%mem,command ax
+```
+
+Get parent pid of a given pid
+```bash
+ps -o ppid= -p 750
+ps -o ppid= -p $(pidof systemd)
 ```
 
 RedHat style
@@ -3717,6 +3727,19 @@ sudo dpkg-reconfigure libxrandr2
 ```
 logout of your current Windows Manager (like I3 or cinnamon, or gnome), then select another one. Then logout and go back to your prefered WM. It may resolve the error.
 
+## Bluetooth
+### How to pair AirPods pro on gnome
+[Blueman](https://wiki.archlinux.org/index.php/Blueman) is a full featured Bluetooth manager written in GTK. 
+Be sure to enable the Bluetooth daemon and start Blueman with `blueman-applet`. A graphical settings panel can be launched with `blueman-manager` or your favourite bluetooth manager. 
+```bash
+yaourt -S gtk
+yaourt -S blueman
+```
+
+Then run blueman
+```bash
+blueman-applet
+```
 
 # Virtualization
 Virtualization (OS-level)  
@@ -4291,3 +4314,21 @@ CLI / Promt| Command Line Interpreter / Interface en ligne de commande. Differen
 Shell Linux | CLI of Linux (sh,bash,dash,csh,tcsh,zsh) | [:book:](https://fr.wikipedia.org/wiki/Shell_Unix#Shells)
 Java Heap | shared among all Java virtual machine threads. The heap is the runtime data area from which memory for all __class__ instances and __arrays__ is allocated. | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
 Java Stack | Each Java virtual machine thread has a private Java virtual machine stack holding __local variables__ and partial results, and plays a part in __method invocation__ and __return__ | [:book:](https://alvinalexander.com/java/java-stack-heap-definitions-memory)
+
+# Media / Platform
+Name | Description | Logo
+-|-|-
+__[GitHub](https://github.com/)__ | Biggest __code hosting__ platform (Owned by Microsoft) | ![GitHub Logo](../src/logo/Github.svg)
+__[GitLab](https://about.gitlab.com/devops-tools/)__ | __Code hosting__ + entire DevOps lifecycle. (almost as big as github)|  ![GitLab Logo](../src/logo/gitlab-logo-gray-stacked-rgb.svg)
+[LGTM](https://lgtm.com/#explore) | Continuous __security analysis__. Pluggable with github| ![GitHub Logo](../src/logo/lgtm.png)
+[Regex101](https://regex101.com/) | __Regular expression__ tester
+[Gitter](https://gitter.im/) | Comunity conversation for software developpers 
+[Signal](https://signal.org/fr/) | End-to-End messaging app. Used by Edward Snowden
+[Keybase](https://keybase.io/) | End-to-End messaging and file sharing | 
+
+# DevOps
+![DevOps Lifecycle logo](../src/logo/devops_lifecycle.png)
+## GitLab
+### CI
+### Pages
+https://about.gitlab.com/stages-devops-lifecycle/pages/
