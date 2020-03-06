@@ -3344,6 +3344,9 @@ grep grunt.registerTask Gruntfile.js
 ```
 
 ## Varnish
+Concept of varnish
+https://book.varnish-software.com/4.0/chapters/VCL_Basics.html
+
 ### Varnishadm
 ```bash
 varnishadm -S /etc/varnish/secret
